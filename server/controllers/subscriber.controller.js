@@ -21,4 +21,19 @@ export const list = asyncHandler(async (req, res) => {
   return sendSuccess(res, { message: "Subscribers list", data: result });
 });
 
-export default { subscribe, unsubscribe, list };
+export const remove = asyncHandler(async (req, res) => {
+  await subscriberService.deleteSubscriber(req.params.id);
+  return sendSuccess(res, { message: "Subscriber deleted", data: null });
+});
+
+export const exportCsv = asyncHandler(async (req, res) => {
+  const csv = await subscriberService.exportSubscribersCsv(req.query);
+  res.setHeader("Content-Type", "text/csv; charset=utf-8");
+  res.setHeader(
+    "Content-Disposition",
+    `attachment; filename="subscribers-${Date.now()}.csv"`
+  );
+  return res.status(200).send(csv);
+});
+
+export default { subscribe, unsubscribe, list, remove, exportCsv };

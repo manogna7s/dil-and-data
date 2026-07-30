@@ -35,6 +35,14 @@ export async function listSubscribers(query = {}) {
   if (query.active === "true") filter.isActive = true;
   if (query.active === "false") filter.isActive = false;
 
+  if (query.q) {
+    const keyword = String(query.q).trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    filter.$or = [
+      { email: { $regex: keyword, $options: "i" } },
+      { name: { $regex: keyword, $options: "i" } },
+    ];
+  }
+
   const [items, total] = await Promise.all([
     Subscriber.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit),
     Subscriber.countDocuments(filter),
@@ -43,4 +51,38 @@ export async function listSubscribers(query = {}) {
   return { items, pagination: buildPaginationMeta({ total, page, limit }) };
 }
 
-export default { subscribe, unsubscribe, listSubscribers };
+export async function deleteSubscriber(id) {
+  const doc = await Subscriber.findByIdAndDelete(id);
+  if (!doc) throw new AppError("Subscriber not found", 404);
+  return doc;
+}
+
+export async function exportSubscribersCsv(query = {}) {
+  const filter = {};
+  if (query.active === "true") filter.isActive = true;
+  if (query.active === "false") filter.isActive = false;
+
+  const items = await Subscriber.find(filter).sort({ createdAt: -1 });
+  const header = ["email", "name", "isActive", "createdAt", "unsubscribedAt"];
+  const rows = items.map((s) =>
+    [
+      s.email,
+      s.name || "",
+      s.isActive ? "true" : "false",
+      s.createdAt?.toISOString?.() || "",
+      s.unsubscribedAt?.toISOString?.() || "",
+    ]
+      .map((cell) => `"${String(cell).replace(/"/g, '""')}"`)
+      .join(",")
+  );
+
+  return [header.join(","), ...rows].join("\n");
+}
+
+export default {
+  subscribe,
+  unsubscribe,
+  listSubscribers,
+  deleteSubscriber,
+  exportSubscribersCsv,
+};

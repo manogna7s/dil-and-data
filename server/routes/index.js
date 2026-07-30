@@ -9,6 +9,7 @@ import subscriberRoutes from "./subscriber.routes.js";
 import mediaRoutes from "./media.routes.js";
 import settingsRoutes from "./settings.routes.js";
 import pageRoutes from "./page.routes.js";
+import seoRoutes from "./seo.routes.js";
 
 /**
  * Mount all API modules under /api.
@@ -25,5 +26,6 @@ router.use("/subscribers", subscriberRoutes);
 router.use("/media", mediaRoutes);
 router.use("/settings", settingsRoutes);
 router.use("/pages", pageRoutes);
+router.use("/seo", seoRoutes);
 
 export default router;

@@ -11,7 +11,9 @@ export const unsubscribeValidator = [
 
 export const listSubscribersValidator = [
   query("page").optional().isInt({ min: 1 }),
-  query("limit").optional().isInt({ min: 1, max: 50 }),
+  query("limit").optional().isInt({ min: 1, max: 100 }),
+  query("active").optional().isIn(["true", "false"]),
+  query("q").optional().isString().isLength({ max: 200 }),
 ];
 
 export default { subscribeValidator, unsubscribeValidator, listSubscribersValidator };

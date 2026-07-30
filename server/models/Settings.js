@@ -2,7 +2,6 @@ import mongoose from "mongoose";
 
 /**
  * Site-wide settings (singleton document).
- * Extend freely — socials, about blurb, feature flags.
  */
 const settingsSchema = new mongoose.Schema(
   {
@@ -23,6 +22,32 @@ const settingsSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+    logo: { type: String, default: "" },
+    favicon: { type: String, default: "" },
+    footer: {
+      text: { type: String, default: "" },
+      credit: { type: String, default: "" },
+    },
+    contact: {
+      email: { type: String, default: "" },
+      phone: { type: String, default: "" },
+      location: { type: String, default: "" },
+      note: { type: String, default: "" },
+    },
+    analytics: {
+      googleAnalyticsId: { type: String, default: "" },
+      plausibleDomain: { type: String, default: "" },
+    },
+    navigation: {
+      type: [
+        {
+          label: String,
+          href: String,
+          enabled: { type: Boolean, default: true },
+        },
+      ],
+      default: [],
+    },
     socials: {
       type: [
         {
@@ -38,6 +63,17 @@ const settingsSchema = new mongoose.Schema(
       title: { type: String, default: "DIL & DATA" },
       description: { type: String, default: "" },
       image: { type: String, default: "" },
+      canonicalBase: { type: String, default: "" },
+      ogTitle: { type: String, default: "" },
+      ogDescription: { type: String, default: "" },
+      ogImage: { type: String, default: "" },
+      robots: { type: String, default: "index, follow" },
+      twitterCard: { type: String, default: "summary_large_image" },
+    },
+    sitemap: {
+      enabled: { type: Boolean, default: true },
+      includePages: { type: Boolean, default: true },
+      includeContent: { type: Boolean, default: true },
     },
   },
   { timestamps: true }

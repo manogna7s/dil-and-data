@@ -21,9 +21,31 @@ export const listCommentsValidator = [
   query("limit").optional().isInt({ min: 1, max: 50 }),
 ];
 
+export const listAllCommentsValidator = [
+  query("page").optional().isInt({ min: 1 }),
+  query("limit").optional().isInt({ min: 1, max: 100 }),
+  query("status").optional().isIn(["all", "pending", "approved", "rejected", "spam"]),
+  query("q").optional().isString().isLength({ max: 200 }),
+];
+
+export const bulkCommentsValidator = [
+  body("ids").isArray({ min: 1 }),
+  body("ids.*").isMongoId(),
+  body("status").optional().isIn(["pending", "approved", "rejected", "spam"]),
+];
+
+export const replyCommentValidator = [
+  param("id").isMongoId(),
+  body("body").trim().notEmpty().isLength({ max: 2000 }),
+  body("authorName").optional().isLength({ max: 80 }),
+];
+
 export default {
   createCommentValidator,
   commentIdValidator,
   moderateCommentValidator,
   listCommentsValidator,
+  listAllCommentsValidator,
+  bulkCommentsValidator,
+  replyCommentValidator,
 };

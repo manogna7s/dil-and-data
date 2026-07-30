@@ -7,6 +7,9 @@ import {
   commentIdValidator,
   moderateCommentValidator,
   listCommentsValidator,
+  listAllCommentsValidator,
+  bulkCommentsValidator,
+  replyCommentValidator,
 } from "../validators/comment.validator.js";
 
 const router = Router();
@@ -20,12 +23,44 @@ router.get(
 router.post("/", createCommentValidator, validateRequest, ctrl.create);
 
 router.get(
+  "/admin",
+  protect,
+  adminOnly,
+  listAllCommentsValidator,
+  validateRequest,
+  ctrl.list
+);
+router.get(
   "/admin/content/:contentId",
   protect,
   adminOnly,
   listCommentsValidator,
   validateRequest,
   ctrl.listAdmin
+);
+router.post(
+  "/admin/bulk-moderate",
+  protect,
+  adminOnly,
+  bulkCommentsValidator,
+  validateRequest,
+  ctrl.bulkModerate
+);
+router.post(
+  "/admin/bulk-delete",
+  protect,
+  adminOnly,
+  bulkCommentsValidator,
+  validateRequest,
+  ctrl.bulkRemove
+);
+router.post(
+  "/:id/reply",
+  protect,
+  adminOnly,
+  replyCommentValidator,
+  validateRequest,
+  ctrl.reply
 );
 router.patch(
   "/:id/moderate",
