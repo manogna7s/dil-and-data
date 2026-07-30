@@ -1,0 +1,31 @@
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: var(--space-4xl) var(--space-xl);
+  color: var(--color-secondary);
+}
+
+.ornament {
+  width: 2.5rem;
+  height: 1px;
+  background: var(--color-accent);
+  margin-bottom: var(--space-lg);
+}
+
+.title {
+  font-family: var(--font-heading);
+  font-size: var(--text-xl);
+  color: var(--color-text);
+  margin-bottom: var(--space-sm);
+}
+
+.description {
+  max-width: 24rem;
+  margin-bottom: var(--space-lg);
+}
+
+.action {
+  margin-top: var(--space-sm);
+}

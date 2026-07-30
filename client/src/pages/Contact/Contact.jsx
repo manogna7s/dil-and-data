@@ -1,9 +1,9 @@
-import { PageContainer } from "../../components";
+import { PageContainer, SectionTitle } from "../../components";
 
 function Contact() {
   return (
     <PageContainer>
-      <h1>Contact</h1>
+      <SectionTitle>Contact</SectionTitle>
     </PageContainer>
   );
 }

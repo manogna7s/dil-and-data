@@ -1,0 +1,35 @@
+.quote {
+  margin: var(--space-2xl) 0;
+  padding: var(--space-xl) var(--space-2xl);
+  border-left: 2px solid var(--color-highlight);
+  max-width: var(--container-sm);
+}
+
+.text {
+  font-family: var(--font-heading);
+  font-size: var(--text-xl);
+  font-style: italic;
+  font-weight: var(--font-weight-regular);
+  line-height: var(--leading-relaxed);
+  color: var(--color-text);
+}
+
+.cite {
+  display: block;
+  margin-top: var(--space-md);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-style: normal;
+  letter-spacing: var(--tracking-wide);
+  color: var(--color-secondary);
+}
+
+@media (max-width: 768px) {
+  .quote {
+    padding: var(--space-lg);
+  }
+
+  .text {
+    font-size: var(--text-lg);
+  }
+}

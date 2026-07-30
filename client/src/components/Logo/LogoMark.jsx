@@ -1,0 +1,47 @@
+/**
+ * LogoMark — the tiny book/letter/heart symbol.
+ * Used in: navbar, footer, loader, favicon contexts.
+ */
+function LogoMark({ size = 32, className = "", title = "DIL & DATA" }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 64 64"
+      width={size}
+      height={size}
+      fill="none"
+      className={className}
+      role="img"
+      aria-label={title}
+    >
+      <path
+        d="M8 44 C8 44 18 38 32 38 C46 38 56 44 56 44 L56 18 C56 18 46 12 32 12 C18 12 8 18 8 18 Z"
+        stroke="currentColor"
+        strokeWidth="1.75"
+        strokeLinejoin="round"
+        strokeLinecap="round"
+      />
+      <path
+        d="M32 12 V44"
+        stroke="currentColor"
+        strokeWidth="1.75"
+        strokeLinecap="round"
+      />
+      <path
+        d="M22 28 L32 20 L42 28 L32 36 Z"
+        stroke="currentColor"
+        strokeWidth="1.75"
+        strokeLinejoin="round"
+        strokeLinecap="round"
+      />
+      <path
+        d="M32 33.5 C32 33.5 26.5 29.5 26.5 26.2 C26.5 24.4 27.8 23 29.5 23 C30.6 23 31.5 23.55 32 24.35 C32.5 23.55 33.4 23 34.5 23 C36.2 23 37.5 24.4 37.5 26.2 C37.5 29.5 32 33.5 32 33.5 Z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+export default LogoMark;

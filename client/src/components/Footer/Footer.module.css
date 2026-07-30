@@ -1,16 +1,110 @@
 .footer {
   margin-top: auto;
-  padding: var(--space-xl);
-  border-top: 1px solid var(--color-surface);
-  text-align: center;
+  padding-block: var(--footer-padding-y) var(--space-xl);
+  background: var(--color-surface-elevated);
+  border-top: 1px solid var(--color-border-soft);
 }
 
-.brand {
-  font-size: var(--text-sm);
-  margin-bottom: var(--space-sm);
+.grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1.4fr;
+  gap: var(--space-2xl);
+  margin-bottom: var(--space-3xl);
 }
 
-.copy {
+.brandCol {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.tagline {
+  color: var(--color-secondary);
+  font-style: italic;
+  max-width: 16rem;
+}
+
+.socials {
+  display: flex;
+  gap: var(--space-xs);
+  margin-top: var(--space-sm);
+}
+
+.heading {
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: var(--color-text);
+  margin-bottom: var(--space-lg);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.link {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  color: var(--color-secondary);
+}
+
+.link:hover {
+  color: var(--color-text);
+}
+
+.newsletterCol {
+  display: flex;
+  flex-direction: column;
+}
+
+.newsletterCopy {
+  color: var(--color-secondary);
+  font-size: var(--text-base);
+  margin-bottom: var(--space-md);
+  font-style: italic;
+}
+
+.bottom {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding-top: var(--space-xl);
+  border-top: 1px solid var(--color-border-soft);
+}
+
+.copy,
+.note {
   font-size: var(--text-sm);
   color: var(--color-secondary);
+  letter-spacing: var(--tracking-wide);
+}
+
+.note {
+  font-style: italic;
+}
+
+@media (max-width: 1024px) {
+  .grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-2xl);
+  }
+
+  .footer {
+    padding-block: var(--space-3xl) var(--space-xl);
+  }
+
+  .bottom {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }

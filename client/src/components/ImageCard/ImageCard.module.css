@@ -1,0 +1,52 @@
+.wrapper {
+  display: block;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+}
+
+.frame {
+  position: relative;
+  overflow: hidden;
+  background: var(--color-surface);
+}
+
+.landscape {
+  aspect-ratio: 16 / 10;
+}
+
+.portrait {
+  aspect-ratio: 3 / 4;
+}
+
+.square {
+  aspect-ratio: 1 / 1;
+}
+
+.wide {
+  aspect-ratio: 21 / 9;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 0;
+  transition: transform var(--duration-slower) var(--ease-out);
+}
+
+.wrapper:hover .image {
+  transform: scale(1.04);
+}
+
+.caption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: var(--space-md) var(--space-lg);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-style: italic;
+  color: var(--color-white);
+  background: rgba(45, 49, 44, 0.4);
+}

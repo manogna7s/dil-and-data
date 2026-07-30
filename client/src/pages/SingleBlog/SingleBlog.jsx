@@ -1,9 +1,17 @@
-import { PageContainer } from "../../components";
+import { PageContainer, SectionTitle, Breadcrumb } from "../../components";
+import { ROUTES } from "../../constants";
 
 function SingleBlog() {
   return (
     <PageContainer>
-      <h1>Single Blog</h1>
+      <Breadcrumb
+        items={[
+          { label: "Home", href: ROUTES.HOME },
+          { label: "Blogs", href: ROUTES.BLOGS },
+          { label: "Single Blog" },
+        ]}
+      />
+      <SectionTitle>Single Blog</SectionTitle>
     </PageContainer>
   );
 }

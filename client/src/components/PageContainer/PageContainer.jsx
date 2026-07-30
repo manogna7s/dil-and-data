@@ -1,11 +1,16 @@
+import Container from "../Container/Container";
 import styles from "./PageContainer.module.css";
 
 /**
- * Constrains page content to a readable max width.
- * Every page should wrap its content in this component.
+ * PageContainer — standard page body wrapper.
+ * Combines max-width container with vertical page padding.
  */
-function PageContainer({ children }) {
-  return <div className={styles.container}>{children}</div>;
+function PageContainer({ children, size = "lg", className = "" }) {
+  return (
+    <div className={`${styles.page} ${className}`}>
+      <Container size={size}>{children}</Container>
+    </div>
+  );
 }
 
 export default PageContainer;

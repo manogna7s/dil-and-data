@@ -1,0 +1,28 @@
+.nav {
+  margin-bottom: var(--space-lg);
+}
+
+.list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-sm);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--color-secondary);
+  letter-spacing: var(--tracking-wide);
+}
+
+.item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.item [aria-current="page"] {
+  color: var(--color-text);
+}
+
+.sep {
+  opacity: 0.5;
+}

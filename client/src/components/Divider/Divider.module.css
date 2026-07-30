@@ -1,0 +1,27 @@
+.divider {
+  border: none;
+  border-top: 1px solid var(--color-border-soft);
+  margin: var(--space-2xl) 0;
+}
+
+.labeled {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  margin: var(--space-2xl) 0;
+}
+
+.line {
+  flex: 1;
+  height: 1px;
+  background: var(--color-border-soft);
+}
+
+.label {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: var(--color-secondary);
+  white-space: nowrap;
+}

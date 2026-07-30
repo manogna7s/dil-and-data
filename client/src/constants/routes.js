@@ -12,5 +12,5 @@ export const ROUTES = {
 
 export const SITE = {
   NAME: "DIL & DATA",
-  TAGLINE: "A personal publishing platform",
+  TAGLINE: "Stories, letters, and quiet observations",
 };

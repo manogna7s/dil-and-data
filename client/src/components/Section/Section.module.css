@@ -1,0 +1,22 @@
+.section {
+  padding-block: var(--section-padding-y);
+  width: 100%;
+}
+
+.default {
+  background: transparent;
+}
+
+.surface {
+  background: var(--color-surface);
+}
+
+.muted {
+  background: var(--color-surface-elevated);
+}
+
+@media (max-width: 768px) {
+  .section {
+    padding-block: var(--section-padding-y-sm);
+  }
+}
