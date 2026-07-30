@@ -1,0 +1,16 @@
+/* Global styles — compose the design system */
+
+@import "./reset.css";
+@import "./variables.css";
+@import "./typography.css";
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-text);
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}

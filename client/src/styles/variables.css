@@ -1,0 +1,42 @@
+/* Design tokens — single source of truth for colors, type, spacing */
+
+:root {
+  /* Colors */
+  --color-background: #f5f5f0;
+  --color-surface: #e2e5da;
+  --color-text: #2d312c;
+  --color-secondary: #73776f;
+  --color-accent: #a3b18a;
+  --color-highlight: #b7d7a8;
+
+  /* Typography */
+  --font-display: "Cinzel", serif;
+  --font-heading: "Playfair Display", serif;
+  --font-body: "Cormorant Garamond", serif;
+
+  /* Type scale */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1.125rem;
+  --text-lg: 1.375rem;
+  --text-xl: 1.75rem;
+  --text-2xl: 2.25rem;
+  --text-3xl: 3rem;
+
+  /* Spacing */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+  --space-3xl: 4rem;
+
+  /* Layout */
+  --max-width: 72rem;
+  --header-height: 4.5rem;
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-base: 250ms ease;
+}
