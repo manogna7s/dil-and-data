@@ -1,24 +1,58 @@
+import { AppError } from "../utils/AppError.js";
+import { sendError } from "../utils/apiResponse.js";
+import config from "../config/index.js";
+
 /**
- * Global error handler placeholder.
- * Expand with logging and typed error responses in later phases.
+ * 404 for unknown API routes.
+ */
+export function notFoundHandler(req, _res, next) {
+  next(new AppError(`Route not found: ${req.method} ${req.originalUrl}`, 404));
+}
+
+/**
+ * Centralized error handler — always returns the standard envelope.
  */
 export function errorHandler(err, _req, res, _next) {
-  console.error(err);
+  let statusCode = err.statusCode || 500;
+  let message = err.message || "Internal Server Error";
+  let errors = err.errors || null;
 
-  const statusCode = err.statusCode || 500;
+  if (err.name === "ValidationError") {
+    statusCode = 400;
+    message = "Validation failed";
+    errors = Object.values(err.errors || {}).map((e) => ({
+      field: e.path,
+      message: e.message,
+    }));
+  }
 
-  res.status(statusCode).json({
-    status: "error",
-    message: err.message || "Internal Server Error",
-  });
+  if (err.code === 11000) {
+    statusCode = 409;
+    const field = Object.keys(err.keyPattern || {})[0] || "field";
+    message = `Duplicate value for ${field}`;
+    errors = [{ field, message }];
+  }
+
+  if (err.name === "CastError") {
+    statusCode = 400;
+    message = `Invalid ${err.path}: ${err.value}`;
+  }
+
+  if (err.name === "JsonWebTokenError") {
+    statusCode = 401;
+    message = "Invalid token";
+  }
+
+  if (err.name === "TokenExpiredError") {
+    statusCode = 401;
+    message = "Token expired";
+  }
+
+  if (config.nodeEnv === "development" && statusCode === 500) {
+    console.error(err);
+  }
+
+  return sendError(res, { statusCode, message, errors });
 }
 
-/**
- * 404 handler for unknown API routes.
- */
-export function notFoundHandler(_req, res) {
-  res.status(404).json({
-    status: "error",
-    message: "Route not found",
-  });
-}
+export default { notFoundHandler, errorHandler };

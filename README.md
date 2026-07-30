@@ -34,6 +34,8 @@ Runs at `http://localhost:5173` (Vite may pick the next free port if busy).
 ```bash
 cd server
 npm install
+# set MONGODB_URI + JWT_SECRET in .env
+npm run seed:admin   # optional
 npm run dev
 ```
 
