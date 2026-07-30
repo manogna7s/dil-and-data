@@ -11,7 +11,6 @@ import {
   QuoteBlock,
   Newsletter,
   Avatar,
-  OutlineButton,
 } from "../../components";
 import {
   getFeaturedBlog,
@@ -91,8 +90,8 @@ function Home() {
               <SectionTitle>A note from {ABOUT.name}</SectionTitle>
               <p className={styles.aboutRole}>{ABOUT.role}</p>
               <p className={styles.aboutIntro}>{ABOUT.intro}</p>
-              <Link to={ROUTES.ABOUT}>
-                <OutlineButton>Read more about me</OutlineButton>
+              <Link to={ROUTES.ABOUT} className={styles.aboutCta}>
+                Read more about me
               </Link>
             </div>
           </div>

@@ -1,0 +1,93 @@
+.split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3xl);
+  align-items: start;
+}
+
+.story {
+  font-size: var(--text-lg);
+  line-height: var(--leading-loose);
+}
+
+.story p {
+  margin-bottom: var(--space-md);
+}
+
+.handwritten {
+  font-family: var(--font-heading);
+  font-style: italic;
+  font-size: var(--text-2xl);
+  color: var(--color-accent);
+  margin-bottom: var(--space-lg) !important;
+}
+
+.signoff {
+  margin-top: var(--space-xl);
+  font-style: italic;
+  color: var(--color-secondary);
+}
+
+.signature {
+  font-family: var(--font-heading);
+  font-size: var(--text-xl);
+  font-style: italic;
+}
+
+.socialList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  margin-top: var(--space-2xl);
+  padding-top: var(--space-xl);
+  border-top: 1px solid var(--color-border-soft);
+}
+
+.socialList li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.socialLabel {
+  font-family: var(--font-heading);
+  font-size: var(--text-base);
+}
+
+.handle {
+  font-size: var(--text-sm);
+  color: var(--color-secondary);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  padding: var(--space-2xl);
+  background: var(--color-surface);
+  border-radius: var(--radius-xl);
+  border: 1px dashed var(--color-border);
+}
+
+.formEyebrow {
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: var(--color-secondary);
+  margin-bottom: var(--space-sm);
+}
+
+.formHint {
+  font-size: var(--text-sm);
+  color: var(--color-secondary);
+  text-align: center;
+  font-style: italic;
+}
+
+@media (max-width: 900px) {
+  .split {
+    grid-template-columns: 1fr;
+    gap: var(--space-2xl);
+  }
+}

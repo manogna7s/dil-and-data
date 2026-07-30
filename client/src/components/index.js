@@ -43,3 +43,7 @@ export { default as Newsletter } from "./Newsletter/Newsletter";
 export { default as Hero } from "./Hero/Hero";
 export { default as FeaturedStory } from "./FeaturedStory/FeaturedStory";
 export { default as PhotographyCarousel } from "./PhotographyCarousel/PhotographyCarousel";
+export { default as ReadingProgress } from "./ReadingProgress/ReadingProgress";
+export { default as ArticleContent } from "./ArticleContent/ArticleContent";
+export { default as ArticleActions } from "./ArticleActions/ArticleActions";
+export { default as CommentSection } from "./CommentSection/CommentSection";

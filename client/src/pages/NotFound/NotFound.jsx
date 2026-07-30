@@ -1,19 +1,24 @@
 import { useNavigate } from "react-router-dom";
-import { PageContainer, EmptyState } from "../../components";
+import { Container, EmptyState, Logo } from "../../components";
 import { ROUTES } from "../../constants";
+import styles from "./NotFound.module.css";
 
 function NotFound() {
   const navigate = useNavigate();
 
   return (
-    <PageContainer size="md">
-      <EmptyState
-        title="404 — Page not found"
-        description="This page wandered off the journal. Let's find our way back."
-        actionLabel="Return home"
-        onAction={() => navigate(ROUTES.HOME)}
-      />
-    </PageContainer>
+    <div className={styles.page}>
+      <Container size="sm" className={styles.inner}>
+        <Logo size={40} to={null} className={styles.logo} />
+        <EmptyState
+          title="Lost in another chapter"
+          description="The page wandered off into another chapter. Softly now — let's find our way home."
+          actionLabel="Return home"
+          onAction={() => navigate(ROUTES.HOME)}
+        />
+        <p className={styles.hint}>Error 404 · A blank page in the journal</p>
+      </Container>
+    </div>
   );
 }
 
