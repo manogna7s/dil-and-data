@@ -8,6 +8,7 @@ import likeRoutes from "./like.routes.js";
 import subscriberRoutes from "./subscriber.routes.js";
 import mediaRoutes from "./media.routes.js";
 import settingsRoutes from "./settings.routes.js";
+import pageRoutes from "./page.routes.js";
 
 /**
  * Mount all API modules under /api.
@@ -23,5 +24,6 @@ router.use("/likes", likeRoutes);
 router.use("/subscribers", subscriberRoutes);
 router.use("/media", mediaRoutes);
 router.use("/settings", settingsRoutes);
+router.use("/pages", pageRoutes);
 
 export default router;

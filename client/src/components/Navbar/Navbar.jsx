@@ -3,11 +3,11 @@ import { NavLink } from "react-router-dom";
 import { ROUTES } from "../../constants";
 import Logo from "../Logo/Logo";
 import { IconButton } from "../Button/Button";
+import { listNavPages } from "../../services/page.service.js";
+import { pagePath } from "../../blocks/blockTypes";
 import styles from "./Navbar.module.css";
 
-const NAV_LINKS = [
-  { to: ROUTES.HOME, label: "Home", end: true },
-  { to: ROUTES.ABOUT, label: "About" },
+const CORE_LINKS = [
   { to: ROUTES.BLOGS, label: "Blogs" },
   { to: ROUTES.CATEGORIES, label: "Categories" },
   { to: ROUTES.CONTACT, label: "Contact" },
@@ -15,12 +15,15 @@ const NAV_LINKS = [
 
 /**
  * Navbar — sticky, minimal, editorial.
- * Desktop: logo left, links right with growing underlines.
- * Mobile: slide-over menu (book page opening from the right).
+ * CMS pages with showInNav appear automatically from GET /api/pages/nav.
  */
 function Navbar() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [cmsLinks, setCmsLinks] = useState([
+    { to: ROUTES.HOME, label: "Home", end: true },
+    { to: ROUTES.ABOUT, label: "About" },
+  ]);
 
   useEffect(() => {
     function onScroll() {
@@ -38,9 +41,33 @@ function Navbar() {
     };
   }, [open]);
 
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const pages = await listNavPages();
+        if (cancelled || !Array.isArray(pages) || !pages.length) return;
+        setCmsLinks(
+          pages.map((page) => ({
+            to: pagePath(page.slug),
+            label: page.navLabel || page.title,
+            end: page.slug === "home",
+          }))
+        );
+      } catch {
+        /* keep fallback Home/About */
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   function closeMenu() {
     setOpen(false);
   }
+
+  const links = [...cmsLinks, ...CORE_LINKS];
 
   return (
     <header
@@ -50,9 +77,9 @@ function Navbar() {
         <Logo size={28} />
 
         <nav className={styles.desktopNav} aria-label="Main">
-          {NAV_LINKS.map(({ to, label, end }) => (
+          {links.map(({ to, label, end }) => (
             <NavLink
-              key={to}
+              key={`${to}-${label}`}
               to={to}
               end={end}
               className={({ isActive }) =>
@@ -88,19 +115,17 @@ function Navbar() {
         id="mobile-menu"
         className={`${styles.mobileNav} ${open ? styles.mobileOpen : ""}`}
         aria-label="Mobile"
-        aria-hidden={!open}
       >
         <p className={styles.mobileLabel}>Menu</p>
-        {NAV_LINKS.map(({ to, label, end }) => (
+        {links.map(({ to, label, end }) => (
           <NavLink
-            key={to}
+            key={`m-${to}-${label}`}
             to={to}
             end={end}
+            onClick={closeMenu}
             className={({ isActive }) =>
               `${styles.mobileLink} ${isActive ? styles.active : ""}`
             }
-            onClick={closeMenu}
-            tabIndex={open ? 0 : -1}
           >
             {label}
           </NavLink>

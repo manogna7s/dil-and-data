@@ -8,8 +8,7 @@ import StudioLoader from "../studio/components/StudioLoader/StudioLoader";
 import { Loader } from "../components";
 import { ROUTES, STUDIO } from "../constants";
 
-const Home = lazy(() => import("../pages/Home/Home"));
-const About = lazy(() => import("../pages/About/About"));
+const CmsPage = lazy(() => import("../pages/CmsPage/CmsPage"));
 const Blogs = lazy(() => import("../pages/Blogs/Blogs"));
 const SingleBlog = lazy(() => import("../pages/SingleBlog/SingleBlog"));
 const Categories = lazy(() => import("../pages/Categories/Categories"));
@@ -28,6 +27,10 @@ const ContentEditor = lazy(
 );
 const MediaLibrary = lazy(
   () => import("../studio/pages/MediaLibrary/MediaLibrary")
+);
+const PagesList = lazy(() => import("../studio/pages/PagesList/PagesList"));
+const PageBuilder = lazy(
+  () => import("../studio/pages/PageBuilder/PageBuilder")
 );
 const StudioPlaceholder = lazy(
   () => import("../studio/pages/StudioPlaceholder/StudioPlaceholder")
@@ -122,10 +125,17 @@ const router = createBrowserRouter([
       {
         path: "pages",
         element: (
-          <Placeholder
-            title="Pages"
-            description="Static pages like About and Contact will be editable here."
-          />
+          <Suspend studio>
+            <PagesList />
+          </Suspend>
+        ),
+      },
+      {
+        path: "pages/:id",
+        element: (
+          <Suspend studio>
+            <PageBuilder />
+          </Suspend>
         ),
       },
       {
@@ -191,7 +201,7 @@ const router = createBrowserRouter([
         index: true,
         element: (
           <Suspend>
-            <Home />
+            <CmsPage slug="home" />
           </Suspend>
         ),
       },
@@ -199,7 +209,7 @@ const router = createBrowserRouter([
         path: "about",
         element: (
           <Suspend>
-            <About />
+            <CmsPage slug="about" />
           </Suspend>
         ),
       },
@@ -232,6 +242,14 @@ const router = createBrowserRouter([
         element: (
           <Suspend>
             <Contact />
+          </Suspend>
+        ),
+      },
+      {
+        path: ":slug",
+        element: (
+          <Suspend>
+            <CmsPage />
           </Suspend>
         ),
       },

@@ -10,6 +10,7 @@ export const STUDIO = {
   CONTENT_EDIT: "/studio/content/:id",
   MEDIA: "/studio/media",
   PAGES: "/studio/pages",
+  PAGES_EDIT: "/studio/pages/:id",
   CATEGORIES: "/studio/categories",
   COMMENTS: "/studio/comments",
   SUBSCRIBERS: "/studio/subscribers",

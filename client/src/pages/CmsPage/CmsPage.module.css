@@ -1,0 +1,10 @@
+.page {
+  min-height: 50vh;
+}
+
+.state {
+  min-height: 50vh;
+  display: grid;
+  place-items: center;
+  padding: var(--space-2xl) var(--space-md);
+}
