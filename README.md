@@ -43,13 +43,13 @@ Health check: `GET http://localhost:5050/api/health`
 
 ## Design tokens
 
-| Token     | Hex     |
-|-----------|---------|
-| Background| `#F5F5F0` |
-| Surface   | `#E2E5DA` |
-| Text      | `#2D312C` |
-| Secondary | `#73776F` |
-| Accent    | `#A3B18A` |
-| Highlight | `#B7D7A8` |
+| Token      | Hex       |
+|------------|-----------|
+| Background | `#F7F2EF` |
+| Surface    | `#EDE3DE` |
+| Text       | `#2E2826` |
+| Secondary  | `#7A706B` |
+| Accent     | `#C9A8A3` |
+| Highlight  | `#E5CDC8` |
 
 Fonts: Cinzel, Playfair Display, Cormorant Garamond

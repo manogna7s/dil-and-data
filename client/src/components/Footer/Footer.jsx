@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { ROUTES, SITE } from "../../constants";
-import { SOCIAL_LINKS, PLACEHOLDER_CATEGORIES } from "../../data";
+import { FOOTER_SOCIALS, getCategoriesWithCounts } from "../../data";
 import Logo from "../Logo/Logo";
 import NewsletterInput from "../NewsletterInput/NewsletterInput";
 import SocialIcon from "../SocialIcon/SocialIcon";
@@ -14,12 +14,9 @@ const QUICK_LINKS = [
   { to: ROUTES.CONTACT, label: "Contact" },
 ];
 
-/**
- * Footer — newsletter, quick links, categories, socials, copyright.
- * Beautiful spacing; never cramped.
- */
 function Footer() {
   const year = new Date().getFullYear();
+  const categories = getCategoriesWithCounts().slice(0, 4);
 
   return (
     <footer className={styles.footer}>
@@ -29,7 +26,7 @@ function Footer() {
             <Logo size={28} />
             <p className={styles.tagline}>{SITE.TAGLINE}</p>
             <div className={styles.socials}>
-              {SOCIAL_LINKS.map((s) => (
+              {FOOTER_SOCIALS.map((s) => (
                 <SocialIcon
                   key={s.id}
                   name={s.id}
@@ -56,10 +53,10 @@ function Footer() {
           <div className={styles.col}>
             <h4 className={styles.heading}>Categories</h4>
             <ul className={styles.list}>
-              {PLACEHOLDER_CATEGORIES.map((cat) => (
+              {categories.map((cat) => (
                 <li key={cat.id}>
                   <Link
-                    to={`${ROUTES.CATEGORIES}`}
+                    to={cat.href}
                     className={`link-underline ${styles.link}`}
                   >
                     {cat.name}

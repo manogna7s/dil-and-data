@@ -96,7 +96,7 @@
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(45, 49, 44, 0.25);
+  background: rgba(46, 40, 38, 0.25);
   opacity: 0;
   pointer-events: none;
   transition: opacity var(--transition-slow);

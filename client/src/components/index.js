@@ -39,3 +39,7 @@ export { default as ScrollToTop } from "./ScrollToTop/ScrollToTop";
 export { default as Navbar } from "./Navbar/Navbar";
 export { default as Footer } from "./Footer/Footer";
 export { default as Newsletter } from "./Newsletter/Newsletter";
+
+export { default as Hero } from "./Hero/Hero";
+export { default as FeaturedStory } from "./FeaturedStory/FeaturedStory";
+export { default as PhotographyCarousel } from "./PhotographyCarousel/PhotographyCarousel";

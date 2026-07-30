@@ -62,7 +62,7 @@
 }
 
 .primary:hover:not(:disabled) {
-  background: #8fa075;
+  background: var(--color-accent-hover);
   transform: translateY(-1px);
   box-shadow: var(--shadow-sm);
 }

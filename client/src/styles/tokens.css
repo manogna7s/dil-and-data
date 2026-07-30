@@ -11,19 +11,21 @@
   /* ========================================
      COLOR
      ======================================== */
-  --color-background: #f5f5f0;
-  --color-surface: #e2e5da;
-  --color-surface-elevated: #ebeee4;
-  --color-text: #2d312c;
-  --color-secondary: #73776f;
-  --color-accent: #a3b18a;
-  --color-highlight: #b7d7a8;
-  --color-border: #d4d8cc;
-  --color-border-soft: #e8ebe2;
+  /* Soft dusty-rose pastel — warm journal paper */
+  --color-background: #f7f2ef;
+  --color-surface: #ede3de;
+  --color-surface-elevated: #f3ebe7;
+  --color-text: #2e2826;
+  --color-secondary: #7a706b;
+  --color-accent: #c9a8a3;
+  --color-highlight: #e5cdc8;
+  --color-border: #ddd0cb;
+  --color-border-soft: #efe6e2;
   --color-white: #ffffff;
-  --color-focus: #a3b18a;
+  --color-focus: #c9a8a3;
+  --color-accent-hover: #b8928c;
   --color-error: #9b6b6b;
-  --color-success: #6b8f71;
+  --color-success: #7a9a82;
 
   /* ========================================
      TYPOGRAPHY
@@ -86,11 +88,11 @@
   /* ========================================
      SHADOWS — whisper-soft paper lift only
      ======================================== */
-  --shadow-xs: 0 1px 2px rgba(45, 49, 44, 0.04);
-  --shadow-sm: 0 2px 8px rgba(45, 49, 44, 0.05);
-  --shadow-md: 0 4px 16px rgba(45, 49, 44, 0.06);
-  --shadow-lg: 0 8px 28px rgba(45, 49, 44, 0.08);
-  --shadow-focus: 0 0 0 3px rgba(163, 177, 138, 0.35);
+  --shadow-xs: 0 1px 2px rgba(46, 40, 38, 0.04);
+  --shadow-sm: 0 2px 8px rgba(46, 40, 38, 0.05);
+  --shadow-md: 0 4px 16px rgba(46, 40, 38, 0.06);
+  --shadow-lg: 0 8px 28px rgba(46, 40, 38, 0.08);
+  --shadow-focus: 0 0 0 3px rgba(201, 168, 163, 0.4);
 
   /* ========================================
      CONTAINER WIDTHS

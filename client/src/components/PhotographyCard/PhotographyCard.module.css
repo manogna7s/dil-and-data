@@ -30,7 +30,7 @@
   gap: var(--space-2xs);
   padding: var(--space-lg);
   color: var(--color-white);
-  background: rgba(45, 49, 44, 0.35);
+  background: rgba(46, 40, 38, 0.35);
   opacity: 0;
   transform: translateY(6px);
   transition:
