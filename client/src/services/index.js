@@ -1,5 +1,5 @@
-/* API service layer — all backend calls go through here (later phases) */
-
-const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5050/api";
-
-export { API_BASE_URL };
+export { API_BASE_URL, apiRequest, ApiError, getStoredToken, clearAuthToken } from "./api.js";
+export * as authService from "./auth.service.js";
+export * as contentService from "./content.service.js";
+export * as categoryService from "./category.service.js";
+export * as mediaService from "./media.service.js";

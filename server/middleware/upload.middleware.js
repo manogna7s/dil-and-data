@@ -27,22 +27,27 @@ const allowed = new Set([
   "image/gif",
   "video/mp4",
   "video/webm",
+  "application/pdf",
 ]);
 
 function fileFilter(_req, file, cb) {
   if (!allowed.has(file.mimetype)) {
-    return cb(new AppError("Unsupported file type", 400), false);
+    return cb(
+      new AppError("Unsupported file type. Use images, MP4/WebM, or PDF.", 400),
+      false
+    );
   }
   return cb(null, true);
 }
 
 /**
  * Multer instance — temp disk storage before Cloudinary upload.
+ * 40MB ceiling covers video + PDF; images stay well under.
  */
 export const upload = multer({
   storage,
   fileFilter,
-  limits: { fileSize: 15 * 1024 * 1024 },
+  limits: { fileSize: 40 * 1024 * 1024 },
 });
 
 export default upload;

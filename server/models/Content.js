@@ -135,6 +135,11 @@ const contentSchema = new mongoose.Schema(
       default: null,
       index: true,
     },
+    scheduledFor: {
+      type: Date,
+      default: null,
+      index: true,
+    },
   },
   { timestamps: true }
 );

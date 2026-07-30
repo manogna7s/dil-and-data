@@ -1,0 +1,12 @@
+.cta {
+  display: inline-flex;
+  padding: 0.65rem 1.2rem;
+  border-radius: var(--radius-md);
+  background: var(--color-accent);
+  color: var(--color-white);
+  font-size: var(--text-sm);
+}
+
+.cta:hover {
+  background: var(--color-accent-hover);
+}

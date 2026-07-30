@@ -5,6 +5,12 @@ import mongoose from "mongoose";
  */
 const mediaSchema = new mongoose.Schema(
   {
+    title: {
+      type: String,
+      default: "",
+      maxlength: 200,
+      trim: true,
+    },
     url: {
       type: String,
       required: true,
@@ -38,7 +44,9 @@ const mediaSchema = new mongoose.Schema(
     },
     folder: {
       type: String,
-      default: "",
+      default: "gallery",
+      index: true,
+      trim: true,
     },
     uploadedBy: {
       type: mongoose.Schema.Types.ObjectId,
@@ -48,6 +56,9 @@ const mediaSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+mediaSchema.index({ title: "text", alt: "text", caption: "text" });
+mediaSchema.index({ folder: 1, resourceType: 1, createdAt: -1 });
 
 const Media = mongoose.model("Media", mediaSchema);
 
