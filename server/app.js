@@ -60,7 +60,8 @@ app.use(
         return callback(null, true);
       }
 
-      return callback(new Error(`Not allowed by CORS: ${origin}`));
+      // Reject without throwing — throwing makes cors return HTTP 500.
+      return callback(null, false);
     },
     credentials: true,
   })
