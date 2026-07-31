@@ -4,6 +4,7 @@ import { ROUTES } from "../../constants";
 import Logo from "../Logo/Logo";
 import { IconButton } from "../Button/Button";
 import { listNavPages } from "../../services/page.service.js";
+import { getSettings } from "../../services/settings.service.js";
 import { pagePath } from "../../blocks/blockTypes";
 import styles from "./Navbar.module.css";
 
@@ -24,6 +25,7 @@ function Navbar() {
     { to: ROUTES.HOME, label: "Home", end: true },
     { to: ROUTES.ABOUT, label: "About" },
   ]);
+  const [useCustomNav, setUseCustomNav] = useState(false);
 
   useEffect(() => {
     function onScroll() {
@@ -45,6 +47,23 @@ function Navbar() {
     let cancelled = false;
     (async () => {
       try {
+        const settings = await getSettings();
+        const custom = (settings?.navigation || []).filter(
+          (item) => item?.enabled !== false && item?.label && item?.href
+        );
+        if (!cancelled && custom.length) {
+          setUseCustomNav(true);
+          setCmsLinks(
+            custom.map((item) => ({
+              to: item.href,
+              label: item.label,
+              end: item.href === "/",
+            }))
+          );
+          return;
+        }
+
+        setUseCustomNav(false);
         const pages = await listNavPages();
         if (cancelled || !Array.isArray(pages) || !pages.length) return;
         setCmsLinks(
@@ -67,7 +86,7 @@ function Navbar() {
     setOpen(false);
   }
 
-  const links = [...cmsLinks, ...CORE_LINKS];
+  const links = useCustomNav ? cmsLinks : [...cmsLinks, ...CORE_LINKS];
 
   return (
     <header

@@ -22,9 +22,33 @@ app.set("trust proxy", 1);
 
 app.use(helmet());
 app.use(compression());
+
+/**
+ * CORS — allow configured CLIENT_URL plus any localhost Vite port in development
+ * (Vite bumps 5173 → 5174… when ports are busy).
+ */
+const extraOrigins = String(process.env.CLIENT_URLS || "")
+  .split(",")
+  .map((s) => s.trim())
+  .filter(Boolean);
+
 app.use(
   cors({
-    origin: config.clientUrl,
+    origin(origin, callback) {
+      if (!origin) return callback(null, true);
+
+      const allowed = new Set([config.clientUrl, ...extraOrigins]);
+      if (allowed.has(origin)) return callback(null, true);
+
+      if (
+        config.nodeEnv !== "production" &&
+        /^https?:\/\/(localhost|127\.0\.0\.1):\d+$/.test(origin)
+      ) {
+        return callback(null, true);
+      }
+
+      return callback(new Error(`Not allowed by CORS: ${origin}`));
+    },
     credentials: true,
   })
 );

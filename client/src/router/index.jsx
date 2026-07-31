@@ -32,6 +32,16 @@ const PagesList = lazy(() => import("../studio/pages/PagesList/PagesList"));
 const PageBuilder = lazy(
   () => import("../studio/pages/PageBuilder/PageBuilder")
 );
+const CommentsDesk = lazy(
+  () => import("../studio/pages/CommentsDesk/CommentsDesk")
+);
+const SubscribersDesk = lazy(
+  () => import("../studio/pages/SubscribersDesk/SubscribersDesk")
+);
+const SeoDesk = lazy(() => import("../studio/pages/SeoDesk/SeoDesk"));
+const SettingsDesk = lazy(
+  () => import("../studio/pages/SettingsDesk/SettingsDesk")
+);
 const StudioPlaceholder = lazy(
   () => import("../studio/pages/StudioPlaceholder/StudioPlaceholder")
 );
@@ -150,37 +160,33 @@ const router = createBrowserRouter([
       {
         path: "comments",
         element: (
-          <Placeholder
-            title="Comments"
-            description="Moderate reader notes with a soft editorial eye."
-          />
+          <Suspend studio>
+            <CommentsDesk />
+          </Suspend>
         ),
       },
       {
         path: "subscribers",
         element: (
-          <Placeholder
-            title="Subscribers"
-            description="The quiet list of people who asked for letters."
-          />
+          <Suspend studio>
+            <SubscribersDesk />
+          </Suspend>
         ),
       },
       {
         path: "seo",
         element: (
-          <Placeholder
-            title="SEO"
-            description="Titles, descriptions, and Open Graph details for discovery."
-          />
+          <Suspend studio>
+            <SeoDesk />
+          </Suspend>
         ),
       },
       {
         path: "settings",
         element: (
-          <Placeholder
-            title="Settings"
-            description="Site identity, socials, and studio preferences."
-          />
+          <Suspend studio>
+            <SettingsDesk />
+          </Suspend>
         ),
       },
       {

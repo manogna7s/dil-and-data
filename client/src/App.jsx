@@ -1,14 +1,19 @@
 import { RouterProvider } from "react-router-dom";
 import { AuthProvider } from "./context";
+import { ToastProvider, ConfirmProvider } from "./studio/components/ux";
 import router from "./router";
 
 /**
- * App root — auth provider wraps the router for Creator Studio sessions.
+ * App root — auth + studio UX providers wrap the router.
  */
 function App() {
   return (
     <AuthProvider>
-      <RouterProvider router={router} />
+      <ToastProvider>
+        <ConfirmProvider>
+          <RouterProvider router={router} />
+        </ConfirmProvider>
+      </ToastProvider>
     </AuthProvider>
   );
 }

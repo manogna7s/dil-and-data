@@ -34,7 +34,9 @@ function StudioLogin() {
       const message =
         err instanceof ApiError
           ? err.message
-          : "Could not sign in. Please try again.";
+          : err?.message?.includes("Failed to fetch") || err?.name === "TypeError"
+            ? "Cannot reach the API. Is the server running on port 5050?"
+            : "Could not sign in. Please try again.";
       setError(message);
     } finally {
       setSubmitting(false);

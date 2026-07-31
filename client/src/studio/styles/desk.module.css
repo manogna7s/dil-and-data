@@ -1,0 +1,234 @@
+/* Shared classic desk layout — tables & forms, not cards. */
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: var(--space-lg);
+  flex-wrap: wrap;
+  padding-bottom: var(--space-md);
+  border-bottom: 1px solid var(--color-border-soft);
+}
+
+.eyebrow {
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: var(--color-secondary);
+}
+
+.title {
+  font-family: var(--font-heading);
+  font-size: clamp(1.75rem, 3vw, 2.25rem);
+  margin: var(--space-xs) 0;
+}
+
+.lede {
+  color: var(--color-secondary);
+  font-style: italic;
+  max-width: 34rem;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  align-items: center;
+}
+
+.toolbar input,
+.toolbar select {
+  height: 2.5rem;
+  padding: 0 0.8rem;
+  border: 1px solid var(--color-border);
+  background: var(--color-white);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  min-width: 10rem;
+}
+
+.toolbar input[type="search"] {
+  flex: 1;
+  min-width: 14rem;
+}
+
+.btn,
+.primaryBtn,
+.ghostBtn,
+.dangerBtn {
+  height: 2.5rem;
+  padding: 0 0.95rem;
+  border: 1px solid var(--color-border);
+  background: var(--color-white);
+  font-size: var(--text-sm);
+  letter-spacing: var(--tracking-wide);
+}
+
+.primaryBtn {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--color-white);
+}
+
+.dangerBtn {
+  color: #8a3a3a;
+  border-color: color-mix(in srgb, #8a3a3a 35%, var(--color-border));
+}
+
+.btn:disabled,
+.primaryBtn:disabled,
+.ghostBtn:disabled,
+.dangerBtn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.error {
+  padding: 0.75rem 1rem;
+  border: 1px solid color-mix(in srgb, #8a3a3a 35%, white);
+  color: #8a3a3a;
+  font-size: var(--text-sm);
+}
+
+.tableWrap {
+  overflow-x: auto;
+  border: 1px solid var(--color-border-soft);
+  background: var(--color-white);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+}
+
+.table th {
+  text-align: left;
+  padding: 0.8rem 1rem;
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: var(--color-secondary);
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-surface-elevated);
+  white-space: nowrap;
+}
+
+.table td {
+  padding: 0.95rem 1rem;
+  border-bottom: 1px solid var(--color-border-soft);
+  vertical-align: top;
+}
+
+.muted {
+  color: var(--color-secondary);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.action {
+  padding: 0.25rem 0.5rem;
+  border: 1px solid var(--color-border-soft);
+  background: var(--color-surface-elevated);
+  font-size: var(--text-xs);
+}
+
+.actionDanger {
+  color: #8a3a3a;
+}
+
+.status {
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-wide);
+  text-transform: capitalize;
+}
+
+.pager {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-md);
+  font-size: var(--text-sm);
+  color: var(--color-secondary);
+}
+
+.pager button {
+  padding: 0.4rem 0.85rem;
+  border: 1px solid var(--color-border);
+  background: var(--color-white);
+}
+
+.formStack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  max-width: 40rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--color-secondary);
+}
+
+.field input,
+.field textarea,
+.field select {
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--color-border);
+  background: var(--color-white);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.sectionRule {
+  margin: var(--space-lg) 0 var(--space-sm);
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--color-border-soft);
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: var(--color-secondary);
+}
+
+.hint {
+  font-size: var(--text-xs);
+  color: var(--color-secondary);
+  font-style: italic;
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.saveBar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+}
+
+.saveStatus {
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--color-secondary);
+}
