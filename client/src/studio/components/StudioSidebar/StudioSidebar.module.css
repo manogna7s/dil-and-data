@@ -76,7 +76,7 @@
 
 @media (max-width: 900px) {
   .overlay {
-    display: block;
+    display: none;
     position: fixed;
     inset: 0;
     background: rgba(46, 40, 38, 0.28);
@@ -87,6 +87,7 @@
   }
 
   .overlayOpen {
+    display: block;
     opacity: 1;
     pointer-events: auto;
   }

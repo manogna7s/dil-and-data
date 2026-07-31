@@ -1,7 +1,9 @@
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import styles from "./OverviewCard.module.css";
 
 function OverviewCard({ label, value, hint, to }) {
+  const navigate = useNavigate();
+
   const inner = (
     <>
       <p className={styles.label}>{label}</p>
@@ -12,9 +14,13 @@ function OverviewCard({ label, value, hint, to }) {
 
   if (to) {
     return (
-      <Link to={to} className={`${styles.card} ${styles.clickable}`}>
+      <button
+        type="button"
+        className={`${styles.card} ${styles.clickable}`}
+        onClick={() => navigate(to)}
+      >
         {inner}
-      </Link>
+      </button>
     );
   }
 

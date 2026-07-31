@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context";
 import { STUDIO } from "../../../constants";
 import { listAdminContent } from "../../../services/content.service.js";
@@ -37,6 +37,7 @@ const QUICK_ACTIONS = [
  */
 function StudioDashboard() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [stats, setStats] = useState({
     published: "—",
     drafts: "—",
@@ -139,25 +140,39 @@ function StudioDashboard() {
       <section className={styles.section} aria-label="Recent activity">
         <div className={styles.sectionHead}>
           <h2 className={styles.sectionTitle}>Recent drafts</h2>
-          <Link to={STUDIO.CONTENT} className={styles.link}>
+          <button
+            type="button"
+            className={styles.link}
+            onClick={() => navigate(STUDIO.CONTENT)}
+          >
             Open content
-          </Link>
+          </button>
         </div>
         {recent.length === 0 ? (
           <StudioEmptyState
             title="No drafts yet"
             description="Once you write, a gentle trail of recent work will appear here."
             action={
-              <Link to={STUDIO.CONTENT_NEW} className={styles.cta}>
+              <button
+                type="button"
+                className={styles.cta}
+                onClick={() => navigate(STUDIO.CONTENT_NEW)}
+              >
                 Start writing
-              </Link>
+              </button>
             }
           />
         ) : (
           <ul className={styles.activity}>
             {recent.map((item) => (
               <li key={item._id}>
-                <Link to={`${STUDIO.CONTENT}/${item._id}`}>{item.title || "Untitled"}</Link>
+                <button
+                  type="button"
+                  className={styles.activityLink}
+                  onClick={() => navigate(`${STUDIO.CONTENT}/${item._id}`)}
+                >
+                  {item.title || "Untitled"}
+                </button>
               </li>
             ))}
           </ul>

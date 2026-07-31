@@ -61,6 +61,10 @@
 .link {
   font-size: var(--text-sm);
   color: var(--color-secondary);
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
 }
 
 .link:hover {
@@ -75,10 +79,26 @@
   color: var(--color-white);
   font-size: var(--text-sm);
   letter-spacing: var(--tracking-wide);
+  border: none;
+  cursor: pointer;
 }
 
 .cta:hover {
   background: var(--color-accent-hover);
+}
+
+.activityLink {
+  background: none;
+  border: none;
+  padding: 0;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+
+.activityLink:hover {
+  color: var(--color-accent);
 }
 
 .activity {

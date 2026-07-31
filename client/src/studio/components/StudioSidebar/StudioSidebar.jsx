@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { STUDIO_NAV, SITE } from "../../../constants";
 import LogoMark from "../../../components/Logo/LogoMark";
 import styles from "./StudioSidebar.module.css";
@@ -7,6 +7,8 @@ import styles from "./StudioSidebar.module.css";
  * Studio sidebar — calm Notion/Ghost-style navigation.
  */
 function StudioSidebar({ open, onClose }) {
+  const navigate = useNavigate();
+
   return (
     <>
       <div
@@ -35,7 +37,11 @@ function StudioSidebar({ open, onClose }) {
               className={({ isActive }) =>
                 `${styles.link} ${isActive ? styles.active : ""}`
               }
-              onClick={onClose}
+              onClick={(e) => {
+                e.preventDefault();
+                onClose?.();
+                navigate(item.path);
+              }}
             >
               {item.label}
             </NavLink>
