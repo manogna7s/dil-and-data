@@ -48,6 +48,7 @@ export async function apiRequest(path, options = {}) {
     body,
     headers = {},
     auth = true,
+    signal,
   } = options;
 
   const requestHeaders = {
@@ -68,6 +69,7 @@ export async function apiRequest(path, options = {}) {
     method,
     headers: requestHeaders,
     credentials: "include",
+    signal,
     body:
       body === undefined
         ? undefined

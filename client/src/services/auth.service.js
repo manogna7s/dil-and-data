@@ -30,8 +30,8 @@ export async function logout() {
   }
 }
 
-export async function getProfile() {
-  const result = await apiRequest("/auth/profile");
+export async function getProfile(options = {}) {
+  const result = await apiRequest("/auth/profile", options);
   return result.data;
 }
 

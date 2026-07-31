@@ -40,23 +40,28 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     let active = true;
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 8000);
 
     (async () => {
       try {
         if (getStoredToken()) {
-          const profile = await authService.getProfile();
+          const profile = await authService.getProfile({ signal: controller.signal });
           if (active) setUser(profile);
         }
       } catch {
         clearAuthToken();
         if (active) setUser(null);
       } finally {
+        clearTimeout(timeout);
         if (active) setBootstrapping(false);
       }
     })();
 
     return () => {
       active = false;
+      clearTimeout(timeout);
+      controller.abort();
     };
   }, []);
 
