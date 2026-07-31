@@ -39,6 +39,16 @@
   line-height: 1.1;
 }
 
+.authorName {
+  font-family: var(--font-heading);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: var(--color-secondary);
+  margin-top: var(--space-xs);
+  line-height: 1;
+}
+
 .menuToggle {
   display: inline-flex;
   justify-self: start;

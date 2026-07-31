@@ -113,6 +113,7 @@ function Navbar() {
 
         <Link to={ROUTES.HOME} className={styles.brand}>
           <span className={styles.siteName}>{brand.siteName}</span>
+          <span className={styles.authorName}>{SITE.AUTHOR}</span>
         </Link>
 
         {/* Balances the hamburger so the brand stays visually centered */}
