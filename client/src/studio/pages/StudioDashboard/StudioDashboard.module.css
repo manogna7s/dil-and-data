@@ -36,6 +36,18 @@
   margin-bottom: var(--space-md);
 }
 
+.hint {
+  color: var(--color-secondary);
+  font-size: var(--text-base);
+  line-height: var(--leading-relaxed);
+  margin: 0 0 var(--space-md);
+  max-width: 40rem;
+}
+
+.hint code {
+  font-size: 0.9em;
+}
+
 .sectionHead .sectionTitle {
   margin-bottom: 0;
 }

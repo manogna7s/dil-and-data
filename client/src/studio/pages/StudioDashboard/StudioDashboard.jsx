@@ -127,6 +127,12 @@ function StudioDashboard() {
 
       <section className={styles.section} aria-label="Quick actions">
         <h2 className={styles.sectionTitle}>Quick actions</h2>
+        <p className={styles.hint}>
+          To write a post that appears on your live site: open{" "}
+          <strong>New story</strong> → type your title and body → click{" "}
+          <strong>Publish</strong> at the top. Then visit <code>/blogs</code> on
+          the public site.
+        </p>
         <QuickActions actions={QUICK_ACTIONS} />
       </section>
 

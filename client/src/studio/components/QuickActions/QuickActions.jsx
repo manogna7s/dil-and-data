@@ -5,7 +5,12 @@ function QuickActions({ actions = [] }) {
   return (
     <div className={styles.grid}>
       {actions.map((action) => (
-        <Link key={action.id} to={action.to} className={styles.action}>
+        <Link
+          key={action.id}
+          to={action.to}
+          className={styles.action}
+          aria-label={action.label}
+        >
           <span className={styles.title}>{action.label}</span>
           <span className={styles.desc}>{action.description}</span>
         </Link>
