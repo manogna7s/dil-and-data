@@ -17,6 +17,26 @@ export async function listAdminContent(params = {}) {
   return result.data;
 }
 
+/** Public published content (Shakti's Blog). */
+export async function listPublicContent(params = {}) {
+  const query = new URLSearchParams();
+  Object.entries(params).forEach(([key, value]) => {
+    if (value !== undefined && value !== null && value !== "" && value !== "all") {
+      query.set(key, String(value));
+    }
+  });
+  const suffix = query.toString() ? `?${query}` : "";
+  const result = await apiRequest(`/content${suffix}`, { auth: false });
+  return result.data;
+}
+
+export async function getContentBySlug(slug) {
+  const result = await apiRequest(`/content/slug/${encodeURIComponent(slug)}`, {
+    auth: false,
+  });
+  return result.data;
+}
+
 export async function getContent(id) {
   const result = await apiRequest(`/content/${id}`);
   return result.data;
@@ -77,6 +97,8 @@ export async function duplicateContent(item) {
 
 export default {
   listAdminContent,
+  listPublicContent,
+  getContentBySlug,
   getContent,
   createContent,
   updateContent,

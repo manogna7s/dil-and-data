@@ -22,6 +22,13 @@
   transition: transform var(--transition-slow);
 }
 
+.customMark {
+  flex-shrink: 0;
+  display: block;
+  object-fit: contain;
+  border-radius: 0;
+}
+
 /* Envelope flap / book opens slightly on hover */
 .logo:hover .mark {
   transform: scale(1.04) translateY(-1px);

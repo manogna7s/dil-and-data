@@ -35,15 +35,15 @@ const PageBuilder = lazy(
 const CommentsDesk = lazy(
   () => import("../studio/pages/CommentsDesk/CommentsDesk")
 );
+const CategoriesDesk = lazy(
+  () => import("../studio/pages/CategoriesDesk/CategoriesDesk")
+);
 const SubscribersDesk = lazy(
   () => import("../studio/pages/SubscribersDesk/SubscribersDesk")
 );
 const SeoDesk = lazy(() => import("../studio/pages/SeoDesk/SeoDesk"));
 const SettingsDesk = lazy(
   () => import("../studio/pages/SettingsDesk/SettingsDesk")
-);
-const StudioPlaceholder = lazy(
-  () => import("../studio/pages/StudioPlaceholder/StudioPlaceholder")
 );
 const StudioNotFound = lazy(
   () => import("../studio/pages/StudioNotFound/StudioNotFound")
@@ -62,14 +62,6 @@ function Suspend({ children, studio = false }) {
     >
       {children}
     </Suspense>
-  );
-}
-
-function Placeholder({ title, description }) {
-  return (
-    <Suspend studio>
-      <StudioPlaceholder title={title} description={description} />
-    </Suspend>
   );
 }
 
@@ -151,10 +143,9 @@ const router = createBrowserRouter([
       {
         path: "categories",
         element: (
-          <Placeholder
-            title="Categories"
-            description="Organize the shelves of your journal."
-          />
+          <Suspend studio>
+            <CategoriesDesk />
+          </Suspend>
         ),
       },
       {

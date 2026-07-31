@@ -11,7 +11,6 @@ import {
   CategoryCard,
   QuoteBlock,
   Newsletter,
-  Avatar,
   Divider,
 } from "../components";
 import {
@@ -38,27 +37,31 @@ export function BlockView({ block }) {
           tagline={data.tagline}
           ctaLabel={data.ctaLabel}
           ctaTo={data.ctaTo || "/blogs"}
+          secondaryLabel={data.secondaryLabel}
+          secondaryTo={data.secondaryTo}
         />
       );
     case "featuredStory":
       return <FeaturedStoryBlock data={data} />;
-    case "photographyCarousel":
-      return (
-        <PhotographyCarousel
-          photos={(data.items || []).map((item, i) => ({
-            id: item.id || `ph-${i}`,
-            title: item.title,
-            location: item.location,
-            src: item.src || item.url,
-            alt: item.alt || item.title || "",
-          }))}
-        />
-      );
+    case "photographyCarousel": {
+      const photos = (data.items || [])
+        .filter((item) => item?.src || item?.url)
+        .map((item, i) => ({
+          id: item.id || `ph-${i}`,
+          title: item.title,
+          location: item.location,
+          src: item.src || item.url,
+          alt: item.alt || item.title || "",
+        }));
+      if (!photos.length) return null;
+      return <PhotographyCarousel photos={photos} />;
+    }
     case "latestStories":
       return <LatestStoriesBlock data={data} />;
     case "categories":
       return <CategoriesBlock data={data} />;
     case "quote":
+      if (!String(data.text || "").trim()) return null;
       return (
         <Section>
           <Container size="sm">
@@ -75,9 +78,15 @@ export function BlockView({ block }) {
       return (
         <Section tone="surface">
           <Container size="lg">
-            <div className={styles.aboutPreview}>
+            <div
+              className={`${styles.aboutPreview} ${
+                data.portrait ? "" : styles.aboutPreviewTextOnly
+              }`}
+            >
               {data.portrait && (
-                <Avatar src={data.portrait} alt={data.name || ""} size="xl" />
+                <figure className={styles.aboutPortrait}>
+                  <img src={data.portrait} alt={data.name || ""} loading="lazy" />
+                </figure>
               )}
               <div>
                 <SectionTitle>
@@ -95,6 +104,27 @@ export function BlockView({ block }) {
           </Container>
         </Section>
       );
+    case "features": {
+      const items = (data.items || []).filter((item) => item?.title);
+      if (!items.length) return null;
+      return (
+        <Section>
+          <Container size="lg">
+            {data.title && (
+              <SectionTitle align="center">{data.title}</SectionTitle>
+            )}
+            <ul className={styles.features}>
+              {items.map((item, i) => (
+                <li key={`${item.title}-${i}`} className={styles.feature}>
+                  <h3>{item.title}</h3>
+                  {item.description && <p>{item.description}</p>}
+                </li>
+              ))}
+            </ul>
+          </Container>
+        </Section>
+      );
+    }
     case "divider":
       return (
         <Section>

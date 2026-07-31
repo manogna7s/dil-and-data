@@ -1,57 +1,67 @@
 # DIL & DATA
 
-A production-grade personal publishing platform.
-
-## Architecture
+A personal publishing platform — **DIL & DATA** by Manogna, home of **Shakti's Blog**.
 
 ```
 dil-and-data/
-├── client/    # React + Vite (Vercel)
-└── server/    # Express API (Render)
+├── client/          # React + Vite (Vercel)
+├── server/          # Express API (Render)
+└── DEPLOYMENT.md    # Production deploy guide
 ```
 
-## Phase 1 — Foundation
+## Features
 
-- Project structure and design system
-- React Router with placeholder pages
-- Express health endpoint (`GET /api/health`)
-- No auth, MongoDB, or blog APIs yet
+- Public journal: Home/About CMS pages, blogs, categories, contact, newsletter
+- Creator Studio: content editor (TipTap), media library (Cloudinary), page builder, categories, comments, subscribers, SEO, settings
+- Auth: JWT (cookie + Bearer), admin-only Studio
+- Scheduled publishing (drafts with `scheduledFor` auto-publish)
 
 ## Getting started
-
-### Frontend
-
-```bash
-cd client
-npm install
-npm run dev
-```
-
-Runs at `http://localhost:5173` (Vite may pick the next free port if busy).
 
 ### Backend
 
 ```bash
 cd server
+cp .env.example .env
 npm install
-# set MONGODB_URI + JWT_SECRET in .env
-npm run seed:admin   # optional
+npm run seed:admin
+npm run seed:pages
 npm run dev
 ```
 
-Runs at `http://localhost:5050`.
+API: `http://localhost:5050` · Health: `GET /api/health`
 
-Health check: `GET http://localhost:5050/api/health`
+### Frontend
 
-## Design tokens
+```bash
+cd client
+cp .env.example .env
+npm install
+npm run dev
+```
 
-| Token      | Hex       |
-|------------|-----------|
+## Admin credentials (seed default)
+
+| Field | Value |
+|-------|--------|
+| Email | `admin@dilanddata.com` |
+| Password | `ChangeMe123!` |
+
+Change this immediately after first login (or reseed with `SEED_ADMIN_PASSWORD`).
+
+Studio: `/studio/login`
+
+## Design
+
+| Token | Hex |
+|-------|-----|
 | Background | `#F7F2EF` |
-| Surface    | `#EDE3DE` |
-| Text       | `#2E2826` |
-| Secondary  | `#7A706B` |
-| Accent     | `#C9A8A3` |
-| Highlight  | `#E5CDC8` |
+| Surface | `#EDE3DE` |
+| Text | `#2E2826` |
+| Accent | `#C9A8A3` |
 
 Fonts: Cinzel, Playfair Display, Cormorant Garamond
+
+## Deploy
+
+See [DEPLOYMENT.md](./DEPLOYMENT.md) for Vercel + Render + Atlas + Cloudinary.

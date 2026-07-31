@@ -75,6 +75,16 @@ function ContentEditor() {
   formRef.current = form;
   contentIdRef.current = contentId;
 
+  useEffect(() => {
+    function onBeforeUnload(e) {
+      if (!dirtyRef.current) return;
+      e.preventDefault();
+      e.returnValue = "";
+    }
+    window.addEventListener("beforeunload", onBeforeUnload);
+    return () => window.removeEventListener("beforeunload", onBeforeUnload);
+  }, []);
+
   const readingTime = useMemo(
     () => estimateReadingTime(form.body),
     [form.body]
@@ -296,7 +306,9 @@ function ContentEditor() {
       return;
     }
     const saved = await saveNow({ silent: false, statusOverride: "draft" });
-    if (saved) setSaveLabel("Scheduled");
+    if (saved) {
+      setSaveLabel("Scheduled — publishes automatically at that time");
+    }
   }
 
   function setPreview(open) {

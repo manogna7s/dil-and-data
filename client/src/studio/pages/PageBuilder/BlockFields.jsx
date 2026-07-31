@@ -41,6 +41,16 @@ function BlockFields({ block, onChange }) {
           <Field label="Tagline" value={data.tagline} onChange={(v) => set({ tagline: v })} area />
           <Field label="CTA label" value={data.ctaLabel} onChange={(v) => set({ ctaLabel: v })} />
           <Field label="CTA link" value={data.ctaTo} onChange={(v) => set({ ctaTo: v })} />
+          <Field
+            label="Secondary label"
+            value={data.secondaryLabel}
+            onChange={(v) => set({ secondaryLabel: v })}
+          />
+          <Field
+            label="Secondary link"
+            value={data.secondaryTo}
+            onChange={(v) => set({ secondaryTo: v })}
+          />
         </>
       )}
 
@@ -90,6 +100,33 @@ function BlockFields({ block, onChange }) {
           />
           <Field label="CTA label" value={data.ctaLabel} onChange={(v) => set({ ctaLabel: v })} />
           <Field label="CTA link" value={data.ctaTo} onChange={(v) => set({ ctaTo: v })} />
+        </>
+      )}
+
+      {block.type === "features" && (
+        <>
+          <Field label="Title" value={data.title} onChange={(v) => set({ title: v })} />
+          <ListEditor
+            label="Features"
+            items={data.items || []}
+            onAdd={() => addItem("items", { title: "", description: "" })}
+            onRemove={(i) => removeItem("items", i)}
+            renderItem={(item, i) => (
+              <>
+                <Field
+                  label="Title"
+                  value={item.title}
+                  onChange={(v) => setItem("items", i, { title: v })}
+                />
+                <Field
+                  label="Description"
+                  value={item.description}
+                  onChange={(v) => setItem("items", i, { description: v })}
+                  area
+                />
+              </>
+            )}
+          />
         </>
       )}
 

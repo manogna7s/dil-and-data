@@ -1,5 +1,5 @@
 import { apiRequest } from "../services/api.js";
-import { formatBlogDate } from "../data";
+import { formatBlogDate } from "../utils/formatDate.js";
 
 /** Public content helpers for live feed blocks (no auth). */
 

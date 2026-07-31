@@ -1,5 +1,14 @@
 import { apiRequest, API_BASE_URL, getStoredToken } from "./api.js";
 
+export async function subscribe({ email, name = "" }) {
+  const result = await apiRequest("/subscribers/subscribe", {
+    method: "POST",
+    body: { email, name },
+    auth: false,
+  });
+  return result.data;
+}
+
 export async function listSubscribers(params = {}) {
   const query = new URLSearchParams();
   Object.entries(params).forEach(([key, value]) => {
@@ -39,4 +48,4 @@ export async function exportSubscribersCsv(params = {}) {
   return response.text();
 }
 
-export default { listSubscribers, deleteSubscriber, exportSubscribersCsv };
+export default { subscribe, listSubscribers, deleteSubscriber, exportSubscribersCsv };

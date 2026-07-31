@@ -3,7 +3,7 @@ import Badge from "../Badge/Badge";
 import Container from "../Container/Container";
 import Section from "../Section/Section";
 import SectionTitle from "../SectionTitle/SectionTitle";
-import { formatBlogDate } from "../../data";
+import { formatBlogDate } from "../../utils/formatDate.js";
 import styles from "./FeaturedStory.module.css";
 
 /**
@@ -20,14 +20,16 @@ function FeaturedStory({ post }) {
       <Container size="lg">
         <SectionTitle>Featured story</SectionTitle>
         <article className={styles.layout}>
-          <Link to={href} className={styles.media} tabIndex={-1} aria-hidden="true">
-            <img
-              src={post.coverImage}
-              alt=""
-              className={styles.image}
-              loading="lazy"
-            />
-          </Link>
+          {post.coverImage ? (
+            <Link to={href} className={styles.media} tabIndex={-1} aria-hidden="true">
+              <img
+                src={post.coverImage}
+                alt=""
+                className={styles.image}
+                loading="lazy"
+              />
+            </Link>
+          ) : null}
           <div className={styles.body}>
             <div className={styles.meta}>
               <Badge>{post.categoryName}</Badge>

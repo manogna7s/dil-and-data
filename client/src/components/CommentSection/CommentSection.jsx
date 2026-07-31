@@ -1,21 +1,60 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "../Button/Button";
 import Input from "../Input/Input";
 import TextArea from "../TextArea/TextArea";
+import {
+  listPublicComments,
+  createComment,
+} from "../../services/comment.service.js";
 import styles from "./CommentSection.module.css";
 
-/** Comment UI — local state only until comments API exists. */
-function CommentSection() {
+/** Public comments — create + list approved notes for a story. */
+function CommentSection({ contentId }) {
   const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
-  const [submitted, setSubmitted] = useState(false);
+  const [comments, setComments] = useState([]);
+  const [status, setStatus] = useState("");
+  const [busy, setBusy] = useState(false);
 
-  function handleSubmit(e) {
+  useEffect(() => {
+    if (!contentId) return undefined;
+    let cancelled = false;
+    (async () => {
+      try {
+        const items = await listPublicComments(contentId);
+        const list = Array.isArray(items) ? items : items?.items || [];
+        if (!cancelled) setComments(list);
+      } catch {
+        if (!cancelled) setComments([]);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [contentId]);
+
+  async function handleSubmit(e) {
     e.preventDefault();
-    if (!name.trim() || !message.trim()) return;
-    setSubmitted(true);
-    setName("");
-    setMessage("");
+    if (!contentId || !name.trim() || !message.trim() || busy) return;
+    setBusy(true);
+    setStatus("");
+    try {
+      await createComment({
+        content: contentId,
+        authorName: name.trim(),
+        authorEmail: email.trim() || "",
+        body: message.trim(),
+      });
+      setName("");
+      setEmail("");
+      setMessage("");
+      setStatus("Thank you — your note awaits a quiet approval.");
+    } catch (err) {
+      setStatus(err.message || "Could not send your note.");
+    } finally {
+      setBusy(false);
+    }
   }
 
   return (
@@ -24,12 +63,23 @@ function CommentSection() {
         Leave a note
       </h2>
       <p className={styles.note}>
-        Comments are a soft conversation — kind words welcome. (UI only for now.)
+        Comments are a soft conversation — kind words welcome.
       </p>
 
-      {submitted && (
+      {comments.length > 0 && (
+        <ul className={styles.list}>
+          {comments.map((c) => (
+            <li key={c._id} className={styles.item}>
+              <p className={styles.author}>{c.authorName}</p>
+              <p className={styles.body}>{c.body}</p>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {status && (
         <p className={styles.success} role="status">
-          Thank you — your note is ready for when comments go live.
+          {status}
         </p>
       )}
 
@@ -39,19 +89,26 @@ function CommentSection() {
           name="name"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          placeholder="Your name"
           required
         />
+        <Input
+          label="Email (optional)"
+          name="email"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
         <TextArea
-          label="Message"
+          label="Note"
           name="message"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          placeholder="A thoughtful line or two…"
           rows={4}
           required
         />
-        <Button type="submit">Send note</Button>
+        <Button type="submit" disabled={busy || !contentId}>
+          {busy ? "Sending…" : "Send note"}
+        </Button>
       </form>
     </section>
   );

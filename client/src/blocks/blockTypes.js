@@ -9,6 +9,7 @@ export const PAGE_BLOCK_TYPES = [
   { type: "quote", label: "Quote" },
   { type: "newsletter", label: "Newsletter" },
   { type: "aboutPreview", label: "About Preview" },
+  { type: "features", label: "Features" },
   { type: "divider", label: "Divider" },
   { type: "image", label: "Image" },
   { type: "gallery", label: "Gallery" },
@@ -24,13 +25,11 @@ export const PAGE_BLOCK_TYPES = [
 export function defaultBlockData(type) {
   const map = {
     hero: {
-      eyebrow: "A personal journal",
+      eyebrow: "Shakti's Blog",
       title: "DIL & DATA",
-      tagline: "Stories, letters, and quiet observations",
-      ctaLabel: "Begin reading",
+      tagline: "A personal journal of heart, curiosity, and quiet strength",
+      ctaLabel: "Enter the journal",
       ctaTo: "/blogs",
-      secondaryLabel: "Meet the author",
-      secondaryTo: "/about",
     },
     featuredStory: { source: "featured", contentId: "" },
     photographyCarousel: { title: "", items: [] },
@@ -51,6 +50,10 @@ export function defaultBlockData(type) {
       portrait: "",
       ctaLabel: "Read more about me",
       ctaTo: "/about",
+    },
+    features: {
+      title: "What lives here",
+      items: [],
     },
     divider: { label: "" },
     image: { url: "", alt: "", caption: "" },

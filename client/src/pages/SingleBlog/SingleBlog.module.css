@@ -55,14 +55,11 @@
   width: 100%;
   aspect-ratio: 21 / 9;
   object-fit: cover;
-  border-radius: var(--radius-xl);
+  border-radius: 0;
 }
 
 .bodyLayout {
-  display: grid;
-  grid-template-columns: 14rem 1fr;
-  gap: var(--space-2xl);
-  align-items: start;
+  display: block;
   padding-bottom: var(--space-3xl);
 }
 
@@ -148,6 +145,15 @@
   font-family: var(--font-heading);
   font-size: var(--text-2xl);
   margin-bottom: var(--space-xl);
+}
+
+.related {
+  padding-block: var(--space-3xl);
+}
+
+.back {
+  margin-top: var(--space-xl);
+  text-align: center;
 }
 
 .relatedGrid {

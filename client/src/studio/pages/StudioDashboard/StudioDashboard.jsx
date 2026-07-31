@@ -1,6 +1,10 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../../context";
 import { STUDIO } from "../../../constants";
+import { listAdminContent } from "../../../services/content.service.js";
+import { listAdminComments } from "../../../services/comment.service.js";
+import { listSubscribers } from "../../../services/subscriber.service.js";
 import useStudioPage from "../../hooks/useStudioPage";
 import OverviewCard from "../../components/OverviewCard/OverviewCard";
 import QuickActions from "../../components/QuickActions/QuickActions";
@@ -29,11 +33,17 @@ const QUICK_ACTIONS = [
 ];
 
 /**
- * Dashboard homepage — overview, quick actions, recent activity placeholders.
- * Stats will bind to live API aggregates in a later studio phase.
+ * Dashboard homepage — live overview counts + quick actions.
  */
 function StudioDashboard() {
   const { user } = useAuth();
+  const [stats, setStats] = useState({
+    published: "—",
+    drafts: "—",
+    comments: "—",
+    subscribers: "—",
+  });
+  const [recent, setRecent] = useState([]);
 
   useStudioPage({
     title: "Dashboard",
@@ -42,6 +52,33 @@ function StudioDashboard() {
       { label: "Dashboard" },
     ],
   });
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const [published, drafts, comments, subscribers] = await Promise.all([
+          listAdminContent({ status: "published", limit: 1 }),
+          listAdminContent({ status: "draft", limit: 5 }),
+          listAdminComments({ status: "pending", limit: 1 }),
+          listSubscribers({ limit: 1 }),
+        ]);
+        if (cancelled) return;
+        setStats({
+          published: published?.pagination?.total ?? 0,
+          drafts: drafts?.pagination?.total ?? 0,
+          comments: comments?.pagination?.total ?? 0,
+          subscribers: subscribers?.pagination?.total ?? 0,
+        });
+        setRecent((drafts?.items || []).slice(0, 5));
+      } catch {
+        /* keep placeholders */
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const hour = new Date().getHours();
   const greeting =
@@ -63,25 +100,25 @@ function StudioDashboard() {
         <div className={styles.cards}>
           <OverviewCard
             label="Published"
-            value="—"
+            value={String(stats.published)}
             hint="Stories live on the site"
             to={STUDIO.CONTENT}
           />
           <OverviewCard
             label="Drafts"
-            value="—"
+            value={String(stats.drafts)}
             hint="Waiting on the desk"
             to={STUDIO.CONTENT}
           />
           <OverviewCard
             label="Comments"
-            value="—"
+            value={String(stats.comments)}
             hint="Awaiting your eye"
             to={STUDIO.COMMENTS}
           />
           <OverviewCard
             label="Subscribers"
-            value="—"
+            value={String(stats.subscribers)}
             hint="Soft letters list"
             to={STUDIO.SUBSCRIBERS}
           />
@@ -95,20 +132,30 @@ function StudioDashboard() {
 
       <section className={styles.section} aria-label="Recent activity">
         <div className={styles.sectionHead}>
-          <h2 className={styles.sectionTitle}>Recent activity</h2>
+          <h2 className={styles.sectionTitle}>Recent drafts</h2>
           <Link to={STUDIO.CONTENT} className={styles.link}>
             Open content
           </Link>
         </div>
-        <StudioEmptyState
-          title="No activity yet"
-          description="Once you publish, edit, or approve comments, a gentle trail of recent work will appear here."
-          action={
-            <Link to={STUDIO.CONTENT} className={styles.cta}>
-              Start writing
-            </Link>
-          }
-        />
+        {recent.length === 0 ? (
+          <StudioEmptyState
+            title="No drafts yet"
+            description="Once you write, a gentle trail of recent work will appear here."
+            action={
+              <Link to={STUDIO.CONTENT_NEW} className={styles.cta}>
+                Start writing
+              </Link>
+            }
+          />
+        ) : (
+          <ul className={styles.activity}>
+            {recent.map((item) => (
+              <li key={item._id}>
+                <Link to={`${STUDIO.CONTENT}/${item._id}`}>{item.title || "Untitled"}</Link>
+              </li>
+            ))}
+          </ul>
+        )}
       </section>
     </div>
   );

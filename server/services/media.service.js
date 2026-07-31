@@ -112,12 +112,13 @@ export async function replaceMedia(id, file, meta = {}) {
   const logicalFolder = normalizeFolder(meta.folder || media.folder);
 
   try {
-    await deleteFromCloudinary(media.publicId, cloudinaryResourceType(media)).catch(() => {});
-
     const uploaded = await uploadToCloudinary(file.path, {
       resourceType,
       folder: logicalFolder,
     });
+
+    const oldPublicId = media.publicId;
+    const oldType = cloudinaryResourceType(media);
 
     media.url = uploaded.url;
     media.publicId = uploaded.publicId;
@@ -132,6 +133,11 @@ export async function replaceMedia(id, file, meta = {}) {
     if (meta.caption !== undefined) media.caption = String(meta.caption).slice(0, 300);
 
     await media.save();
+
+    if (oldPublicId && oldPublicId !== uploaded.publicId) {
+      await deleteFromCloudinary(oldPublicId, oldType).catch(() => {});
+    }
+
     return media;
   } finally {
     await fs.unlink(file.path).catch(() => {});

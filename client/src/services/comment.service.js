@@ -1,5 +1,21 @@
 import { apiRequest } from "./api.js";
 
+export async function listPublicComments(contentId) {
+  const result = await apiRequest(`/comments/content/${contentId}`, {
+    auth: false,
+  });
+  return result.data;
+}
+
+export async function createComment(payload) {
+  const result = await apiRequest("/comments", {
+    method: "POST",
+    body: payload,
+    auth: false,
+  });
+  return result.data;
+}
+
 export async function listAdminComments(params = {}) {
   const query = new URLSearchParams();
   Object.entries(params).forEach(([key, value]) => {
@@ -50,6 +66,8 @@ export async function replyToComment(id, body) {
 }
 
 export default {
+  listPublicComments,
+  createComment,
   listAdminComments,
   moderateComment,
   deleteComment,

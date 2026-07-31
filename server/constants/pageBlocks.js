@@ -12,6 +12,7 @@ export const PAGE_BLOCK_TYPES = [
   "quote",
   "newsletter",
   "aboutPreview",
+  "features",
   "divider",
   "image",
   "gallery",
@@ -40,12 +41,12 @@ export const RESERVED_PAGE_SLUGS = [
 export function defaultBlockData(type) {
   const defaults = {
     hero: {
-      eyebrow: "A personal journal",
+      eyebrow: "Shakti's Blog",
       title: "DIL & DATA",
-      tagline: "Stories, letters, and quiet observations",
-      ctaLabel: "Begin reading",
+      tagline: "A personal journal of heart, curiosity, and quiet strength",
+      ctaLabel: "Enter the journal",
       ctaTo: "/blogs",
-      secondaryLabel: "Meet the author",
+      secondaryLabel: "About Manogna",
       secondaryTo: "/about",
     },
     featuredStory: {
@@ -83,6 +84,10 @@ export function defaultBlockData(type) {
       portrait: "",
       ctaLabel: "Read more about me",
       ctaTo: "/about",
+    },
+    features: {
+      title: "What lives here",
+      items: [],
     },
     divider: {
       label: "",

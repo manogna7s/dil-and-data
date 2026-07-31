@@ -25,7 +25,7 @@ const commentSchema = new mongoose.Schema(
     },
     authorEmail: {
       type: String,
-      required: [true, "Email is required"],
+      default: "",
       lowercase: true,
       trim: true,
     },

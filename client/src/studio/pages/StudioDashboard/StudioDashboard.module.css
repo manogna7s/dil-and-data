@@ -69,6 +69,27 @@
   background: var(--color-accent-hover);
 }
 
+.activity {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border: 1px solid var(--color-border-soft);
+  background: var(--color-white);
+}
+
+.activity li {
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--color-border-soft);
+}
+
+.activity li:last-child {
+  border-bottom: none;
+}
+
+.activity a:hover {
+  color: var(--color-accent);
+}
+
 @media (max-width: 1024px) {
   .cards {
     grid-template-columns: repeat(2, 1fr);

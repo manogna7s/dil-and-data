@@ -48,6 +48,11 @@ export function errorHandler(err, _req, res, _next) {
     message = "Token expired";
   }
 
+  if (err.name === "MulterError") {
+    statusCode = 400;
+    message = err.message || "Upload failed";
+  }
+
   if (config.nodeEnv === "development" && statusCode === 500) {
     console.error(err);
   }

@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import {
   Breadcrumb,
@@ -7,27 +8,76 @@ import {
   Newsletter,
   EmptyState,
   Avatar,
+  Loader,
 } from "../../components";
 import ReadingProgress from "../../components/ReadingProgress/ReadingProgress";
 import ArticleContent from "../../components/ArticleContent/ArticleContent";
 import ArticleActions from "../../components/ArticleActions/ArticleActions";
 import CommentSection from "../../components/CommentSection/CommentSection";
+import { formatBlogDate } from "../../utils/formatDate.js";
+import { ROUTES, SITE } from "../../constants";
 import {
-  getBlogBySlug,
-  getAdjacentBlogs,
-  getRelatedBlogs,
-  formatBlogDate,
-  toBlogCard,
-} from "../../data";
-import { ROUTES } from "../../constants";
+  getContentBySlug,
+  listPublicContent,
+} from "../../services/content.service.js";
+import { toCardProps } from "../../blocks/fetchLive";
 import styles from "./SingleBlog.module.css";
 
 function SingleBlog() {
   const { slug } = useParams();
   const navigate = useNavigate();
-  const post = getBlogBySlug(slug);
+  const [post, setPost] = useState(null);
+  const [related, setRelated] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [missing, setMissing] = useState(false);
 
-  if (!post) {
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      setLoading(true);
+      setMissing(false);
+      try {
+        const item = await getContentBySlug(slug);
+        if (cancelled) return;
+        setPost(item);
+
+        const more = await listPublicContent({
+          limit: 4,
+          sort: "newest",
+          type: "blog",
+          category: item?.category?._id || "",
+        });
+        if (cancelled) return;
+        const cards = (more?.items || [])
+          .filter((p) => p.slug !== slug)
+          .slice(0, 3)
+          .map(toCardProps)
+          .filter(Boolean);
+        setRelated(cards);
+      } catch {
+        if (!cancelled) {
+          setPost(null);
+          setRelated([]);
+          setMissing(true);
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [slug]);
+
+  if (loading) {
+    return (
+      <Container size="md">
+        <Loader label="Opening the story…" />
+      </Container>
+    );
+  }
+
+  if (missing || !post) {
     return (
       <Container size="md">
         <EmptyState
@@ -40,8 +90,9 @@ function SingleBlog() {
     );
   }
 
-  const { previous, next } = getAdjacentBlogs(slug);
-  const related = getRelatedBlogs(slug, 3).map(toBlogCard);
+  const categoryName =
+    post.category?.title || post.category?.name || "Journal";
+  const author = post.author || { name: SITE.AUTHOR, avatar: "", bio: "" };
 
   return (
     <article className={styles.page}>
@@ -52,95 +103,72 @@ function SingleBlog() {
           <Breadcrumb
             items={[
               { label: "Home", href: ROUTES.HOME },
-              { label: "Blogs", href: ROUTES.BLOGS },
+              { label: SITE.BLOG_NAME, href: ROUTES.BLOGS },
               { label: post.title },
             ]}
           />
           <div className={styles.meta}>
-            <Badge>{post.categoryName}</Badge>
-            <time dateTime={post.publishedAt}>
-              {formatBlogDate(post.publishedAt)}
-            </time>
-            <span>{post.readingTime} min read</span>
+            <Badge>{categoryName}</Badge>
+            {post.publishedAt && (
+              <time dateTime={post.publishedAt}>
+                {formatBlogDate(post.publishedAt)}
+              </time>
+            )}
+            {post.readingTime ? <span>{post.readingTime} min read</span> : null}
           </div>
           <h1 className={styles.title}>{post.title}</h1>
-          <p className={styles.excerpt}>{post.excerpt}</p>
+          {post.excerpt && <p className={styles.excerpt}>{post.excerpt}</p>}
           <div className={styles.author}>
-            <Avatar src={post.author.avatar} alt={post.author.name} size="sm" />
+            <Avatar src={author.avatar} alt={author.name || SITE.AUTHOR} size="sm" />
             <div>
-              <p className={styles.authorName}>{post.author.name}</p>
-              <p className={styles.authorBio}>{post.author.bio}</p>
+              <p className={styles.authorName}>{author.name || SITE.AUTHOR}</p>
+              {author.bio ? <p className={styles.authorBio}>{author.bio}</p> : null}
             </div>
           </div>
         </Container>
       </header>
 
-      <div className={styles.cover}>
-        <img
-          src={post.coverImage}
-          alt=""
-          className={styles.coverImage}
-          loading="eager"
-        />
-      </div>
+      {post.coverImage ? (
+        <div className={styles.cover}>
+          <img
+            src={post.coverImage}
+            alt=""
+            className={styles.coverImage}
+            loading="eager"
+          />
+        </div>
+      ) : null}
 
-      <Container size="lg" className={styles.bodyLayout}>
-        <aside className={styles.toc} aria-label="Table of contents">
-          <p className={styles.tocTitle}>On this page</p>
-          <ol>
-            {post.headings.map((h) => (
-              <li key={h.id}>
-                <a href={`#${h.id}`}>{h.text}</a>
-              </li>
-            ))}
-          </ol>
-        </aside>
-
+      <Container size="md" className={styles.bodyLayout}>
         <div className={styles.article}>
-          <ArticleContent blocks={post.content} />
-          <ArticleActions title={post.title} slug={post.slug} />
-          <CommentSection />
+          <ArticleContent html={post.body || ""} />
+          <ArticleActions
+            title={post.title}
+            slug={post.slug}
+            contentId={post._id}
+            initialLikes={post.likesCount || 0}
+          />
+          <CommentSection contentId={post._id} />
         </div>
       </Container>
 
       <Newsletter />
 
-      <Container size="lg" className={styles.navArticles}>
-        <div className={styles.prevNext}>
-          {previous ? (
-            <Link to={`/blogs/${previous.slug}`} className={styles.adjacent}>
-              <span className={styles.adjacentLabel}>Previous</span>
-              <span className={styles.adjacentTitle}>{previous.title}</span>
+      {related.length > 0 && (
+        <Container size="lg" className={styles.related}>
+          <h2 className={styles.relatedTitle}>Continue reading</h2>
+          <div className={styles.relatedGrid}>
+            {related.map((item) => (
+              <BlogCard key={item.id} {...item} />
+            ))}
+          </div>
+          <p className={styles.back}>
+            <Link to={ROUTES.BLOGS} className="link-underline">
+              All of {SITE.BLOG_NAME}
             </Link>
-          ) : (
-            <span />
-          )}
-          {next ? (
-            <Link
-              to={`/blogs/${next.slug}`}
-              className={`${styles.adjacent} ${styles.adjacentNext}`}
-            >
-              <span className={styles.adjacentLabel}>Next</span>
-              <span className={styles.adjacentTitle}>{next.title}</span>
-            </Link>
-          ) : (
-            <span />
-          )}
-        </div>
-
-        {related.length > 0 && (
-          <section className={styles.related} aria-labelledby="related-heading">
-            <h2 id="related-heading" className={styles.relatedTitle}>
-              Related stories
-            </h2>
-            <div className={styles.relatedGrid}>
-              {related.map((item) => (
-                <BlogCard key={item.id} {...item} />
-              ))}
-            </div>
-          </section>
-        )}
-      </Container>
+          </p>
+        </Container>
+      )}
     </article>
   );
 }

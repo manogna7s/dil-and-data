@@ -1,10 +1,12 @@
 /**
- * Seed CMS pages (home, about, and future journal shelves).
+ * Seed CMS pages (home, about).
  *
  * Usage:
  *   npm run seed:pages
+ *   FORCE_SEED=true npm run seed:pages   # rebuild blocks from defaults
  *
- * Idempotent — upserts by slug. Set FORCE_SEED=true to rebuild blocks from defaults.
+ * Home stays free of stock photos / dummy posts — live feed blocks
+ * only appear after you publish from Creator Studio.
  */
 import "dotenv/config";
 import mongoose from "mongoose";
@@ -12,50 +14,74 @@ import config from "../config/index.js";
 import { seedPage } from "../services/page.service.js";
 import { createBlock } from "../constants/pageBlocks.js";
 
-const IMG = {
-  coffee: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=1400&q=80",
-  books: "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=1400&q=80",
-  travel: "https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=1400&q=80",
-  flowers: "https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=1400&q=80",
-  mountains: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1400&q=80",
-  journal: "https://images.unsplash.com/photo-1517842645767-c639042777db?w=1400&q=80",
-  library: "https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=1400&q=80",
-  nature: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1400&q=80",
-  temple: "https://images.unsplash.com/photo-1548013146-72479768bada?w=1400&q=80",
-  goldenHour: "https://images.unsplash.com/photo-1495616811223-4d98c6e9c869?w=1400&q=80",
-  portrait: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=1000&q=80",
-  bookshelf: "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=1400&q=80",
-};
-
 function homeBlocks() {
   return [
-    createBlock("hero"),
-    createBlock("featuredStory"),
-    createBlock("photographyCarousel", {
-      items: [
-        { title: "Where the Trail Softens", location: "Himalayan foothills", src: IMG.mountains, alt: "Misty mountain peaks at dawn" },
-        { title: "Steam & Stillness", location: "A quiet café morning", src: IMG.coffee, alt: "Coffee cup on a wooden table" },
-        { title: "Well-Loved Pages", location: "Home library", src: IMG.books, alt: "Stack of open books" },
-        { title: "Petals After Rain", location: "Neighborhood garden", src: IMG.flowers, alt: "Soft pink flowers" },
-        { title: "Stone & Prayer", location: "South India", src: IMG.temple, alt: "Temple architecture" },
-        { title: "Forest Breathing", location: "Somewhere green", src: IMG.nature, alt: "Forest canopy" },
-        { title: "Maps & Suitcases", location: "On the road", src: IMG.travel, alt: "Travel essentials" },
-        { title: "Golden Hour Letters", location: "Late afternoon light", src: IMG.goldenHour, alt: "Golden hour landscape" },
-      ],
+    createBlock("hero", {
+      eyebrow: "Shakti's Blog",
+      title: "DIL & DATA",
+      tagline: "A personal journal of heart, curiosity, and quiet strength",
+      ctaLabel: "Enter the journal",
+      ctaTo: "/blogs",
+      secondaryLabel: "About Manogna",
+      secondaryTo: "/about",
     }),
-    createBlock("latestStories"),
-    createBlock("categories"),
-    createBlock("quote", {
-      text: "Some days the best thing you can do is sit with a warm cup and let the world arrive slowly.",
-      attribution: "Manogna",
-      eyebrow: "Quote of the week",
+    createBlock("richText", {
+      eyebrow: "Why this name",
+      title: "Shakti's Blog",
+      html:
+        "<p>Once, in a game, I named myself <em>shaktishaali</em> — and yes, I laughed about it too. But I loved the word so much that it stayed with me. Shakti's Blog is that name grown up: a quiet home for strength, softness, and stories that feel true.</p>",
     }),
     createBlock("aboutPreview", {
       name: "Manogna",
-      role: "Writer · Builder · Observer",
+      role: "Writer behind DIL & DATA",
       intro:
-        "I write the way I make chai — slowly, with attention, and always with the hope that someone feels a little warmer afterward.",
-      portrait: IMG.portrait,
+        "I write slowly — about feeling, noticing, and becoming. Short letters, soft frames, and the occasional rabbit hole. This space is mine; you're welcome to sit with it a while.",
+      portrait: "",
+      ctaLabel: "More about me",
+      ctaTo: "/about",
+    }),
+    createBlock("features", {
+      title: "What lives here",
+      items: [
+        {
+          title: "My personal blog",
+          description:
+            "The heart of this house — essays, diary notes, and stories published only when they feel ready.",
+        },
+        {
+          title: "Letters after midnight",
+          description:
+            "Quiet pages written when the world softens — honesty without performance.",
+        },
+        {
+          title: "Golden-hour frames",
+          description:
+            "Photography that keeps light before it leaves — square corners, no filter theater.",
+        },
+        {
+          title: "Margins & nightstands",
+          description:
+            "Books that leave fingerprints on the mind — underlines, dog-ears, and soft reviews.",
+        },
+        {
+          title: "Soft maps & temple towns",
+          description:
+            "Travel remembered as atmosphere: trains, stone, monsoon windows, and kind strangers.",
+        },
+        {
+          title: "Curiosity with a keyboard",
+          description:
+            "Building things carefully — code as craft, not noise.",
+        },
+      ],
+    }),
+    // Live feeds — render nothing until you publish from Studio
+    createBlock("featuredStory"),
+    createBlock("latestStories", {
+      title: "Latest from Shakti's Blog",
+      limit: 6,
+      seeAllLabel: "All stories",
+      seeAllTo: "/blogs",
     }),
     createBlock("newsletter"),
   ];
@@ -66,89 +92,14 @@ function aboutBlocks() {
     createBlock("richText", {
       eyebrow: "About",
       title: "Hello, I'm Manogna",
-      html: "<p>I write the way I make chai — slowly, with attention, and always with the hope that someone feels a little warmer afterward.</p>",
+      html:
+        "<p>I keep DIL & DATA as a notebook for the heart and the curious mind — the same page, shared carefully.</p><p>Shakti's Blog is where the writing lives. The name began as a game-handle I adored (<em>shaktishaali</em>) and became a promise to write with strength and softness at once.</p><p>Upload a portrait and flesh this page out anytime in Creator Studio — until then, this is enough.</p>",
     }),
-    createBlock("image", {
-      url: IMG.portrait,
-      alt: "Manogna — portrait",
-      caption: "Writer · Builder · Observer",
-    }),
-    createBlock("richText", {
-      title: "",
-      html: "<p>DIL & DATA began as two notebooks: one for the heart, one for the curious mind. Over time they became the same page.</p><p>Here you will find travel notes, bookish rabbit holes, soft photography, and the occasional love letter to code that finally compiled.</p><p>If you are the kind of person who underlines sentences and pauses for golden hour — welcome. You are among friends.</p>",
-    }),
-    createBlock("timeline", {
-      title: "A quiet timeline",
-      items: [
-        { year: "2018", title: "First journal entry that felt like a letter", description: "I wrote to no one in particular and realized storytelling was how I make sense of the world." },
-        { year: "2020", title: "Code became another kind of language", description: "Between algorithms and late-night commits, I found curiosity that refused to stay quiet." },
-        { year: "2022", title: "Mountains, trains, and monsoon windows", description: "Travel taught me to notice — light on stone, strangers' kindness, the pause between stations." },
-        { year: "2024", title: "DIL & DATA began as a notebook", description: "A place for heart and logic to sit at the same table." },
-        { year: "2026", title: "Building a home for the words", description: "This site is the living journal — still becoming, always meant to be read slowly." },
-      ],
-    }),
-    createBlock("richText", {
-      title: "Things I love",
-      html: "<ul><li><strong>Reading</strong> — Margins full of soft pencil</li><li><strong>Writing</strong> — Letters, essays, quiet fiction</li><li><strong>Travel</strong> — Trains, trails, temple towns</li><li><strong>Photography</strong> — Light before it leaves</li><li><strong>Coding</strong> — Curiosity with a keyboard</li></ul>",
-      tone: "default",
-    }),
-    createBlock("bookshelf", {
-      title: "Bookshelf",
-      note: "A few companions that still live on my nightstand and in my margins.",
-      items: [
-        { title: "The House in the Cerulean Sea", author: "TJ Klune", note: "Soft magic, found family, and the courage to choose kindness.", cover: IMG.books },
-        { title: "Atomic Habits", author: "James Clear", note: "Tiny rituals that quietly reshape a life.", cover: IMG.journal },
-        { title: "Educated", author: "Tara Westover", note: "A reminder that becoming yourself is a long, brave climb.", cover: IMG.library },
-        { title: "The Midnight Library", author: "Matt Haig", note: "Infinite doors, one heart.", cover: IMG.bookshelf },
-      ],
-    }),
-    createBlock("richText", {
-      title: "Fun facts",
-      html: "<ul><li>I name Wi-Fi networks after book titles.</li><li>Monsoon season is my favorite season for thinking.</li><li>I have a playlist called “writing weather.”</li><li>The first thing I pack is always a notebook.</li></ul>",
-    }),
-    createBlock("faq", {
-      title: "FAQ",
-      items: [
-        { question: "What is DIL & DATA?", answer: "A personal publishing space where stories, photography, books, and quiet tech curiosity live together." },
-        { question: "How often do you publish?", answer: "When something feels worth keeping — usually a few thoughtful pieces a month." },
-        { question: "Can I share your writing?", answer: "Yes, with credit and a link back." },
-        { question: "Do you take collaborations?", answer: "Sometimes. Soft pitches and genuine curiosity are welcome via email." },
-      ],
-    }),
-    createBlock("divider", { label: "A closing note" }),
+    createBlock("divider", { label: "A quiet close" }),
     createBlock("quote", {
       text: "Some days the best thing you can do is sit with a warm cup and let the world arrive slowly.",
       attribution: "Manogna",
       eyebrow: "",
-    }),
-  ];
-}
-
-function shelfPage(title, eyebrow, blurb, image) {
-  return [
-    createBlock("hero", {
-      eyebrow,
-      title,
-      tagline: blurb,
-      ctaLabel: "Browse stories",
-      ctaTo: "/blogs",
-      secondaryLabel: "Home",
-      secondaryTo: "/",
-    }),
-    createBlock("image", { url: image, alt: title, caption: "" }),
-    createBlock("richText", {
-      title: `Welcome to ${title}`,
-      html: `<p>${blurb}</p><p>Edit this page in Creator Studio — add galleries, timelines, quotes, or latest stories without touching React.</p>`,
-    }),
-    createBlock("latestStories", {
-      title: "From this shelf",
-      limit: 6,
-    }),
-    createBlock("cta", {
-      title: "Want to keep reading?",
-      description: "The full journal lives on the blogs shelf.",
-      buttonLabel: "Open blogs",
-      buttonTo: "/blogs",
     }),
   ];
 }
@@ -172,60 +123,6 @@ const PAGES = [
     navOrder: 2,
     blocks: aboutBlocks(),
   },
-  {
-    title: "Travel",
-    slug: "travel",
-    status: "published",
-    showInNav: true,
-    navLabel: "Travel",
-    navOrder: 10,
-    blocks: shelfPage("Travel", "Journeys", "Trains, trails, temple towns, and the pause between stations.", IMG.travel),
-  },
-  {
-    title: "Books",
-    slug: "books",
-    status: "published",
-    showInNav: true,
-    navLabel: "Books",
-    navOrder: 11,
-    blocks: shelfPage("Books", "Reading notes", "Margins, nightstands, and sentences worth underlining.", IMG.books),
-  },
-  {
-    title: "Diary",
-    slug: "diary",
-    status: "published",
-    showInNav: true,
-    navLabel: "Diary",
-    navOrder: 12,
-    blocks: shelfPage("Diary", "Soft letters", "Quiet days, monsoon windows, and notes to self.", IMG.journal),
-  },
-  {
-    title: "Photography",
-    slug: "photography",
-    status: "published",
-    showInNav: true,
-    navLabel: "Photography",
-    navOrder: 13,
-    blocks: shelfPage("Photography", "Frames", "Light before it leaves — soft frames from the road and home.", IMG.mountains),
-  },
-  {
-    title: "Projects",
-    slug: "projects",
-    status: "published",
-    showInNav: true,
-    navLabel: "Projects",
-    navOrder: 14,
-    blocks: shelfPage("Projects", "Building", "Curiosity with a keyboard — things made carefully.", IMG.library),
-  },
-  {
-    title: "Coffee Journal",
-    slug: "coffee-journal",
-    status: "published",
-    showInNav: true,
-    navLabel: "Coffee",
-    navOrder: 15,
-    blocks: shelfPage("Coffee Journal", "Steam & stillness", "Café mornings, warm cups, and slow thinking.", IMG.coffee),
-  },
 ];
 
 async function run() {
@@ -240,6 +137,33 @@ async function run() {
     }
     const saved = await seedPage(page);
     console.log("Upserted page:", saved.slug, `(${saved.blocks.length} blocks)`);
+  }
+
+  // Hide previously seeded shelf pages with stock imagery from the public nav
+  if (process.env.FORCE_SEED === "true") {
+    const result = await mongoose.connection.db.collection("pages").updateMany(
+      { slug: { $nin: ["home", "about"] } },
+      { $set: { showInNav: false, status: "draft" } }
+    );
+    console.log("Archived extra shelf pages:", result.modifiedCount);
+
+    await mongoose.connection.db.collection("settings").updateOne(
+      { key: "site" },
+      {
+        $set: {
+          siteName: "DIL & DATA",
+          tagline: "A personal journal of heart, curiosity, and quiet strength",
+          about:
+            "Manogna writes DIL & DATA — home of Shakti's Blog. Short letters, soft frames, and quiet strength.",
+          "seoDefaults.title": "DIL & DATA · Shakti's Blog",
+          "seoDefaults.description":
+            "A personal journal by Manogna — heart, curiosity, and quiet strength.",
+        },
+        $setOnInsert: { key: "site" },
+      },
+      { upsert: true }
+    );
+    console.log("Updated site settings branding");
   }
 
   await mongoose.disconnect();

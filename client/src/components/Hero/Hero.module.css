@@ -39,8 +39,18 @@
   letter-spacing: var(--tracking-wider);
   text-transform: uppercase;
   line-height: var(--leading-tight);
-  margin-bottom: var(--space-lg);
+  margin-bottom: var(--space-sm);
   animation: fade-up var(--duration-slow) var(--ease-out) 0.2s both;
+}
+
+.byline {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: var(--color-secondary);
+  margin-bottom: var(--space-lg);
+  animation: fade-up var(--duration-slow) var(--ease-out) 0.25s both;
 }
 
 .tagline {
@@ -73,17 +83,15 @@
   letter-spacing: var(--tracking-wide);
   color: var(--color-white);
   background: var(--color-accent);
-  border-radius: var(--radius-md);
+  border-radius: 0;
   transition:
     background-color var(--transition-base),
-    transform var(--transition-base),
     box-shadow var(--transition-base);
 }
 
 .cta:hover {
   background: var(--color-accent-hover);
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-sm);
+  box-shadow: none;
 }
 
 .secondary {

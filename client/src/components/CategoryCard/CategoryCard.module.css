@@ -1,16 +1,13 @@
 .card {
   display: block;
-  border-radius: var(--radius-lg);
+  border-radius: 0;
   overflow: hidden;
   background: var(--color-surface);
-  transition:
-    transform var(--transition-slow),
-    box-shadow var(--transition-slow);
+  transition: opacity var(--transition-slow);
 }
 
 .card:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-sm);
+  opacity: 0.92;
 }
 
 .media {
@@ -23,11 +20,6 @@
   height: 100%;
   object-fit: cover;
   border-radius: 0;
-  transition: transform var(--duration-slower) var(--ease-out);
-}
-
-.card:hover .image {
-  transform: scale(1.05);
 }
 
 .body {

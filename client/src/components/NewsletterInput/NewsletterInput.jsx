@@ -1,48 +1,64 @@
 import { useState } from "react";
 import Button from "../Button/Button";
+import { subscribe } from "../../services/subscriber.service.js";
 import styles from "./NewsletterInput.module.css";
 
 /**
- * NewsletterInput — email capture for footer / homepage.
- * UI only in Phase 2 — submit handler is a no-op placeholder.
+ * NewsletterInput — email capture wired to /api/subscribers/subscribe.
  */
 function NewsletterInput({
-  onSubmit,
   placeholder = "Your email address",
   buttonLabel = "Subscribe",
   className = "",
 }) {
   const [email, setEmail] = useState("");
+  const [status, setStatus] = useState("");
+  const [busy, setBusy] = useState(false);
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    onSubmit?.(email);
+    if (!email.trim() || busy) return;
+    setBusy(true);
+    setStatus("");
+    try {
+      await subscribe({ email: email.trim() });
+      setEmail("");
+      setStatus("You're on the list — soft letters, rarely sent.");
+    } catch (err) {
+      setStatus(err.message || "Could not subscribe. Try again?");
+    } finally {
+      setBusy(false);
+    }
   }
 
   return (
-    <form
-      className={`${styles.form} ${className}`}
-      onSubmit={handleSubmit}
-      noValidate
-    >
-      <label htmlFor="newsletter-email" className="visually-hidden">
-        Email address
-      </label>
-      <input
-        id="newsletter-email"
-        type="email"
-        name="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder={placeholder}
-        className={styles.input}
-        autoComplete="email"
-        required
-      />
-      <Button type="submit" size="md" className={styles.button}>
-        {buttonLabel}
-      </Button>
-    </form>
+    <div className={className}>
+      <form className={styles.form} onSubmit={handleSubmit} noValidate>
+        <label htmlFor="newsletter-email" className="visually-hidden">
+          Email address
+        </label>
+        <input
+          id="newsletter-email"
+          type="email"
+          name="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder={placeholder}
+          className={styles.input}
+          autoComplete="email"
+          required
+          disabled={busy}
+        />
+        <Button type="submit" size="md" className={styles.button} disabled={busy}>
+          {busy ? "…" : buttonLabel}
+        </Button>
+      </form>
+      {status && (
+        <p className={styles.status} role="status">
+          {status}
+        </p>
+      )}
+    </div>
   );
 }
 

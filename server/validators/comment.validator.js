@@ -3,7 +3,11 @@ import { body, param, query } from "express-validator";
 export const createCommentValidator = [
   body("content").isMongoId().withMessage("Valid content id is required"),
   body("authorName").trim().notEmpty().withMessage("Name is required").isLength({ max: 80 }),
-  body("authorEmail").isEmail().withMessage("Valid email is required").normalizeEmail(),
+  body("authorEmail")
+    .optional({ checkFalsy: true })
+    .isEmail()
+    .withMessage("Valid email is required")
+    .normalizeEmail(),
   body("body").trim().notEmpty().withMessage("Comment body is required").isLength({ max: 2000 }),
   body("parent").optional({ nullable: true }).isMongoId(),
 ];

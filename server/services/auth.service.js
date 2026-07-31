@@ -53,15 +53,21 @@ export async function getProfile(userId) {
 }
 
 /**
- * Bootstrap first admin (optional seed helper).
+ * Bootstrap first admin only — locked after an admin exists unless ALLOW_REGISTER=true.
  */
 export async function registerAdmin({ name, email, password }) {
+  const adminCount = await User.countDocuments({ role: "admin" });
+  if (adminCount > 0 && !config.allowRegister) {
+    throw new AppError(
+      "Registration is closed. Use seed:admin or set ALLOW_REGISTER=true.",
+      403
+    );
+  }
+
   const existing = await User.findOne({ email: email.toLowerCase() });
   if (existing) throw new AppError("Email already registered", 409);
 
-  const adminCount = await User.countDocuments({ role: "admin" });
   const role = adminCount === 0 ? "admin" : "author";
-
   const user = await User.create({ name, email, password, role });
   const token = signToken(user._id);
 

@@ -100,19 +100,49 @@ function SeoDesk() {
   useKeyboardShortcuts(shortcuts);
 
   function patch(partial) {
-    setForm((prev) => ({ ...prev, ...partial }));
-    setDirty(true);
-    setSaveLabel("Unsaved changes");
-    if (timer.current) clearTimeout(timer.current);
-    timer.current = setTimeout(() => save(true), 1600);
+    setForm((prev) => {
+      const next = { ...prev, ...partial };
+      setDirty(true);
+      setSaveLabel("Unsaved changes");
+      if (timer.current) clearTimeout(timer.current);
+      timer.current = setTimeout(() => {
+        updateSettings({ seoDefaults: next, sitemap })
+          .then(() => {
+            setDirty(false);
+            setSaveLabel(
+              `Saved ${new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`
+            );
+          })
+          .catch((err) => {
+            toast.error(err.message || "Save failed");
+            setSaveLabel("Save failed");
+          });
+      }, 1600);
+      return next;
+    });
   }
 
   function patchSitemap(partial) {
-    setSitemap((prev) => ({ ...prev, ...partial }));
-    setDirty(true);
-    setSaveLabel("Unsaved changes");
-    if (timer.current) clearTimeout(timer.current);
-    timer.current = setTimeout(() => save(true), 1600);
+    setSitemap((prev) => {
+      const next = { ...prev, ...partial };
+      setDirty(true);
+      setSaveLabel("Unsaved changes");
+      if (timer.current) clearTimeout(timer.current);
+      timer.current = setTimeout(() => {
+        updateSettings({ seoDefaults: form, sitemap: next })
+          .then(() => {
+            setDirty(false);
+            setSaveLabel(
+              `Saved ${new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`
+            );
+          })
+          .catch((err) => {
+            toast.error(err.message || "Save failed");
+            setSaveLabel("Save failed");
+          });
+      }, 1600);
+      return next;
+    });
   }
 
   if (loading) return <TableSkeleton rows={4} />;

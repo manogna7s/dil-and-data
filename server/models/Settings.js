@@ -16,11 +16,12 @@ const settingsSchema = new mongoose.Schema(
     },
     tagline: {
       type: String,
-      default: "Stories, letters, and quiet observations",
+      default: "A personal journal of heart, curiosity, and quiet strength",
     },
     about: {
       type: String,
-      default: "",
+      default:
+        "Manogna writes DIL & DATA — home of Shakti's Blog. Short letters, soft frames, and quiet strength.",
     },
     logo: { type: String, default: "" },
     favicon: { type: String, default: "" },

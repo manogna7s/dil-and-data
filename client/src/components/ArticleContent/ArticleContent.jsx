@@ -2,10 +2,18 @@ import styles from "./ArticleContent.module.css";
 import QuoteBlock from "../QuoteBlock/QuoteBlock";
 
 /**
- * Renders CMS-ready content blocks.
- * Backend later returns the same { type, ... } shape.
+ * Renders TipTap HTML from Creator Studio, or legacy content blocks.
  */
-function ArticleContent({ blocks = [] }) {
+function ArticleContent({ blocks = [], html = "" }) {
+  if (html) {
+    return (
+      <div
+        className={styles.content}
+        dangerouslySetInnerHTML={{ __html: html }}
+      />
+    );
+  }
+
   return (
     <div className={styles.content}>
       {blocks.map((block, index) => {
@@ -37,9 +45,7 @@ function ArticleContent({ blocks = [] }) {
             return (
               <figure key={key} className={styles.figure}>
                 <img src={block.src} alt={block.alt || ""} loading="lazy" />
-                {block.caption && (
-                  <figcaption>{block.caption}</figcaption>
-                )}
+                {block.caption && <figcaption>{block.caption}</figcaption>}
               </figure>
             );
           case "gallery":
@@ -63,7 +69,12 @@ function ArticleContent({ blocks = [] }) {
             );
           case "video":
             return (
-              <div key={key} className={styles.video} role="group" aria-label={block.title}>
+              <div
+                key={key}
+                className={styles.video}
+                role="group"
+                aria-label={block.title}
+              >
                 <img src={block.poster} alt="" loading="lazy" />
                 <span className={styles.play} aria-hidden="true">
                   ▶

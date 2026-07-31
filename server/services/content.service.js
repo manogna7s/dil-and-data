@@ -99,6 +99,15 @@ export async function updateContent(id, payload) {
 export async function deleteContent(id) {
   const doc = await Content.findByIdAndDelete(id);
   if (!doc) throw new AppError("Content not found", 404);
+
+  // Best-effort cleanup of related docs
+  const Comment = (await import("../models/Comment.js")).default;
+  const Like = (await import("../models/Like.js")).default;
+  await Promise.all([
+    Comment.deleteMany({ content: id }).catch(() => {}),
+    Like.deleteMany({ content: id }).catch(() => {}),
+  ]);
+
   return doc;
 }
 
@@ -139,6 +148,12 @@ export async function getContentById(id) {
 }
 
 export async function getContentBySlug(slug, { publicOnly = true } = {}) {
+  // Promote due scheduled drafts before public lookup.
+  if (publicOnly) {
+    const { publishDueScheduledContent } = await import("./scheduler.service.js");
+    await publishDueScheduledContent();
+  }
+
   const filter = { slug };
   if (publicOnly) filter.status = "published";
 

@@ -7,16 +7,31 @@ function siteBase(settings) {
   return fromSeo || process.env.CLIENT_URL?.replace(/\/$/, "") || "http://localhost:5173";
 }
 
+function apiBase(settings) {
+  const explicit = process.env.API_PUBLIC_URL?.replace(/\/$/, "");
+  if (explicit) return explicit;
+  // Prefer client origin + /api only when API is reverse-proxied under the same host.
+  const fromSeo = settings.seoDefaults?.canonicalBase?.replace(/\/$/, "");
+  if (fromSeo && process.env.SEO_SITEMAP_ON_CLIENT === "true") {
+    return `${fromSeo}/api`;
+  }
+  return (
+    process.env.API_PUBLIC_URL?.replace(/\/$/, "") ||
+    process.env.RENDER_EXTERNAL_URL?.replace(/\/$/, "") ||
+    `http://localhost:${process.env.PORT || 5050}/api`
+  );
+}
+
 export async function buildRobotsTxt() {
   const settings = await getSettings();
-  const base = siteBase(settings);
+  const api = apiBase(settings);
   const robots = settings.seoDefaults?.robots || "index, follow";
   const disallow = robots.includes("noindex") ? "Disallow: /\n" : "Disallow:\n";
 
   return [
     "User-agent: *",
     disallow.trimEnd(),
-    `Sitemap: ${base}/api/seo/sitemap.xml`,
+    `Sitemap: ${api}/seo/sitemap.xml`,
     "",
   ].join("\n");
 }

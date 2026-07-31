@@ -20,7 +20,12 @@ const app = express();
 
 app.set("trust proxy", 1);
 
-app.use(helmet());
+app.use(
+  helmet({
+    // API is called cross-origin from the Vite app (different port).
+    crossOriginResourcePolicy: { policy: "cross-origin" },
+  })
+);
 app.use(compression());
 
 /**
@@ -32,13 +37,21 @@ const extraOrigins = String(process.env.CLIENT_URLS || "")
   .map((s) => s.trim())
   .filter(Boolean);
 
+function normalizeOrigin(value = "") {
+  return String(value).trim().replace(/\/$/, "");
+}
+
 app.use(
   cors({
     origin(origin, callback) {
       if (!origin) return callback(null, true);
 
-      const allowed = new Set([config.clientUrl, ...extraOrigins]);
-      if (allowed.has(origin)) return callback(null, true);
+      const allowed = new Set(
+        [normalizeOrigin(config.clientUrl), ...extraOrigins.map(normalizeOrigin)].filter(
+          Boolean
+        )
+      );
+      if (allowed.has(normalizeOrigin(origin))) return callback(null, true);
 
       if (
         config.nodeEnv !== "production" &&

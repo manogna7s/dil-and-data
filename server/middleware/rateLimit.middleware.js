@@ -3,6 +3,7 @@ import config from "../config/index.js";
 
 /**
  * Global API rate limiter — protects public endpoints from abuse.
+ * Default ceiling is high enough for Studio autosave/upload in normal use.
  */
 export const apiRateLimiter = rateLimit({
   windowMs: config.rateLimit.windowMs,
@@ -16,7 +17,6 @@ export const apiRateLimiter = rateLimit({
     errors: null,
   },
 });
-
 /**
  * Stricter limiter for auth routes.
  */

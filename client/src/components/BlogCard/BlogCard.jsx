@@ -19,11 +19,13 @@ function BlogCard({
 
   return (
     <Card className={`${styles.card} ${className}`}>
-      <Link to={href} className={styles.mediaLink} tabIndex={-1} aria-hidden="true">
-        <div className={styles.media}>
-          <img src={image} alt="" className={styles.image} loading="lazy" />
-        </div>
-      </Link>
+      {image ? (
+        <Link to={href} className={styles.mediaLink} tabIndex={-1} aria-hidden="true">
+          <div className={styles.media}>
+            <img src={image} alt="" className={styles.image} loading="lazy" />
+          </div>
+        </Link>
+      ) : null}
 
       <div className={styles.body}>
         <div className={styles.meta}>

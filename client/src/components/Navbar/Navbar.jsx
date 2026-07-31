@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
-import { NavLink } from "react-router-dom";
-import { ROUTES } from "../../constants";
-import Logo from "../Logo/Logo";
+import { Link, NavLink } from "react-router-dom";
+import { ROUTES, SITE } from "../../constants";
 import { IconButton } from "../Button/Button";
 import { listNavPages } from "../../services/page.service.js";
 import { getSettings } from "../../services/settings.service.js";
@@ -9,14 +8,13 @@ import { pagePath } from "../../blocks/blockTypes";
 import styles from "./Navbar.module.css";
 
 const CORE_LINKS = [
-  { to: ROUTES.BLOGS, label: "Blogs" },
+  { to: ROUTES.BLOGS, label: "Shakti's Blog" },
   { to: ROUTES.CATEGORIES, label: "Categories" },
   { to: ROUTES.CONTACT, label: "Contact" },
 ];
 
 /**
- * Navbar — sticky, minimal, editorial.
- * CMS pages with showInNav appear automatically from GET /api/pages/nav.
+ * Editorial masthead — brand first, classic journal etiquette.
  */
 function Navbar() {
   const [open, setOpen] = useState(false);
@@ -26,6 +24,9 @@ function Navbar() {
     { to: ROUTES.ABOUT, label: "About" },
   ]);
   const [useCustomNav, setUseCustomNav] = useState(false);
+  const [brand, setBrand] = useState({
+    siteName: SITE.NAME,
+  });
 
   useEffect(() => {
     function onScroll() {
@@ -48,6 +49,12 @@ function Navbar() {
     (async () => {
       try {
         const settings = await getSettings();
+        if (!cancelled && settings?.siteName) {
+          setBrand({
+            siteName: settings.siteName || SITE.NAME,
+          });
+        }
+
         const custom = (settings?.navigation || []).filter(
           (item) => item?.enabled !== false && item?.label && item?.href
         );
@@ -74,7 +81,7 @@ function Navbar() {
           }))
         );
       } catch {
-        /* keep fallback Home/About */
+        /* keep fallback */
       }
     })();
     return () => {
@@ -89,27 +96,8 @@ function Navbar() {
   const links = useCustomNav ? cmsLinks : [...cmsLinks, ...CORE_LINKS];
 
   return (
-    <header
-      className={`${styles.header} ${scrolled ? styles.scrolled : ""}`}
-    >
-      <div className={styles.inner}>
-        <Logo size={28} />
-
-        <nav className={styles.desktopNav} aria-label="Main">
-          {links.map(({ to, label, end }) => (
-            <NavLink
-              key={`${to}-${label}`}
-              to={to}
-              end={end}
-              className={({ isActive }) =>
-                `${styles.link} ${isActive ? styles.active : ""}`
-              }
-            >
-              {label}
-            </NavLink>
-          ))}
-        </nav>
-
+    <header className={`${styles.header} ${scrolled ? styles.scrolled : ""}`}>
+      <div className={styles.masthead}>
         <IconButton
           label={open ? "Close menu" : "Open menu"}
           className={styles.menuToggle}
@@ -122,6 +110,13 @@ function Navbar() {
             <span />
           </span>
         </IconButton>
+
+        <Link to={ROUTES.HOME} className={styles.brand}>
+          <span className={styles.siteName}>{brand.siteName}</span>
+        </Link>
+
+        {/* Balances the hamburger so the brand stays visually centered */}
+        <span className={styles.menuSpacer} aria-hidden="true" />
       </div>
 
       <div
