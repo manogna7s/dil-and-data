@@ -8,7 +8,7 @@ function QuoteBlock({ children, attribution, className = "" }) {
   return (
     <blockquote className={`${styles.quote} ${className}`}>
       <p className={styles.text}>{children}</p>
-      {attribution && <cite className={styles.cite}>— {attribution}</cite>}
+      {attribution && <cite className={styles.cite}>{attribution}</cite>}
     </blockquote>
   );
 }

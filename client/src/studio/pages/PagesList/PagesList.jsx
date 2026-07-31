@@ -83,7 +83,7 @@ function PagesList() {
           <p className={styles.eyebrow}>Page builder</p>
           <h1 className={styles.title}>Pages</h1>
           <p className={styles.lede}>
-            Block-driven pages — Home, About, and every future shelf. No React edits required.
+            Block-driven pages for Home, About, and every future shelf. No React edits required.
           </p>
         </div>
       </header>

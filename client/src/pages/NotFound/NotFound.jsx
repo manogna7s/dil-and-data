@@ -12,7 +12,7 @@ function NotFound() {
         <Logo size={40} to={null} className={styles.logo} />
         <EmptyState
           title="Lost in another chapter"
-          description="The page wandered off into another chapter. Softly now — let's find our way home."
+          description="The page wandered off into another chapter. Softly now, let's find our way home."
           actionLabel="Return home"
           onAction={() => navigate(ROUTES.HOME)}
         />

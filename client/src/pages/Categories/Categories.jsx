@@ -141,7 +141,7 @@ function Categories() {
         <Section>
           <Container size="md">
             <p className={styles.hint}>
-              Pick a shelf above to begin — only published stories appear.
+              Pick a shelf above to begin. Only published stories appear.
             </p>
           </Container>
         </Section>

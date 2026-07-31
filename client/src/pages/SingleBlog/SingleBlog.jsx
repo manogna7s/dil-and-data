@@ -82,7 +82,7 @@ function SingleBlog() {
       <Container size="md">
         <EmptyState
           title="Story not found"
-          description="This chapter may have moved — or not been written yet."
+          description="This chapter may have moved, or not been written yet."
           actionLabel="Browse stories"
           onAction={() => navigate(ROUTES.BLOGS)}
         />

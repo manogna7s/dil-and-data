@@ -49,7 +49,7 @@ function CommentSection({ contentId }) {
       setName("");
       setEmail("");
       setMessage("");
-      setStatus("Thank you — your note awaits a quiet approval.");
+      setStatus("Thank you. Your note awaits a quiet approval.");
     } catch (err) {
       setStatus(err.message || "Could not send your note.");
     } finally {
@@ -63,7 +63,7 @@ function CommentSection({ contentId }) {
         Leave a note
       </h2>
       <p className={styles.note}>
-        Comments are a soft conversation — kind words welcome.
+        Comments are a soft conversation. Kind words welcome.
       </p>
 
       {comments.length > 0 && (

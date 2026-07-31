@@ -22,7 +22,7 @@ function StudioPlaceholder({ title, description }) {
         title={`${title} is on the way`}
         description={
           description ||
-          "This chapter of Creator Studio will open in the next phase — the shelf is ready."
+          "This chapter of Creator Studio will open in the next phase. The shelf is ready."
         }
         action={
           <Link to={STUDIO.DASHBOARD} className={styles.back}>

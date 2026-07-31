@@ -128,7 +128,7 @@ function Footer() {
           <div className={styles.newsletterCol}>
             <h4 className={styles.heading}>Newsletter</h4>
             <p className={styles.newsletterCopy}>
-              Soft letters, rarely sent — stories worth keeping.
+              Soft letters, rarely sent. Stories worth keeping.
             </p>
             <NewsletterInput />
           </div>

@@ -157,7 +157,7 @@ function SeoDesk() {
           <p className={desk.eyebrow}>Discovery</p>
           <h1 className={desk.title}>SEO</h1>
           <p className={desk.lede}>
-            Meta titles, Open Graph, robots, and the sitemap — edit without touching code.
+            Meta titles, Open Graph, robots, and the sitemap. Edit without touching code.
           </p>
         </div>
         <div className={desk.saveBar}>

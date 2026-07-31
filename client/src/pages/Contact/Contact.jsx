@@ -61,7 +61,7 @@ function Contact() {
 
     const subject = encodeURIComponent(`Letter from ${form.name.trim()}`);
     const body = encodeURIComponent(
-      `${form.message.trim()}\n\n— ${form.name.trim()}\n${form.email.trim()}`
+      `${form.message.trim()}\n\n${form.name.trim()}\n${form.email.trim()}`
     );
     window.location.href = `mailto:${to}?subject=${subject}&body=${body}`;
     setStatus("Opening your email app…");
@@ -74,7 +74,7 @@ function Contact() {
         title="Say hello"
         description={
           site.note ||
-          "A letter, a kind note, or a soft hello — I read every one."
+          "A letter, a kind note, or a soft hello. I read every one."
         }
       />
 
@@ -84,7 +84,7 @@ function Contact() {
             <div className={styles.story}>
               <p className={styles.handwritten}>dear reader,</p>
               <p>
-                If something here made you pause, smile, or feel a little less alone —
+                If something here made you pause, smile, or feel a little less alone,
                 I would love to hear from you. No pitch decks required. Just words.
               </p>
               <p>
@@ -151,7 +151,7 @@ function Contact() {
               {status && <p className={styles.formHint}>{status}</p>}
               {site.email && (
                 <p className={styles.formHint}>
-                  Or email directly —{" "}
+                  Or email directly:{" "}
                   <a href={`mailto:${site.email}`} className="link-underline">
                     {site.email}
                   </a>

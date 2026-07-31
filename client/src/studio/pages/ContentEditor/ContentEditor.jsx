@@ -307,7 +307,7 @@ function ContentEditor() {
     }
     const saved = await saveNow({ silent: false, statusOverride: "draft" });
     if (saved) {
-      setSaveLabel("Scheduled — publishes automatically at that time");
+      setSaveLabel("Scheduled. Publishes automatically at that time");
     }
   }
 

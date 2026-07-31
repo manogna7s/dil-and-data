@@ -117,7 +117,7 @@ function CategoriesDesk() {
           <p className={desk.eyebrow}>Shelves</p>
           <h1 className={desk.title}>Categories</h1>
           <p className={desk.lede}>
-            Organize Shakti's Blog — travel, books, diary, and whatever else you invent.
+            Organize Shakti's Blog: travel, books, diary, and whatever else you invent.
           </p>
         </div>
       </header>

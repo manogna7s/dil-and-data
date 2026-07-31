@@ -21,7 +21,7 @@ const settingsSchema = new mongoose.Schema(
     about: {
       type: String,
       default:
-        "Manogna writes DIL & DATA — home of Shakti's Blog. Short letters, soft frames, and quiet strength.",
+        "Manogna writes DIL & DATA, home of Shakti's Blog. Short letters, soft frames, and quiet strength.",
     },
     logo: { type: String, default: "" },
     favicon: { type: String, default: "" },

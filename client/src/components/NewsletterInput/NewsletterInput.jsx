@@ -23,7 +23,7 @@ function NewsletterInput({
     try {
       await subscribe({ email: email.trim() });
       setEmail("");
-      setStatus("You're on the list — soft letters, rarely sent.");
+      setStatus("You're on the list. Soft letters, rarely sent.");
     } catch (err) {
       setStatus(err.message || "Could not subscribe. Try again?");
     } finally {

@@ -107,7 +107,7 @@ function Blogs() {
       <PageHeader
         eyebrow={SITE.BLOG_NAME}
         title="Stories from the journal"
-        description="Essays, letters, and soft observations — published only when they feel ready."
+        description="Essays, letters, and soft observations, published only when they feel ready."
       />
 
       <Section>

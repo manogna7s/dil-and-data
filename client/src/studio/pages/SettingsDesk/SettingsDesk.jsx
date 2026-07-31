@@ -160,7 +160,7 @@ function SettingsDesk() {
           <p className={desk.eyebrow}>Site identity</p>
           <h1 className={desk.title}>Settings</h1>
           <p className={desk.lede}>
-            Name, mark, footer, socials, contact, and analytics — classic desk, no cards.
+            Name, mark, footer, socials, contact, and analytics. Classic desk, no cards.
           </p>
         </div>
         <div className={desk.saveBar}>

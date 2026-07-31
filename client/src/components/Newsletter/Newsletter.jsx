@@ -9,7 +9,7 @@ import styles from "./Newsletter.module.css";
  */
 function Newsletter({
   title = "Stay close to the stories",
-  description = "Occasional letters — never noise. Just warm notes from the journal.",
+  description = "Occasional letters, never noise. Just warm notes from the journal.",
   onSubmit,
   className = "",
 }) {
