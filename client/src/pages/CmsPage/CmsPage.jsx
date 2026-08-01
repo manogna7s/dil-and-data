@@ -18,23 +18,34 @@ function CmsPage({ slug: slugProp, preview = false }) {
 
   useEffect(() => {
     let cancelled = false;
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 45000);
+
     (async () => {
       setLoading(true);
       setError("");
       try {
-        const data = await getPageBySlug(slug, { preview });
+        const data = await getPageBySlug(slug, { preview, signal: controller.signal });
         if (!cancelled) setPage(data);
       } catch (err) {
         if (!cancelled) {
           setPage(null);
-          setError(err.message || "Page not found");
+          const aborted = err?.name === "AbortError" || controller.signal.aborted;
+          setError(
+            aborted
+              ? "The journal is waking up (slow API). Refresh in a few seconds."
+              : err.message || "Page not found"
+          );
         }
       } finally {
+        clearTimeout(timeout);
         if (!cancelled) setLoading(false);
       }
     })();
     return () => {
       cancelled = true;
+      clearTimeout(timeout);
+      controller.abort();
     };
   }, [slug, preview]);
 
@@ -68,6 +79,8 @@ function CmsPage({ slug: slugProp, preview = false }) {
         <EmptyState
           title="Page not found"
           description={error || "This page has not been published yet."}
+          actionLabel="Refresh"
+          onAction={() => window.location.reload()}
         />
       </div>
     );
