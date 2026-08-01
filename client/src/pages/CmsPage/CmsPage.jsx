@@ -74,10 +74,11 @@ function CmsPage({ slug: slugProp, preview = false }) {
   }
 
   if (error || !page) {
+    const waking = /waking up|slow api|failed to fetch|network/i.test(String(error || ""));
     return (
       <div className={styles.state}>
         <EmptyState
-          title="Page not found"
+          title={waking ? "Almost there…" : "Page not found"}
           description={error || "This page has not been published yet."}
           actionLabel="Refresh"
           onAction={() => window.location.reload()}
