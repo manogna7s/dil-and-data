@@ -128,9 +128,8 @@ function Footer() {
           <div className={styles.newsletterCol}>
             <h4 className={styles.heading}>Newsletter</h4>
             <p className={styles.newsletterCopy}>
-              Want Updates on What's New at Dil & Data? <br/> 
+              Want Updates on What's New at Dil & Data?
               Subscribe to our newsletter and Join the journey.
-             
             </p>
             <NewsletterInput />
           </div>
