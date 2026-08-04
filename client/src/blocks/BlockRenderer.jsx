@@ -19,6 +19,7 @@ import {
   fetchPublicCategories,
   toCardProps,
 } from "./fetchLive";
+import { resolveSectionTone } from "./blockTypes";
 import styles from "./blocks.module.css";
 
 /**
@@ -53,7 +54,12 @@ export function BlockView({ block }) {
           alt: item.alt || item.title || "",
         }));
       if (!photos.length) return null;
-      return <PhotographyCarousel photos={photos} />;
+      return (
+        <PhotographyCarousel
+          photos={photos}
+          tone={resolveSectionTone(data.tone, "surface")}
+        />
+      );
     }
     case "latestStories":
       return <LatestStoriesBlock data={data} />;
@@ -62,7 +68,7 @@ export function BlockView({ block }) {
     case "quote":
       if (!String(data.text || "").trim()) return null;
       return (
-        <Section>
+        <Section tone={resolveSectionTone(data.tone, "default")}>
           <Container size="sm">
             {data.eyebrow && (
               <p className={`eyebrow ${styles.quoteLabel}`}>{data.eyebrow}</p>
@@ -72,10 +78,16 @@ export function BlockView({ block }) {
         </Section>
       );
     case "newsletter":
-      return <Newsletter />;
+      return (
+        <Newsletter
+          title={data.title || undefined}
+          description={data.description || undefined}
+          tone={resolveSectionTone(data.tone, "surface")}
+        />
+      );
     case "aboutPreview":
       return (
-        <Section tone="surface">
+        <Section tone={resolveSectionTone(data.tone, "surface")}>
           <Container size="lg">
             <div
               className={`${styles.aboutPreview} ${
@@ -107,7 +119,7 @@ export function BlockView({ block }) {
       const items = (data.items || []).filter((item) => item?.title);
       if (!items.length) return null;
       return (
-        <Section>
+        <Section tone={resolveSectionTone(data.tone, "default")}>
           <Container size="lg">
             {data.title && (
               <SectionTitle align="center">{data.title}</SectionTitle>
@@ -126,7 +138,7 @@ export function BlockView({ block }) {
     }
     case "divider":
       return (
-        <Section>
+        <Section tone={resolveSectionTone(data.tone, "default")}>
           <Container size="sm">
             <Divider label={data.label || undefined} />
           </Container>
@@ -135,7 +147,7 @@ export function BlockView({ block }) {
     case "image":
       if (!data.url) return null;
       return (
-        <Section>
+        <Section tone={resolveSectionTone(data.tone, "default")}>
           <Container size="md">
             <figure className={styles.figure}>
               <img src={data.url} alt={data.alt || ""} loading="lazy" />
@@ -146,7 +158,7 @@ export function BlockView({ block }) {
       );
     case "gallery":
       return (
-        <Section>
+        <Section tone={resolveSectionTone(data.tone, "default")}>
           <Container size="lg">
             {data.title && <SectionTitle>{data.title}</SectionTitle>}
             <div className={styles.gallery}>
@@ -165,7 +177,7 @@ export function BlockView({ block }) {
     case "video":
       if (!data.url) return null;
       return (
-        <Section>
+        <Section tone={resolveSectionTone(data.tone, "default")}>
           <Container size="md">
             {data.title && <SectionTitle>{data.title}</SectionTitle>}
             <video
@@ -180,7 +192,7 @@ export function BlockView({ block }) {
       );
     case "richText":
       return (
-        <Section tone={data.tone === "surface" || data.tone === "muted" ? data.tone : undefined}>
+        <Section tone={resolveSectionTone(data.tone, "default")}>
           <Container size="md">
             {data.eyebrow && <p className="eyebrow">{data.eyebrow}</p>}
             {data.title && <SectionTitle>{data.title}</SectionTitle>}
@@ -193,7 +205,7 @@ export function BlockView({ block }) {
       );
     case "timeline":
       return (
-        <Section tone="surface">
+        <Section tone={resolveSectionTone(data.tone, "surface")}>
           <Container size="md">
             {data.title && (
               <SectionTitle align="center">{data.title}</SectionTitle>
@@ -214,7 +226,7 @@ export function BlockView({ block }) {
       );
     case "bookshelf":
       return (
-        <Section tone="muted">
+        <Section tone={resolveSectionTone(data.tone, "muted")}>
           <Container size="lg">
             {data.title && <SectionTitle>{data.title}</SectionTitle>}
             {data.note && <p className={styles.shelfNote}>{data.note}</p>}
@@ -235,7 +247,7 @@ export function BlockView({ block }) {
       );
     case "faq":
       return (
-        <Section tone="surface">
+        <Section tone={resolveSectionTone(data.tone, "surface")}>
           <Container size="md">
             {data.title && (
               <SectionTitle align="center">{data.title}</SectionTitle>
@@ -253,7 +265,7 @@ export function BlockView({ block }) {
       );
     case "cta":
       return (
-        <Section tone={data.tone || "surface"}>
+        <Section tone={resolveSectionTone(data.tone, "surface")}>
           <Container size="sm">
             <div className={styles.ctaBlock}>
               {data.title && <SectionTitle align="center">{data.title}</SectionTitle>}
@@ -270,7 +282,7 @@ export function BlockView({ block }) {
     case "embed":
       if (!data.html) return null;
       return (
-        <Section>
+        <Section tone={resolveSectionTone(data.tone, "default")}>
           <Container size="md">
             <div
               className={styles.embed}
@@ -305,7 +317,12 @@ function FeaturedStoryBlock({ data }) {
   }, [data.contentId, data.source]);
 
   if (!post) return null;
-  return <FeaturedStory post={post} />;
+  return (
+    <FeaturedStory
+      post={post}
+      tone={resolveSectionTone(data.tone, "default")}
+    />
+  );
 }
 
 function LatestStoriesBlock({ data }) {
@@ -330,7 +347,7 @@ function LatestStoriesBlock({ data }) {
   if (!posts.length) return null;
 
   return (
-    <Section>
+    <Section tone={resolveSectionTone(data.tone, "default")}>
       <Container size="lg">
         <div className={styles.sectionHead}>
           <SectionTitle>{data.title || "Latest stories"}</SectionTitle>
@@ -378,7 +395,7 @@ function CategoriesBlock({ data }) {
   if (!categories.length) return null;
 
   return (
-    <Section tone={data.tone || "muted"}>
+    <Section tone={resolveSectionTone(data.tone, "muted")}>
       <Container size="lg">
         <SectionTitle align="center">{data.title || "Browse categories"}</SectionTitle>
         <div className={styles.categoryGrid}>

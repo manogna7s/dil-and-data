@@ -15,6 +15,14 @@
   background: var(--color-surface-elevated);
 }
 
+.white {
+  background: var(--color-white);
+}
+
+.blush {
+  background: var(--color-highlight);
+}
+
 @media (max-width: 768px) {
   .section {
     padding-block: var(--section-padding-y-sm);

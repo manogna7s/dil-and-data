@@ -128,7 +128,9 @@ function Footer() {
           <div className={styles.newsletterCol}>
             <h4 className={styles.heading}>Newsletter</h4>
             <p className={styles.newsletterCopy}>
-              Soft letters, rarely sent. Stories worth keeping.
+              Want Updates on What's New at Dil & Data? <br/> 
+              Subscribe to our newsletter and Join the journey.
+             
             </p>
             <NewsletterInput />
           </div>

@@ -1,11 +1,11 @@
 import { apiRequest } from "./api.js";
 
-export async function getPageBySlug(slug, { preview = false } = {}) {
+export async function getPageBySlug(slug, { preview = false, signal } = {}) {
   if (preview) {
-    const result = await apiRequest(`/pages/admin/slug/${slug}`);
+    const result = await apiRequest(`/pages/admin/slug/${slug}`, { signal });
     return result.data;
   }
-  const result = await apiRequest(`/pages/slug/${slug}`, { auth: false });
+  const result = await apiRequest(`/pages/slug/${slug}`, { auth: false, signal });
   return result.data;
 }
 

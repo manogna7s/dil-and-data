@@ -194,7 +194,7 @@ function SeoDesk() {
           <input
             value={form.canonicalBase}
             onChange={(e) => patch({ canonicalBase: e.target.value })}
-            placeholder="https://dilanddata.com"
+            placeholder="https://www.dilanddata.in"
           />
         </label>
 

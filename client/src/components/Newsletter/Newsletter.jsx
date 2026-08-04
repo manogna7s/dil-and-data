@@ -3,6 +3,14 @@ import NewsletterInput from "../NewsletterInput/NewsletterInput";
 import SectionTitle from "../SectionTitle/SectionTitle";
 import styles from "./Newsletter.module.css";
 
+const TONE_CLASS = {
+  default: styles.default,
+  surface: styles.surface,
+  muted: styles.muted,
+  white: styles.white,
+  blush: styles.blush,
+};
+
 /**
  * Newsletter — full-width soft band for email signup.
  * Used in Footer and optionally mid-page on Home.
@@ -12,9 +20,11 @@ function Newsletter({
   description = "Occasional letters, never noise. Just warm notes from the journal.",
   onSubmit,
   className = "",
+  tone = "surface",
 }) {
+  const toneClass = TONE_CLASS[tone] || styles.surface;
   return (
-    <div className={`${styles.band} ${className}`}>
+    <div className={`${styles.band} ${toneClass} ${className}`}>
       <Container size="md" className={styles.inner}>
         <SectionTitle align="center" as="h3" className={styles.title}>
           {title}

@@ -1,6 +1,25 @@
 .band {
-  background: var(--color-surface);
   padding-block: var(--space-3xl);
+}
+
+.default {
+  background: transparent;
+}
+
+.surface {
+  background: var(--color-surface);
+}
+
+.muted {
+  background: var(--color-surface-elevated);
+}
+
+.white {
+  background: var(--color-white);
+}
+
+.blush {
+  background: var(--color-highlight);
 }
 
 .inner {

@@ -9,7 +9,7 @@ import styles from "./PhotographyCarousel.module.css";
  * PhotographyCarousel — slow autoplay cinematic gallery.
  * photos[] will later come from GET /api/photography.
  */
-function PhotographyCarousel({ photos = [], interval = 6000 }) {
+function PhotographyCarousel({ photos = [], interval = 6000, tone = "surface" }) {
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const touchStartX = useRef(0);
@@ -50,7 +50,7 @@ function PhotographyCarousel({ photos = [], interval = 6000 }) {
   }
 
   return (
-    <Section tone="surface" className={styles.section}>
+    <Section tone={tone} className={styles.section}>
       <Container size="xl">
         <div className={styles.header}>
           <SectionTitle>Through the lens</SectionTitle>

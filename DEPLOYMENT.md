@@ -75,9 +75,14 @@ VITE_API_URL=https://YOUR-RENDER-SERVICE.onrender.com/api
 
 ## 5. Custom domain
 
-1. Add domain in Vercel → follow DNS instructions.
-2. Set Studio → SEO → canonical base to `https://yourdomain.com`.
-3. Optionally map `api.yourdomain.com` to Render and set `API_PUBLIC_URL` accordingly.
+Live site: [https://www.dilanddata.in/](https://www.dilanddata.in/)
+
+1. Add `www.dilanddata.in` and `dilanddata.in` in Vercel → follow DNS instructions.
+2. On Render, set:
+   - `CLIENT_URL=https://www.dilanddata.in`
+   - `CLIENT_URLS=https://dilanddata.in`
+3. Set Studio → SEO → canonical base to `https://www.dilanddata.in`.
+4. Optionally map `api.dilanddata.in` to Render and set `API_PUBLIC_URL` accordingly.
 
 ---
 

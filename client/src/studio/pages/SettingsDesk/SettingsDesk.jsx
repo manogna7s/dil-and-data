@@ -359,7 +359,7 @@ function SettingsDesk() {
           <input
             value={form.plausibleDomain}
             onChange={(e) => patch({ plausibleDomain: e.target.value })}
-            placeholder="dilanddata.com"
+            placeholder="www.dilanddata.in"
           />
         </label>
       </div>

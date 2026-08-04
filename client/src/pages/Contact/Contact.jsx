@@ -88,7 +88,7 @@ function Contact() {
                 I would love to hear from you. No pitch decks required. Just words.
               </p>
               <p>
-                {site.author} writes slowly and replies the same way. Tell me about a book
+                I write slowly and reply in the same way. Tell me about a book
                 you loved, a mountain you climbed, or a morning that felt like a poem.
               </p>
               <p className={styles.signoff}>with warmth,</p>

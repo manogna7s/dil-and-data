@@ -1,6 +1,10 @@
 import { useState } from "react";
 import MediaPicker from "../../components/media/MediaPicker";
-import { PAGE_BLOCK_TYPES } from "../../../blocks/blockTypes";
+import {
+  PAGE_BLOCK_TYPES,
+  SECTION_TONES,
+  defaultBlockData,
+} from "../../../blocks/blockTypes";
 import styles from "./BlockFields.module.css";
 
 /**
@@ -9,6 +13,7 @@ import styles from "./BlockFields.module.css";
 function BlockFields({ block, onChange }) {
   if (!block) return null;
   const data = block.data || {};
+  const typeDefaultTone = defaultBlockData(block.type).tone || "default";
 
   function set(partial) {
     onChange({ ...data, ...partial });
@@ -33,6 +38,22 @@ function BlockFields({ block, onChange }) {
       <p className={styles.type}>
         {PAGE_BLOCK_TYPES.find((t) => t.type === block.type)?.label || block.type}
       </p>
+
+      {block.type !== "hero" && (
+        <label className={styles.field}>
+          <span>Background</span>
+          <select
+            value={data.tone || typeDefaultTone}
+            onChange={(e) => set({ tone: e.target.value })}
+          >
+            {SECTION_TONES.map((opt) => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
+            ))}
+          </select>
+        </label>
+      )}
 
       {block.type === "hero" && (
         <>
@@ -166,14 +187,6 @@ function BlockFields({ block, onChange }) {
           <Field label="Eyebrow" value={data.eyebrow} onChange={(v) => set({ eyebrow: v })} />
           <Field label="Title" value={data.title} onChange={(v) => set({ title: v })} />
           <Field label="HTML body" value={data.html} onChange={(v) => set({ html: v })} area rows={8} />
-          <label className={styles.field}>
-            <span>Tone</span>
-            <select value={data.tone || "default"} onChange={(e) => set({ tone: e.target.value })}>
-              <option value="default">Default</option>
-              <option value="surface">Surface</option>
-              <option value="muted">Muted</option>
-            </select>
-          </label>
         </>
       )}
 

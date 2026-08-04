@@ -15,39 +15,44 @@ function CmsPage({ slug: slugProp, preview = false }) {
   const [page, setPage] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
+  const [reloadToken, setReloadToken] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 45000);
-
     (async () => {
       setLoading(true);
       setError("");
-      try {
-        const data = await getPageBySlug(slug, { preview, signal: controller.signal });
-        if (!cancelled) setPage(data);
-      } catch (err) {
-        if (!cancelled) {
-          setPage(null);
-          const aborted = err?.name === "AbortError" || controller.signal.aborted;
-          setError(
-            aborted
-              ? "The journal is waking up (slow API). Refresh in a few seconds."
-              : err.message || "Page not found"
-          );
+      let lastError = null;
+      for (let attempt = 0; attempt < 2; attempt += 1) {
+        try {
+          const data = await getPageBySlug(slug, { preview });
+          if (!cancelled) {
+            setPage(data);
+            setError("");
+          }
+          lastError = null;
+          break;
+        } catch (err) {
+          lastError = err;
+          // Render free-tier API often needs a warm-up on first hit.
+          if (attempt === 0) {
+            await new Promise((r) => setTimeout(r, 1200));
+          }
         }
-      } finally {
-        clearTimeout(timeout);
-        if (!cancelled) setLoading(false);
       }
+      if (!cancelled && lastError) {
+        setPage(null);
+        setError(
+          lastError.message ||
+            "Could not load this page. The API may be waking up — try again."
+        );
+      }
+      if (!cancelled) setLoading(false);
     })();
     return () => {
       cancelled = true;
-      clearTimeout(timeout);
-      controller.abort();
     };
-  }, [slug, preview]);
+  }, [slug, preview, reloadToken]);
 
   useEffect(() => {
     if (!page) return;
@@ -74,14 +79,16 @@ function CmsPage({ slug: slugProp, preview = false }) {
   }
 
   if (error || !page) {
-    const waking = /waking up|slow api|failed to fetch|network/i.test(String(error || ""));
     return (
       <div className={styles.state}>
         <EmptyState
-          title={waking ? "Almost there…" : "Page not found"}
-          description={error || "This page has not been published yet."}
-          actionLabel="Refresh"
-          onAction={() => window.location.reload()}
+          title={slug === "home" ? "Home is waking up" : "Page not found"}
+          description={
+            error ||
+            "This page has not been published yet. If you just opened the site, wait a moment and retry."
+          }
+          actionLabel="Try again"
+          onAction={() => setReloadToken((n) => n + 1)}
         />
       </div>
     );

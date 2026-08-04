@@ -22,6 +22,21 @@ export const PAGE_BLOCK_TYPES = [
   { type: "embed", label: "Embed" },
 ];
 
+/** Brand section background presets (Studio + Section tone classes). */
+export const SECTION_TONES = [
+  { value: "default", label: "Default (page)" },
+  { value: "surface", label: "Soft cream" },
+  { value: "muted", label: "Warm beige" },
+  { value: "white", label: "White" },
+  { value: "blush", label: "Soft blush" },
+];
+
+const SECTION_TONE_VALUES = new Set(SECTION_TONES.map((t) => t.value));
+
+export function resolveSectionTone(tone, fallback = "default") {
+  return SECTION_TONE_VALUES.has(tone) ? tone : fallback;
+}
+
 export function defaultBlockData(type) {
   const map = {
     hero: {
@@ -31,18 +46,19 @@ export function defaultBlockData(type) {
       ctaLabel: "Enter the journal",
       ctaTo: "/blogs",
     },
-    featuredStory: { source: "featured", contentId: "" },
-    photographyCarousel: { title: "", items: [] },
+    featuredStory: { source: "featured", contentId: "", tone: "default" },
+    photographyCarousel: { title: "", items: [], tone: "surface" },
     latestStories: {
       title: "Latest stories",
       limit: 6,
       seeAllLabel: "View all",
       seeAllTo: "/blogs",
       contentType: "",
+      tone: "default",
     },
     categories: { title: "Browse categories", tone: "muted" },
-    quote: { text: "", attribution: "", eyebrow: "" },
-    newsletter: { title: "", description: "" },
+    quote: { text: "", attribution: "", eyebrow: "", tone: "default" },
+    newsletter: { title: "", description: "", tone: "surface" },
     aboutPreview: {
       name: "",
       role: "",
@@ -50,19 +66,21 @@ export function defaultBlockData(type) {
       portrait: "",
       ctaLabel: "Read more about me",
       ctaTo: "/about",
+      tone: "surface",
     },
     features: {
       title: "What lives here",
       items: [],
+      tone: "default",
     },
-    divider: { label: "" },
-    image: { url: "", alt: "", caption: "" },
-    gallery: { title: "", items: [] },
-    video: { url: "", title: "", poster: "" },
+    divider: { label: "", tone: "default" },
+    image: { url: "", alt: "", caption: "", tone: "default" },
+    gallery: { title: "", items: [], tone: "default" },
+    video: { url: "", title: "", poster: "", tone: "default" },
     richText: { eyebrow: "", title: "", html: "", tone: "default" },
-    timeline: { title: "Timeline", items: [] },
-    bookshelf: { title: "Bookshelf", note: "", items: [] },
-    faq: { title: "FAQ", items: [] },
+    timeline: { title: "Timeline", items: [], tone: "surface" },
+    bookshelf: { title: "Bookshelf", note: "", items: [], tone: "muted" },
+    faq: { title: "FAQ", items: [], tone: "surface" },
     cta: {
       title: "",
       description: "",
@@ -70,7 +88,7 @@ export function defaultBlockData(type) {
       buttonTo: "/",
       tone: "surface",
     },
-    embed: { html: "", caption: "" },
+    embed: { html: "", caption: "", tone: "default" },
   };
   return { ...(map[type] || {}) };
 }

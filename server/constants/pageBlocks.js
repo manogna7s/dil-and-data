@@ -52,10 +52,12 @@ export function defaultBlockData(type) {
     featuredStory: {
       source: "featured",
       contentId: "",
+      tone: "default",
     },
     photographyCarousel: {
       title: "",
       items: [],
+      tone: "surface",
     },
     latestStories: {
       title: "Latest stories",
@@ -63,6 +65,7 @@ export function defaultBlockData(type) {
       seeAllLabel: "View all",
       seeAllTo: "/blogs",
       contentType: "",
+      tone: "default",
     },
     categories: {
       title: "Browse categories",
@@ -72,10 +75,12 @@ export function defaultBlockData(type) {
       text: "",
       attribution: "",
       eyebrow: "Quote of the week",
+      tone: "default",
     },
     newsletter: {
       title: "",
       description: "",
+      tone: "surface",
     },
     aboutPreview: {
       name: "",
@@ -84,27 +89,33 @@ export function defaultBlockData(type) {
       portrait: "",
       ctaLabel: "Read more about me",
       ctaTo: "/about",
+      tone: "surface",
     },
     features: {
       title: "What lives here",
       items: [],
+      tone: "default",
     },
     divider: {
       label: "",
+      tone: "default",
     },
     image: {
       url: "",
       alt: "",
       caption: "",
+      tone: "default",
     },
     gallery: {
       title: "",
       items: [],
+      tone: "default",
     },
     video: {
       url: "",
       title: "",
       poster: "",
+      tone: "default",
     },
     richText: {
       eyebrow: "",
@@ -115,15 +126,18 @@ export function defaultBlockData(type) {
     timeline: {
       title: "A quiet timeline",
       items: [],
+      tone: "surface",
     },
     bookshelf: {
       title: "Bookshelf",
       note: "",
       items: [],
+      tone: "muted",
     },
     faq: {
       title: "FAQ",
       items: [],
+      tone: "surface",
     },
     cta: {
       title: "",
@@ -135,6 +149,7 @@ export function defaultBlockData(type) {
     embed: {
       html: "",
       caption: "",
+      tone: "default",
     },
   };
 

@@ -10,13 +10,13 @@ import styles from "./FeaturedStory.module.css";
  * FeaturedStory — large editorial teaser for the homepage.
  * Props map 1:1 to a future featured-post API payload.
  */
-function FeaturedStory({ post }) {
+function FeaturedStory({ post, tone = "default" }) {
   if (!post) return null;
 
   const href = `/blogs/${post.slug}`;
 
   return (
-    <Section className={styles.section}>
+    <Section tone={tone} className={styles.section}>
       <Container size="lg">
         <SectionTitle>Featured story</SectionTitle>
         <article className={styles.layout}>

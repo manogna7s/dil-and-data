@@ -21,7 +21,7 @@ cd "C:\Users\manog\dil and data\server"
 ```powershell
 $env:FORCE_SEED="true"
 $env:SEED_ADMIN_EMAIL="admin@dilanddata.com"
-$env:SEED_ADMIN_PASSWORD="5196423xx!"
+$env:SEED_ADMIN_PASSWORD="YourStrongPasswordHere!"
 $env:SEED_ADMIN_NAME="Manogna"
 npm run seed:admin
 ```
@@ -127,12 +127,20 @@ npm run seed:pages
 7. **Manual Deploy** → clear cache / redeploy the API so CORS picks up the new client URL.
 8. Open the Vercel site → `/studio/login` → log in with the production admin password.
 
-### Optional — custom domain
+### Custom domain — https://www.dilanddata.in
 
-1. Vercel → Project → **Domains** → add `yourdomain.com` → follow DNS instructions.
-2. Render → add custom domain for API if you want `api.yourdomain.com`.
-3. Update `CLIENT_URL`, `API_PUBLIC_URL`, and `VITE_API_URL`, then redeploy both.
-4. In Studio → **SEO** → set **Canonical base** to `https://yourdomain.com`.
+Live site: [https://www.dilanddata.in/](https://www.dilanddata.in/)
+
+1. Vercel → Project → **Domains** → add `www.dilanddata.in` and `dilanddata.in` → follow DNS instructions (redirect apex → www, or serve both).
+2. Render → Environment → set CORS for both hosts, then redeploy:
+
+| Key | Value |
+|-----|--------|
+| `CLIENT_URL` | `https://www.dilanddata.in` |
+| `CLIENT_URLS` | `https://dilanddata.in` |
+
+3. Optional: map `api.dilanddata.in` to Render and set `API_PUBLIC_URL` + client `VITE_API_URL` accordingly, then redeploy both.
+4. In Studio → **SEO** → set **Canonical base** to `https://www.dilanddata.in`.
 
 ---
 
@@ -208,8 +216,10 @@ npm run seed:pages
 - [ ] Atlas + Cloudinary ready
 - [ ] Render API live + `/api/health` OK
 - [ ] Vercel live + `VITE_API_URL` set
-- [ ] Render `CLIENT_URL` = Vercel URL
+- [ ] Domain live: `https://www.dilanddata.in`
+- [ ] Render `CLIENT_URL` = `https://www.dilanddata.in` (+ `CLIENT_URLS` for apex)
 - [ ] Settings: contact email, socials, logo, favicon
+- [ ] Studio SEO canonical base = `https://www.dilanddata.in`
 - [ ] At least one published story
 
 Full feature matrix: [PHASE6_REPORT.md](./PHASE6_REPORT.md)  
