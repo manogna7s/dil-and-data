@@ -4,6 +4,7 @@ import Container from "../Container/Container";
 import Section from "../Section/Section";
 import SectionTitle from "../SectionTitle/SectionTitle";
 import { formatBlogDate } from "../../utils/formatDate.js";
+import { optimizeImageUrl } from "../../utils/optimizeImage.js";
 import styles from "./FeaturedStory.module.css";
 
 /**
@@ -23,10 +24,11 @@ function FeaturedStory({ post, tone = "default" }) {
           {post.coverImage ? (
             <Link to={href} className={styles.media} tabIndex={-1} aria-hidden="true">
               <img
-                src={post.coverImage}
+                src={optimizeImageUrl(post.coverImage, { width: 900 })}
                 alt=""
                 className={styles.image}
                 loading="lazy"
+                decoding="async"
               />
             </Link>
           ) : null}

@@ -15,6 +15,7 @@ import ArticleContent from "../../components/ArticleContent/ArticleContent";
 import ArticleActions from "../../components/ArticleActions/ArticleActions";
 import CommentSection from "../../components/CommentSection/CommentSection";
 import { formatBlogDate } from "../../utils/formatDate.js";
+import { optimizeImageUrl, optimizeHtmlImages } from "../../utils/optimizeImage.js";
 import { ROUTES, SITE } from "../../constants";
 import {
   getContentBySlug,
@@ -36,16 +37,18 @@ function SingleBlog() {
     (async () => {
       setLoading(true);
       setMissing(false);
+      setRelated([]);
       try {
         const item = await getContentBySlug(slug);
         if (cancelled) return;
         setPost(item);
+        setLoading(false);
 
         const more = await listPublicContent({
           limit: 4,
           sort: "newest",
           type: "blog",
-          category: item?.category?._id || "",
+          category: item?.category?.slug || item?.category?._id || "",
         });
         if (cancelled) return;
         const cards = (more?.items || [])
@@ -59,9 +62,8 @@ function SingleBlog() {
           setPost(null);
           setRelated([]);
           setMissing(true);
+          setLoading(false);
         }
-      } finally {
-        if (!cancelled) setLoading(false);
       }
     })();
     return () => {
@@ -131,17 +133,19 @@ function SingleBlog() {
       {post.coverImage ? (
         <div className={styles.cover}>
           <img
-            src={post.coverImage}
+            src={optimizeImageUrl(post.coverImage, { width: 1600 })}
             alt=""
             className={styles.coverImage}
             loading="eager"
+            fetchPriority="high"
+            decoding="async"
           />
         </div>
       ) : null}
 
       <Container size="md" className={styles.bodyLayout}>
         <div className={styles.article}>
-          <ArticleContent html={post.body || ""} />
+          <ArticleContent html={optimizeHtmlImages(post.body || "")} />
           <ArticleActions
             title={post.title}
             slug={post.slug}

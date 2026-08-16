@@ -1,8 +1,13 @@
 import Content from "../models/Content.js";
+import Category from "../models/Category.js";
 import { AppError } from "../utils/AppError.js";
 import { uniqueSlug } from "../utils/slug.js";
 import { calculateReadingTime } from "../utils/readingTime.js";
 import { getPagination, buildPaginationMeta } from "../utils/pagination.js";
+
+/** Card/list payloads should never include the full article HTML. */
+const LIST_SELECT =
+  "title slug excerpt coverImage type category author tags status featured readingTime views likesCount publishedAt createdAt";
 
 function escapeRegex(value) {
   return String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -148,31 +153,45 @@ export async function getContentById(id) {
 }
 
 export async function getContentBySlug(slug, { publicOnly = true } = {}) {
-  // Promote due scheduled drafts before public lookup.
-  if (publicOnly) {
-    const { publishDueScheduledContent } = await import("./scheduler.service.js");
-    await publishDueScheduledContent();
-  }
-
   const filter = { slug };
   if (publicOnly) filter.status = "published";
 
   const doc = await Content.findOne(filter)
     .populate("author", "name email avatar bio")
-    .populate("category", "title slug description");
+    .populate("category", "title slug description")
+    .lean();
 
   if (!doc) throw new AppError("Content not found", 404);
 
   if (publicOnly) {
-    doc.views += 1;
-    await doc.save({ validateBeforeSave: false });
+    doc.views = (doc.views || 0) + 1;
+    Content.updateOne({ _id: doc._id }, { $inc: { views: 1 } }).catch(() => {});
   }
 
   return doc;
 }
 
+async function resolveCategoryFilter(query = {}) {
+  if (!query.category) return query;
+  const value = String(query.category);
+  if (/^[a-fA-F0-9]{24}$/.test(value)) return query;
+
+  const cat = await Category.findOne({ slug: value }).select("_id").lean();
+  if (!cat) return { ...query, category: "__none__" };
+  return { ...query, category: cat._id };
+}
+
 export async function listContent(query = {}, options = {}) {
-  const filter = buildContentFilter(query, options);
+  const resolved = await resolveCategoryFilter(query);
+  if (resolved.category === "__none__") {
+    const { page, limit } = getPagination(query);
+    return {
+      items: [],
+      pagination: buildPaginationMeta({ total: 0, page, limit }),
+    };
+  }
+
+  const filter = buildContentFilter(resolved, options);
   const { page, limit, skip } = getPagination(query);
 
   const sortMap = {
@@ -185,11 +204,13 @@ export async function listContent(query = {}, options = {}) {
 
   const [items, total] = await Promise.all([
     Content.find(filter)
+      .select(LIST_SELECT)
       .sort(sort)
       .skip(skip)
       .limit(limit)
       .populate("author", "name avatar")
-      .populate("category", "title slug"),
+      .populate("category", "title slug")
+      .lean(),
     Content.countDocuments(filter),
   ]);
 
@@ -201,18 +222,22 @@ export async function listContent(query = {}, options = {}) {
 
 export async function getFeaturedContent(limit = 6) {
   return Content.find({ status: "published", featured: true })
+    .select(LIST_SELECT)
     .sort({ publishedAt: -1 })
     .limit(limit)
     .populate("author", "name avatar")
-    .populate("category", "title slug");
+    .populate("category", "title slug")
+    .lean();
 }
 
 export async function getRecentContent(limit = 6) {
   return Content.find({ status: "published" })
+    .select(LIST_SELECT)
     .sort({ publishedAt: -1 })
     .limit(limit)
     .populate("author", "name avatar")
-    .populate("category", "title slug");
+    .populate("category", "title slug")
+    .lean();
 }
 
 export default {

@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import Badge from "../Badge/Badge";
 import Card from "../Card/Card";
+import { optimizeImageUrl } from "../../utils/optimizeImage.js";
 import styles from "./BlogCard.module.css";
 
 /**
@@ -22,7 +23,13 @@ function BlogCard({
       {image ? (
         <Link to={href} className={styles.mediaLink} tabIndex={-1} aria-hidden="true">
           <div className={styles.media}>
-            <img src={image} alt="" className={styles.image} loading="lazy" />
+            <img
+              src={optimizeImageUrl(image, { width: 720 })}
+              alt=""
+              className={styles.image}
+              loading="lazy"
+              decoding="async"
+            />
           </div>
         </Link>
       ) : null}

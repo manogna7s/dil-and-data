@@ -44,6 +44,8 @@ function Blogs() {
     setParams(next);
   }
 
+  const search = params.get("q") || "";
+
   useEffect(() => {
     let cancelled = false;
     (async () => {
@@ -64,18 +66,13 @@ function Blogs() {
     (async () => {
       setLoading(true);
       try {
-        const selectedCat = categories.find(
-          (c) => c.slug === category || String(c._id) === category
-        );
-        const categoryId = selectedCat?._id || (category !== "all" ? category : "");
-
         const [list, popularList] = await Promise.all([
           listPublicContent({
             page,
             limit: PAGE_SIZE,
             sort,
-            q: params.get("q") || "",
-            category: categoryId,
+            q: search,
+            category: category !== "all" ? category : "",
             type: "blog",
           }),
           listPublicContent({ limit: 4, sort: "popular", type: "blog" }),
@@ -97,7 +94,7 @@ function Blogs() {
     return () => {
       cancelled = true;
     };
-  }, [category, sort, page, params, categories]);
+  }, [category, sort, page, search]);
 
   const totalPages = Math.max(1, pagination.totalPages || 1);
   const currentPage = Math.min(page, totalPages);

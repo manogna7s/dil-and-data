@@ -15,6 +15,14 @@ const Categories = lazy(() => import("../pages/Categories/Categories"));
 const Contact = lazy(() => import("../pages/Contact/Contact"));
 const NotFound = lazy(() => import("../pages/NotFound/NotFound"));
 
+if (typeof window !== "undefined") {
+  const idle = window.requestIdleCallback || ((cb) => setTimeout(cb, 600));
+  idle(() => {
+    import("../pages/Blogs/Blogs");
+    import("../pages/SingleBlog/SingleBlog");
+  });
+}
+
 const StudioLogin = lazy(() => import("../studio/pages/StudioLogin/StudioLogin"));
 const StudioDashboard = lazy(
   () => import("../studio/pages/StudioDashboard/StudioDashboard")

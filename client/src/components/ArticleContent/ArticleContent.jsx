@@ -1,5 +1,6 @@
 import styles from "./ArticleContent.module.css";
 import QuoteBlock from "../QuoteBlock/QuoteBlock";
+import { optimizeImageUrl } from "../../utils/optimizeImage.js";
 
 /**
  * Renders TipTap HTML from Creator Studio, or legacy content blocks.
@@ -44,7 +45,7 @@ function ArticleContent({ blocks = [], html = "" }) {
           case "image":
             return (
               <figure key={key} className={styles.figure}>
-                <img src={block.src} alt={block.alt || ""} loading="lazy" />
+                <img src={optimizeImageUrl(block.src, { width: 1200 })} alt={block.alt || ""} loading="lazy" decoding="async" />
                 {block.caption && <figcaption>{block.caption}</figcaption>}
               </figure>
             );
@@ -54,9 +55,10 @@ function ArticleContent({ blocks = [], html = "" }) {
                 {block.images.map((img) => (
                   <img
                     key={img.src}
-                    src={img.src}
+                    src={optimizeImageUrl(img.src, { width: 720 })}
                     alt={img.alt || ""}
                     loading="lazy"
+                    decoding="async"
                   />
                 ))}
               </div>
