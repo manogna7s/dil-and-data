@@ -9,17 +9,17 @@
   overflow: hidden;
 }
 
-/* Soft wash so title stays readable over the drifting fabric */
+/* Light wash — keeps the centre readable without hiding the frame */
 .scrim {
   position: absolute;
   inset: 0;
   z-index: 1;
   background:
     radial-gradient(
-      ellipse 54% 42% at 50% 40%,
-      rgba(247, 242, 239, 0.62) 0%,
-      rgba(247, 242, 239, 0.18) 62%,
-      rgba(247, 242, 239, 0.04) 100%
+      ellipse 42% 36% at 50% 46%,
+      rgba(255, 255, 255, 0.28) 0%,
+      rgba(255, 255, 255, 0.06) 58%,
+      transparent 100%
     );
   pointer-events: none;
 }
@@ -30,7 +30,7 @@
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  opacity: 0.22;
+  opacity: 0.08;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.45'/%3E%3C/svg%3E");
   background-size: 180px 180px;
 }
@@ -49,16 +49,37 @@
 }
 
 .title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.08em;
   font-family: var(--font-display);
   font-size: clamp(2.5rem, 6vw, 4.25rem);
   font-weight: var(--font-weight-semibold);
   letter-spacing: var(--tracking-wider);
-  text-transform: uppercase;
   line-height: var(--leading-tight);
   margin-bottom: var(--space-sm);
-  color: var(--color-text);
   text-shadow: 0 1px 0 rgba(250, 246, 240, 0.55);
   animation: fade-up var(--duration-slow) var(--ease-out) 0.2s both;
+}
+
+.dil {
+  font-family: "Tiro Devanagari Hindi", var(--font-display), serif;
+  color: #c41e3a;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.amp {
+  color: #111;
+  font-weight: var(--font-weight-semibold);
+}
+
+.data {
+  color: #111;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wider);
 }
 
 .byline {

@@ -1,0 +1,26 @@
+.field {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background-color: #faf8f5;
+  background-image: url("/hero-frame.png");
+  background-image: -webkit-image-set(
+    url("/hero-frame.png") 1x,
+    url("/hero-frame-2x.webp") 2x
+  );
+  background-image: image-set(
+    url("/hero-frame.png") 1x,
+    url("/hero-frame-2x.webp") 2x
+  );
+  background-repeat: no-repeat;
+  background-size: min(100%, 68rem) auto;
+  background-position: center center;
+}
+
+@media (max-width: 640px) {
+  .field {
+    background-size: 100% auto;
+  }
+}
