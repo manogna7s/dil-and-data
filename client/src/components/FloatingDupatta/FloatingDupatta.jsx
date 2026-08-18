@@ -1,6 +1,9 @@
-import { useEffect, useId, useRef } from "react";
-import dupattaSrc from "../../assets/dupatta.png";
+import { useEffect, useId, useRef, useState } from "react";
 import styles from "./FloatingDupatta.module.css";
+
+const DUPATTA_SRC = "/dupatta.webp";
+const DUPATTA_W = 800;
+const DUPATTA_H = 355;
 
 const SPARKLES = [
   { top: "28%", left: "22%", delay: "0s", size: 5 },
@@ -15,13 +18,61 @@ const SPARKLES = [
   { top: "52%", left: "58%", delay: "0.6s", size: 3 },
 ];
 
+function scheduleIdle(callback) {
+  if (typeof window.requestIdleCallback === "function") {
+    return window.requestIdleCallback(callback, { timeout: 900 });
+  }
+  return window.setTimeout(callback, 180);
+}
+
+function cancelIdle(id) {
+  if (typeof window.cancelIdleCallback === "function") {
+    window.cancelIdleCallback(id);
+    return;
+  }
+  window.clearTimeout(id);
+}
+
 /**
  * Dupatta stays in place; only the fabric flutters in the wind.
+ * Still image paints first; the SVG filter starts after the file is cached.
  */
 function FloatingDupatta() {
   const rawId = useId().replace(/:/g, "");
   const filterId = `dupatta-wave-${rawId}`;
   const offsetRef = useRef(null);
+  const [flutter, setFlutter] = useState(false);
+
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      return undefined;
+    }
+
+    let idleId = 0;
+    let cancelled = false;
+    const img = new Image();
+    img.src = DUPATTA_SRC;
+
+    const startFlutter = () => {
+      if (cancelled) return;
+      idleId = scheduleIdle(() => {
+        if (!cancelled) setFlutter(true);
+      });
+    };
+
+    if (img.decode) {
+      img.decode().then(startFlutter).catch(startFlutter);
+    } else if (img.complete) {
+      startFlutter();
+    } else {
+      img.onload = startFlutter;
+    }
+
+    return () => {
+      cancelled = true;
+      cancelIdle(idleId);
+    };
+  }, []);
 
   useEffect(() => {
     const offsetNode = offsetRef.current;
@@ -39,75 +90,92 @@ function FloatingDupatta() {
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, []);
+  }, [flutter]);
 
   return (
     <div className={styles.field} aria-hidden="true">
-      <svg className={styles.canvas} viewBox="0 0 1024 455" preserveAspectRatio="xMidYMid meet">
-        <defs>
-          <filter
-            id={filterId}
-            x="-20%"
-            y="-40%"
-            width="140%"
-            height="180%"
-            colorInterpolationFilters="sRGB"
-          >
-            <feTurbulence
-              type="fractalNoise"
-              baseFrequency="0.012 0.03"
-              numOctaves="2"
-              seed="4"
-              result="noise"
-            />
-            <feOffset ref={offsetRef} in="noise" dx="0" dy="0" result="wind" />
-            <feDisplacementMap
-              in="SourceGraphic"
-              in2="wind"
-              scale="14"
-              xChannelSelector="R"
-              yChannelSelector="G"
-              result="rippled"
-            />
-            <feMorphology
-              in="SourceAlpha"
-              operator="erode"
-              radius="18"
-              result="inner"
-            />
-            <feComposite
-              in="SourceAlpha"
-              in2="inner"
-              operator="out"
-              result="edge"
-            />
-            <feComposite
-              in="SourceGraphic"
-              in2="inner"
-              operator="in"
-              result="stillCenter"
-            />
-            <feComposite
-              in="rippled"
-              in2="edge"
-              operator="in"
-              result="movingEdge"
-            />
-            <feMerge>
-              <feMergeNode in="stillCenter" />
-              <feMergeNode in="movingEdge" />
-            </feMerge>
-          </filter>
-        </defs>
-        <image
-          href={dupattaSrc}
-          x="0"
-          y="0"
-          width="1024"
-          height="455"
-          filter={`url(#${filterId})`}
+      <div className={styles.pose}>
+        <img
+          className={`${styles.still} ${flutter ? styles.stillHidden : ""}`}
+          src={DUPATTA_SRC}
+          alt=""
+          width={DUPATTA_W}
+          height={DUPATTA_H}
+          fetchPriority="high"
+          decoding="async"
         />
-      </svg>
+        {flutter ? (
+          <svg
+            className={styles.canvas}
+            viewBox={`0 0 ${DUPATTA_W} ${DUPATTA_H}`}
+            preserveAspectRatio="xMidYMid meet"
+          >
+            <defs>
+              <filter
+                id={filterId}
+                x="-20%"
+                y="-40%"
+                width="140%"
+                height="180%"
+                colorInterpolationFilters="sRGB"
+              >
+                <feTurbulence
+                  type="fractalNoise"
+                  baseFrequency="0.012 0.03"
+                  numOctaves="2"
+                  seed="4"
+                  result="noise"
+                />
+                <feOffset ref={offsetRef} in="noise" dx="0" dy="0" result="wind" />
+                <feDisplacementMap
+                  in="SourceGraphic"
+                  in2="wind"
+                  scale="14"
+                  xChannelSelector="R"
+                  yChannelSelector="G"
+                  result="rippled"
+                />
+                <feMorphology
+                  in="SourceAlpha"
+                  operator="erode"
+                  radius="18"
+                  result="inner"
+                />
+                <feComposite
+                  in="SourceAlpha"
+                  in2="inner"
+                  operator="out"
+                  result="edge"
+                />
+                <feComposite
+                  in="SourceGraphic"
+                  in2="inner"
+                  operator="in"
+                  result="stillCenter"
+                />
+                <feComposite
+                  in="rippled"
+                  in2="edge"
+                  operator="in"
+                  result="movingEdge"
+                />
+                <feMerge>
+                  <feMergeNode in="stillCenter" />
+                  <feMergeNode in="movingEdge" />
+                </feMerge>
+              </filter>
+            </defs>
+            <image
+              href={DUPATTA_SRC}
+              x="0"
+              y="0"
+              width={DUPATTA_W}
+              height={DUPATTA_H}
+              filter={`url(#${filterId})`}
+            />
+          </svg>
+        ) : null}
+      </div>
 
       <div className={styles.sparkles}>
         {SPARKLES.map((s, i) => (

@@ -7,14 +7,36 @@
   pointer-events: none;
 }
 
+.pose {
+  position: relative;
+  width: min(160vw, 112rem);
+  transform: translate3d(-4%, 6%, 0) rotate(-12deg);
+  transform-origin: 20% 50%;
+}
+
+.still,
 .canvas {
   display: block;
-  width: min(160vw, 112rem);
+  width: 100%;
   height: auto;
   overflow: visible;
   background: transparent;
-  transform: translate3d(-4%, 6%, 0) rotate(-12deg);
-  transform-origin: 20% 50%;
+}
+
+.still {
+  aspect-ratio: 800 / 355;
+  object-fit: contain;
+}
+
+.canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.stillHidden {
+  visibility: hidden;
 }
 
 .sparkles {
@@ -45,7 +67,7 @@
 }
 
 @media (max-width: 700px) {
-  .canvas {
+  .pose {
     width: 180vw;
   }
 
