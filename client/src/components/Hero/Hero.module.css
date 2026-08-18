@@ -1,12 +1,13 @@
 .hero {
   position: relative;
-  min-height: min(88vh, 44rem);
+  width: min(100%, calc(44rem * 1024 / 576));
+  aspect-ratio: 1024 / 576;
+  max-height: 44rem;
+  margin-inline: auto;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding-block: var(--space-4xl);
-  overflow: hidden;
 }
 
 /* Light wash — keeps the centre readable without hiding the frame */
@@ -144,8 +145,8 @@
 
 @media (max-width: 640px) {
   .hero {
-    min-height: auto;
-    padding-block: var(--space-3xl);
+    width: 100%;
+    max-height: none;
   }
 
   .actions {
