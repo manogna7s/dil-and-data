@@ -10,6 +10,25 @@
     />
     <title>DIL &amp; DATA</title>
 
+    <script>
+      (function () {
+        var base = "%VITE_API_URL%" || "http://localhost:5050/api";
+        if (base.indexOf("%") === 0) base = "http://localhost:5050/api";
+        try {
+          var origin = new URL(base).origin;
+          var link = document.createElement("link");
+          link.rel = "preconnect";
+          link.href = origin;
+          document.head.appendChild(link);
+        } catch (e) {}
+        fetch(String(base).replace(/\/$/, "") + "/health", {
+          cache: "no-store",
+          mode: "cors",
+          credentials: "omit",
+        }).catch(function () {});
+      })();
+    </script>
+
     <!-- Google Fonts: Cinzel, Playfair Display, Cormorant Garamond -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

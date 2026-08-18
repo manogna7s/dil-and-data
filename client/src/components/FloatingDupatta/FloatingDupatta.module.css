@@ -1,0 +1,62 @@
+.field {
+  position: absolute;
+  inset: -8% -16%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.canvas {
+  display: block;
+  width: min(160vw, 112rem);
+  height: auto;
+  overflow: visible;
+  background: transparent;
+  transform: translate3d(-4%, 6%, 0) rotate(-12deg);
+  transform-origin: 20% 50%;
+}
+
+.sparkles {
+  position: absolute;
+  inset: 18% 8% 22%;
+  pointer-events: none;
+  transform: rotate(-12deg);
+}
+
+.sparkle {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff 0 35%, rgba(232, 214, 245, 0.7) 55%, transparent 70%);
+  animation: twinkle 2.2s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0.12;
+    transform: scale(0.65);
+  }
+  50% {
+    opacity: 0.95;
+    transform: scale(1);
+  }
+}
+
+@media (max-width: 700px) {
+  .canvas {
+    width: 180vw;
+  }
+
+  .sparkle:nth-child(n + 7) {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sparkle {
+    animation: none;
+    opacity: 0.35;
+  }
+}

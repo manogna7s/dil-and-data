@@ -1,54 +1,66 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getPageBySlug } from "../../services/page.service.js";
+import { readPageCache, writePageCache } from "../../services/pageCache.js";
 import { BlockRenderer } from "../../blocks/BlockRenderer";
-import { Loader, EmptyState } from "../../components";
+import { Hero, Loader, EmptyState } from "../../components";
 import styles from "./CmsPage.module.css";
 
+const RETRY_WAIT_MS = [0, 400, 1200, 2800];
+
 /**
- * Public CMS page — loads Page document by slug and renders blocks.
- * Home uses slug "home"; all future shelves use the same component.
+ * Public CMS page — cached first paint, then refresh from the API.
  */
 function CmsPage({ slug: slugProp, preview = false }) {
   const params = useParams();
   const slug = slugProp || params.slug || "home";
-  const [page, setPage] = useState(null);
+  const cached = preview ? null : readPageCache(slug);
+  const [page, setPage] = useState(cached);
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!cached);
   const [reloadToken, setReloadToken] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
-    (async () => {
-      setLoading(true);
+    const fromCache = preview ? null : readPageCache(slug);
+
+    if (fromCache) {
+      setPage(fromCache);
+      setLoading(false);
       setError("");
+    } else {
+      setLoading(true);
+    }
+
+    (async () => {
       let lastError = null;
-      for (let attempt = 0; attempt < 2; attempt += 1) {
+      for (let attempt = 0; attempt < RETRY_WAIT_MS.length; attempt += 1) {
+        if (attempt > 0) {
+          await new Promise((r) => setTimeout(r, RETRY_WAIT_MS[attempt]));
+        }
         try {
           const data = await getPageBySlug(slug, { preview });
-          if (!cancelled) {
-            setPage(data);
-            setError("");
-          }
-          lastError = null;
-          break;
+          if (cancelled) return;
+          setPage(data);
+          setError("");
+          setLoading(false);
+          if (!preview && data) writePageCache(slug, data);
+          return;
         } catch (err) {
           lastError = err;
-          // Render free-tier API often needs a warm-up on first hit.
-          if (attempt === 0) {
-            await new Promise((r) => setTimeout(r, 1200));
-          }
         }
       }
-      if (!cancelled && lastError) {
+      if (cancelled) return;
+      if (!fromCache) {
         setPage(null);
         setError(
-          lastError.message ||
+          lastError?.message ||
             "Could not load this page. The API may be waking up — try again."
         );
       }
-      if (!cancelled) setLoading(false);
+      setLoading(false);
     })();
+
     return () => {
       cancelled = true;
     };
@@ -70,7 +82,22 @@ function CmsPage({ slug: slugProp, preview = false }) {
     }
   }, [page]);
 
+  if (page) {
+    return (
+      <div className={styles.page}>
+        <BlockRenderer blocks={page.blocks || []} preview={preview} />
+      </div>
+    );
+  }
+
   if (loading) {
+    if (slug === "home") {
+      return (
+        <div className={styles.page}>
+          <Hero />
+        </div>
+      );
+    }
     return (
       <div className={styles.state}>
         <Loader label="Opening the page…" />
@@ -78,25 +105,17 @@ function CmsPage({ slug: slugProp, preview = false }) {
     );
   }
 
-  if (error || !page) {
-    return (
-      <div className={styles.state}>
-        <EmptyState
-          title={slug === "home" ? "Home is waking up" : "Page not found"}
-          description={
-            error ||
-            "This page has not been published yet. If you just opened the site, wait a moment and retry."
-          }
-          actionLabel="Try again"
-          onAction={() => setReloadToken((n) => n + 1)}
-        />
-      </div>
-    );
-  }
-
   return (
-    <div className={styles.page}>
-      <BlockRenderer blocks={page.blocks || []} preview={preview} />
+    <div className={styles.state}>
+      <EmptyState
+        title={slug === "home" ? "Home is waking up" : "Page not found"}
+        description={
+          error ||
+          "This page has not been published yet. If you just opened the site, wait a moment and retry."
+        }
+        actionLabel="Try again"
+        onAction={() => setReloadToken((n) => n + 1)}
+      />
     </div>
   );
 }

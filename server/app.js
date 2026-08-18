@@ -11,6 +11,8 @@ import {
   notFoundHandler,
 } from "./middleware/error.middleware.js";
 import { apiRateLimiter } from "./middleware/rateLimit.middleware.js";
+import { whenDatabaseReady, isDatabaseReady } from "./config/dbReady.js";
+import { AppError } from "./utils/AppError.js";
 
 /**
  * Express application — middleware stack + API mount.
@@ -71,6 +73,16 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(morgan(config.nodeEnv === "production" ? "combined" : "dev"));
 app.use("/api", apiRateLimiter);
+
+app.use("/api", async (req, res, next) => {
+  if (req.path === "/health" || isDatabaseReady()) return next();
+  try {
+    await whenDatabaseReady();
+    next();
+  } catch (err) {
+    next(new AppError(err.message || "Database is still connecting", 503));
+  }
+});
 
 app.use("/api", apiRoutes);
 

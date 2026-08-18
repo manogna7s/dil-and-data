@@ -38,7 +38,6 @@ export function BlockView({ block }) {
           tagline={data.tagline}
           ctaLabel={data.ctaLabel}
           ctaTo={data.ctaTo || "/blogs"}
-          backgroundImage={data.backgroundImage}
         />
       );
     case "featuredStory":

@@ -1,6 +1,7 @@
 import { lazy, Suspense } from "react";
 import { createBrowserRouter } from "react-router-dom";
 import MainLayout from "../layouts/MainLayout";
+import CmsPage from "../pages/CmsPage/CmsPage";
 import StudioLayout from "../studio/layouts/StudioLayout";
 import ProtectedRoute from "../studio/components/ProtectedRoute";
 import GuestRoute from "../studio/components/GuestRoute";
@@ -8,7 +9,6 @@ import StudioLoader from "../studio/components/StudioLoader/StudioLoader";
 import { Loader } from "../components";
 import { ROUTES, STUDIO } from "../constants";
 
-const CmsPage = lazy(() => import("../pages/CmsPage/CmsPage"));
 const Blogs = lazy(() => import("../pages/Blogs/Blogs"));
 const SingleBlog = lazy(() => import("../pages/SingleBlog/SingleBlog"));
 const Categories = lazy(() => import("../pages/Categories/Categories"));
@@ -204,19 +204,11 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: (
-          <Suspend>
-            <CmsPage slug="home" />
-          </Suspend>
-        ),
+        element: <CmsPage slug="home" />,
       },
       {
         path: "about",
-        element: (
-          <Suspend>
-            <CmsPage slug="about" />
-          </Suspend>
-        ),
+        element: <CmsPage slug="about" />,
       },
       {
         path: "blogs",
