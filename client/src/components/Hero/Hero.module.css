@@ -4,10 +4,7 @@
   aspect-ratio: 1024 / 576;
   max-height: 44rem;
   margin-inline: auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
+  overflow: hidden;
 }
 
 /* Light wash — keeps the centre readable without hiding the frame */
@@ -25,7 +22,6 @@
   pointer-events: none;
 }
 
-/* Soft paper grain — no brand gradient */
 .texture {
   position: absolute;
   inset: 0;
@@ -36,16 +32,25 @@
   background-size: 180px 180px;
 }
 
+/* Aligned to the white centre of the frame artwork */
 .inner {
-  position: relative;
+  position: absolute;
   z-index: 2;
+  left: 50%;
+  top: 44%;
+  transform: translate(-50%, -50%);
+  width: 38%;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: stretch;
+  justify-content: center;
+  text-align: center;
 }
 
 .eyebrow {
-  margin-bottom: var(--space-lg);
+  margin-bottom: 0.35em;
+  font-size: clamp(0.55rem, 1.1vw, 0.72rem);
+  letter-spacing: 0.14em;
   animation: fade-up var(--duration-slow) var(--ease-out) 0.1s both;
 }
 
@@ -54,13 +59,13 @@
   flex-wrap: wrap;
   align-items: baseline;
   justify-content: center;
-  gap: 0.08em;
+  gap: 0.06em;
   font-family: var(--font-display);
-  font-size: clamp(2.5rem, 6vw, 4.25rem);
+  font-size: clamp(1.35rem, 3.8vw, 3.25rem);
   font-weight: var(--font-weight-semibold);
   letter-spacing: var(--tracking-wider);
-  line-height: var(--leading-tight);
-  margin-bottom: var(--space-sm);
+  line-height: 1.05;
+  margin-bottom: 0.25em;
   text-shadow: 0 1px 0 rgba(250, 246, 240, 0.55);
   animation: fade-up var(--duration-slow) var(--ease-out) 0.2s both;
 }
@@ -83,47 +88,38 @@
   letter-spacing: var(--tracking-wider);
 }
 
-.byline {
-  font-family: var(--font-body);
-  font-size: var(--text-sm);
-  letter-spacing: var(--tracking-widest);
-  text-transform: uppercase;
-  color: var(--color-secondary);
-  margin-bottom: var(--space-lg);
-  animation: fade-up var(--duration-slow) var(--ease-out) 0.25s both;
-}
-
 .tagline {
   font-family: var(--font-heading);
-  font-size: var(--text-xl);
+  font-size: clamp(0.62rem, 1.45vw, 1.05rem);
   font-style: italic;
   font-weight: var(--font-weight-regular);
   color: var(--color-secondary);
-  max-width: 28rem;
-  line-height: var(--leading-relaxed);
-  margin-bottom: var(--space-2xl);
+  width: 100%;
+  line-height: 1.35;
+  margin-bottom: 0.55em;
+  overflow-wrap: break-word;
   animation: fade-up var(--duration-slow) var(--ease-out) 0.35s both;
 }
 
 .actions {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  gap: var(--space-xl);
+  align-self: center;
   animation: fade-up var(--duration-slow) var(--ease-out) 0.5s both;
 }
 
 .cta {
   display: inline-flex;
   align-items: center;
-  padding: 0.85rem 1.75rem;
+  padding: 0.45em 0.9em;
   font-family: var(--font-body);
-  font-size: var(--text-base);
-  letter-spacing: var(--tracking-wide);
+  font-size: clamp(0.58rem, 1.2vw, 0.92rem);
+  letter-spacing: 0.06em;
   color: var(--color-white);
   background: var(--color-accent);
   border-radius: 0;
+  white-space: nowrap;
   transition:
     background-color var(--transition-base),
     box-shadow var(--transition-base);
@@ -134,23 +130,46 @@
   box-shadow: none;
 }
 
-.secondary {
-  font-size: var(--text-base);
-  color: var(--color-secondary);
-}
-
-.secondary:hover {
-  color: var(--color-text);
-}
-
 @media (max-width: 640px) {
   .hero {
     width: 100%;
     max-height: none;
   }
 
-  .actions {
-    flex-direction: column;
-    gap: var(--space-lg);
+  .inner {
+    top: 43%;
+    width: 36%;
+  }
+
+  .eyebrow {
+    margin-bottom: 0.2em;
+    font-size: 0.52rem;
+  }
+
+  .title {
+    font-size: clamp(1.1rem, 4.8vw, 1.55rem);
+    margin-bottom: 0.2em;
+  }
+
+  .tagline {
+    font-size: clamp(0.52rem, 2.6vw, 0.68rem);
+    line-height: 1.28;
+    margin-bottom: 0.45em;
+  }
+
+  .cta {
+    padding: 0.38em 0.65em;
+    font-size: 0.52rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .inner {
+    width: 37%;
+    top: 44%;
+  }
+
+  .tagline {
+    font-size: 0.5rem;
   }
 }
