@@ -17,7 +17,7 @@ const AuthContext = createContext(null);
  */
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
-  const [bootstrapping, setBootstrapping] = useState(true);
+  const [bootstrapping, setBootstrapping] = useState(() => Boolean(getStoredToken()));
   const [error, setError] = useState(null);
 
   const refreshProfile = useCallback(async () => {
@@ -39,22 +39,25 @@ export function AuthProvider({ children }) {
   }, []);
 
   useEffect(() => {
+    if (!getStoredToken()) {
+      setBootstrapping(false);
+      return undefined;
+    }
+
     let active = true;
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 8000);
+    const timeout = setTimeout(() => controller.abort(), 5000);
 
     (async () => {
       try {
-        if (getStoredToken()) {
-          const profile = await authService.getProfile({ signal: controller.signal });
-          if (active) setUser(profile);
-        }
+        const profile = await authService.getProfile({ signal: controller.signal });
+        if (active) setUser(profile);
       } catch {
         clearAuthToken();
         if (active) setUser(null);
       } finally {
         clearTimeout(timeout);
-        if (active) setBootstrapping(false);
+        setBootstrapping(false);
       }
     })();
 

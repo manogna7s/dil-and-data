@@ -6,6 +6,7 @@ import StudioLayout from "../studio/layouts/StudioLayout";
 import ProtectedRoute from "../studio/components/ProtectedRoute";
 import GuestRoute from "../studio/components/GuestRoute";
 import StudioLoader from "../studio/components/StudioLoader/StudioLoader";
+import StudioLogin from "../studio/pages/StudioLogin/StudioLogin";
 import { Loader } from "../components";
 import { ROUTES, STUDIO } from "../constants";
 
@@ -23,7 +24,6 @@ if (typeof window !== "undefined") {
   });
 }
 
-const StudioLogin = lazy(() => import("../studio/pages/StudioLogin/StudioLogin"));
 const StudioDashboard = lazy(
   () => import("../studio/pages/StudioDashboard/StudioDashboard")
 );
@@ -78,9 +78,7 @@ const router = createBrowserRouter([
     path: STUDIO.LOGIN,
     element: (
       <GuestRoute>
-        <Suspend studio>
-          <StudioLogin />
-        </Suspend>
+        <StudioLogin />
       </GuestRoute>
     ),
   },
