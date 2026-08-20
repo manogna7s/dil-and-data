@@ -2,7 +2,7 @@
 
 My personal publishing platform — **DIL & DATA** by Manogna, home of **Shakti's Blog**.
 
-Live at [dilanddata.in](./dilanddata.in) 
+Live at www.dilanddata.in
 
 ```
 dil-and-data/
