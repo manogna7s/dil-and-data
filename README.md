@@ -1,6 +1,6 @@
 # DIL & DATA
 
-A personal publishing platform — **DIL & DATA** by Manogna, home of **Shakti's Blog**.
+My personal publishing platform — **DIL & DATA** by Manogna, home of **Shakti's Blog**.
 
 ```
 dil-and-data/
@@ -29,7 +29,7 @@ npm run seed:pages
 npm run dev
 ```
 
-API: `http://localhost:5050` · Health: `GET /api/health`
+API Health: `GET /api/health`
 
 ### Frontend
 
@@ -39,28 +39,6 @@ cp .env.example .env
 npm install
 npm run dev
 ```
-
-## Admin credentials (seed default)
-
-| Field | Value |
-|-------|--------|
-| Email | `admin@dilanddata.com` |
-| Password | `ChangeMe123!` |
-
-Change this immediately after first login (or reseed with `SEED_ADMIN_PASSWORD`).
-
-Studio: `/studio/login`
-
-## Design
-
-| Token | Hex |
-|-------|-----|
-| Background | `#F7F2EF` |
-| Surface | `#EDE3DE` |
-| Text | `#2E2826` |
-| Accent | `#C9A8A3` |
-
-Fonts: Cinzel, Playfair Display, Cormorant Garamond
 
 ## Deploy
 
