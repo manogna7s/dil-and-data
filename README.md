@@ -2,6 +2,8 @@
 
 My personal publishing platform — **DIL & DATA** by Manogna, home of **Shakti's Blog**.
 
+Live at dilanddata.in
+
 ```
 dil-and-data/
 ├── client/          # React + Vite (Vercel)
