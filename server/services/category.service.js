@@ -3,9 +3,29 @@ import Content from "../models/Content.js";
 import { AppError } from "../utils/AppError.js";
 import { uniqueSlug } from "../utils/slug.js";
 
+function pickCategoryFields(payload = {}) {
+  const next = {};
+  if (payload.title !== undefined) next.title = String(payload.title).trim();
+  if (payload.description !== undefined) {
+    next.description = payload.description == null ? "" : String(payload.description);
+  }
+  if (payload.coverImage !== undefined) {
+    next.coverImage = payload.coverImage == null ? "" : String(payload.coverImage);
+  }
+  if (payload.icon !== undefined) {
+    next.icon = payload.icon == null ? "" : String(payload.icon);
+  }
+  if (payload.isActive !== undefined) next.isActive = Boolean(payload.isActive);
+  if (payload.slug !== undefined && payload.slug) next.slug = String(payload.slug).trim();
+  return next;
+}
+
 export async function createCategory(payload) {
-  const slug = await uniqueSlug(Category, payload.slug || payload.title);
-  const category = await Category.create({ ...payload, slug });
+  const data = pickCategoryFields(payload);
+  if (!data.title) throw new AppError("Title is required", 400);
+
+  const slug = await uniqueSlug(Category, data.slug || data.title);
+  const category = await Category.create({ ...data, slug });
   return category;
 }
 
@@ -13,11 +33,13 @@ export async function updateCategory(id, payload) {
   const category = await Category.findById(id);
   if (!category) throw new AppError("Category not found", 404);
 
-  if (payload.title || payload.slug) {
-    payload.slug = await uniqueSlug(Category, payload.slug || payload.title, id);
+  const data = pickCategoryFields(payload);
+
+  if (data.title || data.slug) {
+    data.slug = await uniqueSlug(Category, data.slug || data.title, id);
   }
 
-  Object.assign(category, payload);
+  Object.assign(category, data);
   await category.save();
   return category;
 }

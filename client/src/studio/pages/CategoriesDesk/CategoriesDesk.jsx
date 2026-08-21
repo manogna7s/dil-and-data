@@ -72,19 +72,28 @@ function CategoriesDesk() {
       toast.error("Title is required");
       return;
     }
+    const payload = {
+      title: form.title.trim(),
+      description: form.description.trim(),
+      coverImage: form.coverImage.trim(),
+      isActive: Boolean(form.isActive),
+    };
     setSaving(true);
     try {
       if (editingId) {
-        await updateCategory(editingId, form);
+        await updateCategory(editingId, payload);
         toast.success("Category updated");
       } else {
-        await createCategory(form);
+        await createCategory(payload);
         toast.success("Category created");
       }
       resetForm();
       await load();
     } catch (err) {
-      toast.error(err.message || "Save failed");
+      const detail = Array.isArray(err.errors)
+        ? err.errors.map((e) => e.message).filter(Boolean).join(" · ")
+        : "";
+      toast.error(detail || err.message || "Save failed");
     } finally {
       setSaving(false);
     }
