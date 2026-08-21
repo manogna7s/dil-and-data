@@ -51,6 +51,45 @@
   margin: 0.25rem 0.35rem;
 }
 
+.selectField {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0 0.25rem;
+  font-size: var(--text-xs);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-secondary);
+}
+
+.selectField select {
+  min-width: 9.5rem;
+  height: 2rem;
+  padding: 0 0.45rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-white);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.selectField select:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.groupLabel {
+  align-self: center;
+  padding: 0 0.35rem;
+  font-size: var(--text-xs);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-secondary);
+}
+
 .prose {
   min-height: 28rem;
   padding: var(--space-xl) var(--space-2xl);
@@ -120,6 +159,58 @@
   height: auto;
   border-radius: var(--radius-md);
   margin: 1.25em 0;
+}
+
+.prose :global(img.studio-img) {
+  height: auto;
+  border-radius: var(--radius-md);
+  margin: 1.25em 0;
+}
+
+.prose :global(img.studio-img.size-sm) {
+  width: min(12rem, 42%);
+  max-width: 100%;
+}
+
+.prose :global(img.studio-img.size-md) {
+  width: min(18rem, 48%);
+  max-width: 100%;
+}
+
+.prose :global(img.studio-img.size-lg) {
+  width: min(26rem, 62%);
+  max-width: 100%;
+}
+
+.prose :global(img.studio-img.size-full) {
+  width: 100%;
+  max-width: 100%;
+  float: none !important;
+  margin-inline: auto;
+  display: block;
+}
+
+.prose :global(img.studio-img.align-top),
+.prose :global(img.studio-img.align-bottom) {
+  display: block;
+  margin-inline: auto;
+  float: none;
+}
+
+.prose :global(img.studio-img.align-left) {
+  float: left;
+  margin: 0.15em 1.25em 0.85em 0;
+}
+
+.prose :global(img.studio-img.align-right) {
+  float: right;
+  margin: 0.15em 0 0.85em 1.25em;
+}
+
+.prose :global(img.ProseMirror-selectednode),
+.prose :global(img.studio-img.ProseMirror-selectednode) {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
 }
 
 .hint {

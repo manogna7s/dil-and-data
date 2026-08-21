@@ -7,6 +7,74 @@
   margin-bottom: var(--space-lg);
 }
 
+.content :global(img.studio-img),
+.content :global(img[data-align]),
+.content :global(img[data-size]) {
+  height: auto;
+  margin: var(--space-xl) 0;
+  border-radius: 0;
+}
+
+.content :global(img.studio-img.size-sm),
+.content :global(img[data-size="sm"]) {
+  width: min(12rem, 42%);
+  max-width: 100%;
+}
+
+.content :global(img.studio-img.size-md),
+.content :global(img[data-size="md"]) {
+  width: min(18rem, 48%);
+  max-width: 100%;
+}
+
+.content :global(img.studio-img.size-lg),
+.content :global(img[data-size="lg"]) {
+  width: min(26rem, 62%);
+  max-width: 100%;
+}
+
+.content :global(img.studio-img.size-full),
+.content :global(img[data-size="full"]) {
+  width: 100%;
+  max-width: 100%;
+  float: none !important;
+  margin-inline: auto;
+}
+
+.content :global(img.studio-img.align-top),
+.content :global(img.studio-img.align-bottom),
+.content :global(img[data-align="top"]),
+.content :global(img[data-align="bottom"]) {
+  display: block;
+  margin-inline: auto;
+  float: none;
+}
+
+.content :global(img.studio-img.align-left),
+.content :global(img[data-align="left"]) {
+  float: left;
+  margin: 0.15em var(--space-xl) var(--space-lg) 0;
+  shape-outside: margin-box;
+}
+
+.content :global(img.studio-img.align-right),
+.content :global(img[data-align="right"]) {
+  float: right;
+  margin: 0.15em 0 var(--space-lg) var(--space-xl);
+  shape-outside: margin-box;
+}
+
+@media (max-width: 640px) {
+  .content :global(img.studio-img.align-left),
+  .content :global(img.studio-img.align-right),
+  .content :global(img[data-align="left"]),
+  .content :global(img[data-align="right"]) {
+    float: none;
+    margin-inline: auto;
+    margin-bottom: var(--space-lg);
+  }
+}
+
 .dropCap::first-letter {
   float: left;
   font-family: var(--font-heading);
@@ -27,11 +95,43 @@
 
 .figure {
   margin: var(--space-2xl) 0;
+  display: flow-root;
 }
 
 .figure img {
   width: 100%;
   border-radius: 0;
+}
+
+.legacySize-sm {
+  width: min(12rem, 100%);
+}
+
+.legacySize-md {
+  width: min(20rem, 100%);
+}
+
+.legacySize-lg {
+  width: min(30rem, 100%);
+}
+
+.legacySize-full {
+  width: 100%;
+}
+
+.legacyAlign-top,
+.legacyAlign-bottom {
+  margin-inline: auto;
+}
+
+.legacyAlign-left {
+  float: left;
+  margin: 0.25em var(--space-xl) var(--space-lg) 0;
+}
+
+.legacyAlign-right {
+  float: right;
+  margin: 0.25em 0 var(--space-lg) var(--space-xl);
 }
 
 .figure figcaption {
@@ -118,5 +218,12 @@
 
   .gallery img {
     aspect-ratio: 16 / 10;
+  }
+
+  .legacyAlign-left,
+  .legacyAlign-right {
+    float: none;
+    margin-inline: auto;
+    margin-bottom: var(--space-lg);
   }
 }

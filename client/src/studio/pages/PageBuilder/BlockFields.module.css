@@ -18,6 +18,19 @@
   font-style: italic;
 }
 
+.editorField {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.editorLabel {
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--color-secondary);
+}
+
 .field {
   display: flex;
   flex-direction: column;

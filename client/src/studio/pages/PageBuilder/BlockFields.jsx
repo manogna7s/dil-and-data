@@ -1,5 +1,6 @@
 import { useState } from "react";
 import MediaPicker from "../../components/media/MediaPicker";
+import RichTextEditor from "../../components/editor/RichTextEditor";
 import {
   PAGE_BLOCK_TYPES,
   SECTION_TONES,
@@ -11,6 +12,9 @@ import styles from "./BlockFields.module.css";
  * Per-block settings form used by the page builder.
  */
 function BlockFields({ block, onChange }) {
+  const [richImageOpen, setRichImageOpen] = useState(false);
+  const [richImageInsert, setRichImageInsert] = useState(null);
+
   if (!block) return null;
   const data = block.data || {};
   const typeDefaultTone = defaultBlockData(block.type).tone || "default";
@@ -186,7 +190,40 @@ function BlockFields({ block, onChange }) {
         <>
           <Field label="Eyebrow" value={data.eyebrow} onChange={(v) => set({ eyebrow: v })} />
           <Field label="Title" value={data.title} onChange={(v) => set({ title: v })} />
-          <Field label="HTML body" value={data.html} onChange={(v) => set({ html: v })} area rows={8} />
+          <div className={styles.editorField}>
+            <span className={styles.editorLabel}>Body</span>
+            <RichTextEditor
+              value={data.html || ""}
+              onChange={(html) => set({ html })}
+              placeholder="Write about yourself… Insert images, then set Place and Size."
+              onInsertImage={(insert) => {
+                setRichImageInsert(() => insert);
+                setRichImageOpen(true);
+              }}
+            />
+          </div>
+          <p className={styles.hint}>
+            Insert an image, click it, then use Place and Size. Left/Right lets your text fill the space beside the image.
+          </p>
+          <MediaPicker
+            open={richImageOpen}
+            title="Insert image"
+            mode="single"
+            accept="image"
+            initialFolder="gallery"
+            onClose={() => {
+              setRichImageOpen(false);
+              setRichImageInsert(null);
+            }}
+            onSelect={(item) => {
+              const media = Array.isArray(item) ? item[0] : item;
+              if (media?.url && richImageInsert) {
+                richImageInsert(media.url, media.alt || "");
+              }
+              setRichImageOpen(false);
+              setRichImageInsert(null);
+            }}
+          />
         </>
       )}
 

@@ -31,6 +31,22 @@ export const SECTION_TONES = [
   { value: "blush", label: "Soft blush" },
 ];
 
+/** Image placement relative to text / section. */
+export const IMAGE_PLACEMENTS = [
+  { value: "left", label: "Left" },
+  { value: "right", label: "Right" },
+  { value: "top", label: "Top" },
+  { value: "bottom", label: "Bottom" },
+];
+
+/** Image display size. */
+export const IMAGE_SIZES = [
+  { value: "sm", label: "Small" },
+  { value: "md", label: "Medium" },
+  { value: "lg", label: "Large" },
+  { value: "full", label: "Full width" },
+];
+
 const SECTION_TONE_VALUES = new Set(SECTION_TONES.map((t) => t.value));
 
 export function resolveSectionTone(tone, fallback = "default") {

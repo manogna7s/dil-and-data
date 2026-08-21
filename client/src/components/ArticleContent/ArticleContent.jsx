@@ -42,13 +42,26 @@ function ArticleContent({ blocks = [], html = "" }) {
                 {block.text}
               </QuoteBlock>
             );
-          case "image":
+          case "image": {
+            const align = block.align || block.placement || "top";
+            const size = block.size || "full";
             return (
-              <figure key={key} className={styles.figure}>
-                <img src={optimizeImageUrl(block.src, { width: 1200 })} alt={block.alt || ""} loading="lazy" decoding="async" />
+              <figure
+                key={key}
+                className={`${styles.figure} ${styles[`legacyAlign-${align}`] || ""} ${
+                  styles[`legacySize-${size}`] || ""
+                }`}
+              >
+                <img
+                  src={optimizeImageUrl(block.src, { width: 1200 })}
+                  alt={block.alt || ""}
+                  loading="lazy"
+                  decoding="async"
+                />
                 {block.caption && <figcaption>{block.caption}</figcaption>}
               </figure>
             );
+          }
           case "gallery":
             return (
               <div key={key} className={styles.gallery}>

@@ -2,15 +2,29 @@ import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
 import Link from "@tiptap/extension-link";
-import Image from "@tiptap/extension-image";
 import Underline from "@tiptap/extension-underline";
-import { useEffect } from "react";
+import { NodeSelection } from "@tiptap/pm/state";
+import { useEffect, useState } from "react";
+import StudioImage from "./StudioImage";
 import styles from "./RichTextEditor.module.css";
+
+const IMAGE_POSITIONS = [
+  { value: "left", label: "Left (text beside)" },
+  { value: "right", label: "Right (text beside)" },
+  { value: "top", label: "Top (text below)" },
+  { value: "bottom", label: "Bottom (text above)" },
+];
+
+const IMAGE_SIZES = [
+  { value: "sm", label: "Small" },
+  { value: "md", label: "Medium" },
+  { value: "lg", label: "Large" },
+  { value: "full", label: "Full width" },
+];
 
 /**
  * TipTap-powered editorial editor.
- * Markdown shortcuts (# ##, **, -, etc.) come from StarterKit.
- * Undo/redo via history + toolbar / Ctrl+Z / Ctrl+Shift+Z.
+ * Image Position + Size controls for About / blog rich text.
  */
 function RichTextEditor({
   value = "",
@@ -31,9 +45,7 @@ function RichTextEditor({
         openOnClick: false,
         HTMLAttributes: { class: styles.link },
       }),
-      Image.configure({
-        HTMLAttributes: { class: styles.image },
-      }),
+      StudioImage,
     ],
     content: value || "",
     editable,
@@ -43,6 +55,16 @@ function RichTextEditor({
     editorProps: {
       attributes: {
         class: styles.prose,
+      },
+      handleClickOn: (view, _pos, node, nodePos) => {
+        if (node.type.name === "image") {
+          const tr = view.state.tr.setSelection(
+            NodeSelection.create(view.state.doc, nodePos)
+          );
+          view.dispatch(tr);
+          return true;
+        }
+        return false;
       },
     },
   });
@@ -59,7 +81,24 @@ function RichTextEditor({
     if (editor) editor.setEditable(editable);
   }, [editable, editor]);
 
+  const [, setToolbarTick] = useState(0);
+  useEffect(() => {
+    if (!editor) return undefined;
+    const refresh = () => setToolbarTick((n) => n + 1);
+    editor.on("selectionUpdate", refresh);
+    editor.on("transaction", refresh);
+    return () => {
+      editor.off("selectionUpdate", refresh);
+      editor.off("transaction", refresh);
+    };
+  }, [editor]);
+
   if (!editor) return null;
+
+  const imageSelected = editor.isActive("image");
+  const imageAttrs = imageSelected
+    ? editor.getAttributes("image")
+    : { align: "top", size: "md" };
 
   function setLink() {
     const prev = editor.getAttributes("link").href;
@@ -79,14 +118,19 @@ function RichTextEditor({
         editor
           .chain()
           .focus()
-          .setImage({ src: url, alt })
+          .setImage({ src: url, alt, align: "left", size: "md" })
           .run();
       });
       return;
     }
     const url = window.prompt("Image URL");
     if (!url) return;
-    editor.chain().focus().setImage({ src: url }).run();
+    editor.chain().focus().setImage({ src: url, align: "left", size: "md" }).run();
+  }
+
+  function updateImageAttr(partial) {
+    if (!editor.isActive("image")) return;
+    editor.chain().focus().updateAttributes("image", partial).run();
   }
 
   return (
@@ -166,13 +210,6 @@ function RichTextEditor({
           >
             “
           </ToolbarBtn>
-          <ToolbarBtn
-            label="Code block"
-            active={editor.isActive("codeBlock")}
-            onClick={() => editor.chain().focus().toggleCodeBlock().run()}
-          >
-            {"</>"}
-          </ToolbarBtn>
           <span className={styles.sep} />
           <ToolbarBtn label="Link" active={editor.isActive("link")} onClick={setLink}>
             Link
@@ -180,12 +217,52 @@ function RichTextEditor({
           <ToolbarBtn label="Image" onClick={addImage}>
             {onInsertImage ? "Media" : "Img"}
           </ToolbarBtn>
+
+          <span className={styles.sep} />
+          <label className={styles.selectField}>
+            <span>Position</span>
+            <select
+              value={imageAttrs.align || "top"}
+              disabled={!imageSelected}
+              onChange={(e) => updateImageAttr({ align: e.target.value })}
+              title={
+                imageSelected
+                  ? "Image position"
+                  : "Click an image in the editor first"
+              }
+            >
+              {IMAGE_POSITIONS.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className={styles.selectField}>
+            <span>Size</span>
+            <select
+              value={imageAttrs.size || "md"}
+              disabled={!imageSelected}
+              onChange={(e) => updateImageAttr({ size: e.target.value })}
+              title={
+                imageSelected ? "Image size" : "Click an image in the editor first"
+              }
+            >
+              {IMAGE_SIZES.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
+              ))}
+            </select>
+          </label>
         </div>
       )}
       <EditorContent editor={editor} />
       {editable && (
         <p className={styles.hint}>
-          Shortcuts: **bold**, *italic*, ## heading, &gt; quote, - list · Ctrl+Z undo
+          {imageSelected
+            ? "Image selected — set Position and Size above. Left/Right: text fills beside the image."
+            : "Insert Media, click the image, then choose Position and Size."}
         </p>
       )}
     </div>
