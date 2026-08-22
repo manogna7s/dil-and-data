@@ -60,11 +60,8 @@ function CommentSection({ contentId }) {
   return (
     <section className={styles.section} aria-labelledby="comments-heading">
       <h2 id="comments-heading" className={styles.title}>
-        Leave a note
+        Leave a note here
       </h2>
-      <p className={styles.note}>
-        Comments are a soft conversation. Kind words welcome.
-      </p>
 
       {comments.length > 0 && (
         <ul className={styles.list}>

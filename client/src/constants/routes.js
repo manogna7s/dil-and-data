@@ -14,7 +14,7 @@ export const ROUTES = {
 
 export const SITE = {
   NAME: "DIL & DATA",
-  AUTHOR: "Manogna",
+  AUTHOR: "Shakti",
   BLOG_NAME: "Shakti's Blog",
   TAGLINE: "A personal journal of heart, curiosity, and quiet strength",
   STUDIO_NAME: "Creator Studio",

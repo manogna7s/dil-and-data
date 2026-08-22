@@ -28,7 +28,7 @@ async function seed() {
 
   const email = process.env.SEED_ADMIN_EMAIL || "admin@dilanddata.com";
   const password = process.env.SEED_ADMIN_PASSWORD || "ChangeMe123!";
-  const name = process.env.SEED_ADMIN_NAME || "Manogna";
+  const name = process.env.SEED_ADMIN_NAME || "Shakti";
 
   await User.deleteMany({ email });
   const admin = await User.create({
@@ -36,7 +36,7 @@ async function seed() {
     email,
     password,
     role: "admin",
-    bio: "Writer, builder, and collector of quiet mornings.",
+    bio: "Author of Dil & Data.",
   });
 
   console.log("Admin created:", admin.email);

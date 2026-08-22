@@ -157,7 +157,7 @@ function Blogs() {
               ) : items.length === 0 ? (
                 <EmptyState
                   title="No stories yet"
-                  description="When Manogna publishes from Creator Studio, they'll appear here."
+                  description="When Shakti publishes from Creator Studio, they'll appear here."
                   actionLabel={
                     params.toString() ? "Clear filters" : undefined
                   }

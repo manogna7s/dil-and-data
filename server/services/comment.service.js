@@ -112,7 +112,7 @@ export async function bulkDeleteComments(ids = []) {
 }
 
 /** Admin reply — auto-approved */
-export async function replyToComment(parentId, { body, authorName = "Manogna", authorEmail = "" }) {
+export async function replyToComment(parentId, { body, authorName = "Shakti", authorEmail = "" }) {
   const parent = await Comment.findById(parentId);
   if (!parent) throw new AppError("Parent comment not found", 404);
 
