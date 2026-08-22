@@ -6,6 +6,7 @@ import useStudioPage from "../../hooks/useStudioPage";
 import { useToast } from "../../components/ux";
 import { useKeyboardShortcuts, useUnsavedWarning } from "../../hooks/useStudioUx";
 import { TableSkeleton } from "../../components/ux";
+import MediaPicker from "../../components/media/MediaPicker";
 import desk from "../../styles/desk.module.css";
 
 const EMPTY = {
@@ -33,6 +34,9 @@ function SeoDesk() {
   const [dirty, setDirty] = useState(false);
   const [saveLabel, setSaveLabel] = useState("Ready");
   const timer = useRef(null);
+  const [ogPickerOpen, setOgPickerOpen] = useState(false);
+
+  const ogImage = form.ogImage || form.image;
 
   useStudioPage({
     title: "SEO",
@@ -211,10 +215,41 @@ function SeoDesk() {
             onChange={(e) => patch({ ogDescription: e.target.value })}
           />
         </label>
-        <label className={desk.field}>
-          <span>OG image URL</span>
-          <input value={form.ogImage || form.image} onChange={(e) => patch({ ogImage: e.target.value, image: e.target.value })} />
-        </label>
+        <div className={desk.field}>
+          <span>Share image</span>
+          {ogImage ? (
+            <img
+              src={ogImage}
+              alt=""
+              style={{
+                width: "100%",
+                maxWidth: "16rem",
+                aspectRatio: "1.91 / 1",
+                objectFit: "cover",
+                borderRadius: "var(--radius-md)",
+                marginBottom: "0.5rem",
+              }}
+            />
+          ) : (
+            <p className={desk.muted} style={{ textTransform: "none", letterSpacing: "normal" }}>
+              Shown when your site is shared on social apps (recommended 1200×630).
+            </p>
+          )}
+          <div className={desk.toolbar}>
+            <button type="button" className={desk.btn} onClick={() => setOgPickerOpen(true)}>
+              {ogImage ? "Change image" : "Upload or choose"}
+            </button>
+            {ogImage && (
+              <button
+                type="button"
+                className={desk.ghostBtn}
+                onClick={() => patch({ ogImage: "", image: "" })}
+              >
+                Remove
+              </button>
+            )}
+          </div>
+        </div>
         <label className={desk.field}>
           <span>Twitter card</span>
           <select
@@ -280,7 +315,27 @@ function SeoDesk() {
             {sitemapUrl}
           </a>
         </p>
+        <p className={desk.hint}>
+          Google may take several days to refresh search snippets after you deploy. Use Search
+          Console → URL Inspection → Request indexing to speed it up.
+        </p>
       </div>
+
+      <MediaPicker
+        open={ogPickerOpen}
+        title="Choose share image"
+        mode="single"
+        accept="image"
+        initialFolder="covers"
+        onClose={() => setOgPickerOpen(false)}
+        onSelect={(item) => {
+          const media = Array.isArray(item) ? item[0] : item;
+          if (media?.url) {
+            patch({ ogImage: media.url, image: media.url });
+          }
+          setOgPickerOpen(false);
+        }}
+      />
     </div>
   );
 }

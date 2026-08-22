@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import { Navbar, Footer, ScrollToTop } from "../components";
 import { getSettings } from "../services/settings.service.js";
+import useDocumentSeo from "../hooks/useDocumentSeo.js";
 import styles from "./MainLayout.module.css";
 
 function ScrollToTopOnNavigate() {
@@ -68,6 +69,7 @@ function useSiteChrome() {
  */
 function MainLayout() {
   useSiteChrome();
+  useDocumentSeo({});
 
   return (
     <div className={styles.layout}>

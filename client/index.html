@@ -16,9 +16,10 @@
 
     <script>
       (function () {
-        var base = "%VITE_API_URL%" || "http://localhost:5050/api";
-        if (base.indexOf("%") === 0) base = "http://localhost:5050/api";
-        var api = String(base).replace(/\/$/, "");
+        var api = "/api";
+        if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+          api = "/api";
+        }
 
         function setMeta(name, content) {
           if (!content) return;
@@ -28,7 +29,7 @@
             el.setAttribute("name", name);
             document.head.appendChild(el);
           }
-          el.content = content;
+          el.setAttribute("content", content);
         }
 
         function setOg(prop, content) {
@@ -39,40 +40,51 @@
             el.setAttribute("property", prop);
             document.head.appendChild(el);
           }
-          el.content = content;
+          el.setAttribute("content", content);
         }
 
-        fetch(api + "/settings", { cache: "no-store", mode: "cors", credentials: "omit" })
-          .then(function (r) {
-            return r.json();
-          })
-          .then(function (res) {
-            var seo = res && res.data && res.data.seoDefaults;
-            if (!seo) return;
-            if (seo.title) document.title = seo.title;
-            if (seo.description) setMeta("description", seo.description);
-            if (seo.robots) setMeta("robots", seo.robots);
-            var ogTitle = seo.ogTitle || seo.title;
-            var ogDesc = seo.ogDescription || seo.description;
-            var ogImage = seo.ogImage || seo.image;
-            if (ogTitle) setOg("og:title", ogTitle);
-            if (ogDesc) setOg("og:description", ogDesc);
-            if (ogImage) setOg("og:image", ogImage);
-          })
-          .catch(function () {});
+        function setTwitter(name, content) {
+          if (!content) return;
+          var el = document.querySelector('meta[name="' + name + '"]');
+          if (!el) {
+            el = document.createElement("meta");
+            el.setAttribute("name", name);
+            document.head.appendChild(el);
+          }
+          el.setAttribute("content", content);
+        }
+
+        function applySeoFromSettings(seo) {
+          if (!seo) return;
+          if (seo.title) document.title = seo.title;
+          if (seo.description) setMeta("description", seo.description);
+          if (seo.robots) setMeta("robots", seo.robots);
+          var ogTitle = seo.ogTitle || seo.title;
+          var ogDesc = seo.ogDescription || seo.description;
+          var ogImage = seo.ogImage || seo.image;
+          if (ogTitle) setOg("og:title", ogTitle);
+          if (ogDesc) setOg("og:description", ogDesc);
+          if (ogImage) {
+            setOg("og:image", ogImage);
+            setTwitter("twitter:image", ogImage);
+          }
+          setOg("og:type", "website");
+          if (ogTitle) setTwitter("twitter:title", ogTitle);
+          if (ogDesc) setTwitter("twitter:description", ogDesc);
+          setTwitter("twitter:card", seo.twitterCard || "summary_large_image");
+        }
 
         try {
-          var origin = new URL(api).origin;
-          var link = document.createElement("link");
-          link.rel = "preconnect";
-          link.href = origin;
-          document.head.appendChild(link);
+          var xhr = new XMLHttpRequest();
+          xhr.open("GET", api + "/settings", false);
+          xhr.send(null);
+          if (xhr.status >= 200 && xhr.status < 300) {
+            var res = JSON.parse(xhr.responseText);
+            applySeoFromSettings(res && res.data && res.data.seoDefaults);
+          }
         } catch (e) {}
-        fetch(api + "/health", {
-          cache: "no-store",
-          mode: "cors",
-          credentials: "omit",
-        }).catch(function () {});
+
+        fetch(api + "/health", { cache: "no-store", credentials: "omit" }).catch(function () {});
       })();
     </script>
 
