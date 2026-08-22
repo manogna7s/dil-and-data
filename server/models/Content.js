@@ -39,6 +39,17 @@ const mediaRefSchema = new mongoose.Schema(
   { _id: false }
 );
 
+const polaroidItemSchema = new mongoose.Schema(
+  {
+    image: { type: String, default: "" },
+    alt: { type: String, default: "" },
+    heading: { type: String, default: "", maxlength: 120 },
+    tagline: { type: String, default: "", maxlength: 300 },
+    align: { type: String, enum: ["left", "right"], default: "left" },
+  },
+  { _id: false }
+);
+
 /**
  * Polymorphic content document — the heart of the CMS.
  */
@@ -72,6 +83,10 @@ const contentSchema = new mongoose.Schema(
     },
     gallery: {
       type: [mediaRefSchema],
+      default: [],
+    },
+    polaroidItems: {
+      type: [polaroidItemSchema],
       default: [],
     },
     videos: {

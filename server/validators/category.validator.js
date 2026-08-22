@@ -18,6 +18,7 @@ export const createCategoryValidator = [
   body("coverImage").optional(optionalEmpty).isString().withMessage("Cover image must be a string"),
   body("icon").optional(optionalEmpty).isString().withMessage("Icon must be a string"),
   body("isActive").optional().isBoolean().withMessage("isActive must be true or false"),
+  body("layout").optional().isIn(["default", "polaroid"]).withMessage("Invalid layout"),
   body("slug").optional(optionalEmpty).isString().isLength({ max: 100 }),
 ];
 
@@ -38,6 +39,7 @@ export const updateCategoryValidator = [
   body("coverImage").optional(optionalEmpty).isString().withMessage("Cover image must be a string"),
   body("icon").optional(optionalEmpty).isString().withMessage("Icon must be a string"),
   body("isActive").optional().isBoolean().withMessage("isActive must be true or false"),
+  body("layout").optional().isIn(["default", "polaroid"]).withMessage("Invalid layout"),
   body("slug").optional(optionalEmpty).isString().isLength({ max: 100 }),
 ];
 

@@ -35,6 +35,12 @@ const categorySchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    /** `polaroid` — bucket-list posts use floating polaroid + text rows */
+    layout: {
+      type: String,
+      enum: ["default", "polaroid"],
+      default: "default",
+    },
   },
   { timestamps: true }
 );

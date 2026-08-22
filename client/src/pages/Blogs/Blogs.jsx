@@ -16,11 +16,13 @@ import { ROUTES, SITE } from "../../constants";
 import { listPublicContent } from "../../services/content.service.js";
 import { listPublicCategories } from "../../services/category.service.js";
 import { toCardProps } from "../../blocks/fetchLive";
+import useDocumentSeo from "../../hooks/useDocumentSeo.js";
 import styles from "./Blogs.module.css";
 
 const PAGE_SIZE = 6;
 
 function Blogs() {
+  useDocumentSeo({ title: "Shakti's Blog" });
   const [params, setParams] = useSearchParams();
   const [query, setQuery] = useState(params.get("q") || "");
   const category = params.get("category") || "all";

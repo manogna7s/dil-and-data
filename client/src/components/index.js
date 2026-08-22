@@ -47,3 +47,5 @@ export { default as ReadingProgress } from "./ReadingProgress/ReadingProgress";
 export { default as ArticleContent } from "./ArticleContent/ArticleContent";
 export { default as ArticleActions } from "./ArticleActions/ArticleActions";
 export { default as CommentSection } from "./CommentSection/CommentSection";
+export { default as PolaroidFrame } from "./PolaroidFrame/PolaroidFrame";
+export { default as PolaroidBucketList } from "./PolaroidBucketList/PolaroidBucketList";

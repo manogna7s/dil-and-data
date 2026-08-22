@@ -4,6 +4,7 @@ import { getPageBySlug } from "../../services/page.service.js";
 import { readPageCache, writePageCache } from "../../services/pageCache.js";
 import { BlockRenderer } from "../../blocks/BlockRenderer";
 import { Hero, Loader, EmptyState } from "../../components";
+import useDocumentSeo from "../../hooks/useDocumentSeo.js";
 import styles from "./CmsPage.module.css";
 
 const RETRY_WAIT_MS = [0, 400, 1200, 2800];
@@ -66,21 +67,18 @@ function CmsPage({ slug: slugProp, preview = false }) {
     };
   }, [slug, preview, reloadToken]);
 
-  useEffect(() => {
-    if (!page) return;
-    const title = page.seo?.title || page.title;
-    if (title) document.title = `${title} · DIL & DATA`;
-    const desc = page.seo?.description;
-    if (desc) {
-      let meta = document.querySelector('meta[name="description"]');
-      if (!meta) {
-        meta = document.createElement("meta");
-        meta.name = "description";
-        document.head.appendChild(meta);
-      }
-      meta.content = desc;
-    }
-  }, [page]);
+  useDocumentSeo(
+    page
+      ? {
+          title:
+            page.seo?.title || (slug === "home" ? undefined : page.title),
+          description: page.seo?.description || undefined,
+          image: page.seo?.image || undefined,
+          ogImage: page.seo?.image || undefined,
+        }
+      : null,
+    { skip: !page }
+  );
 
   if (page) {
     return (

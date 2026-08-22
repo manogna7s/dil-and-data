@@ -13,7 +13,9 @@ import { listAdminCategories } from "../../../services/category.service.js";
 import useStudioPage from "../../hooks/useStudioPage";
 import RichTextEditor from "../../components/editor/RichTextEditor";
 import MediaPicker from "../../components/media/MediaPicker";
+import PolaroidItemsEditor from "../../components/PolaroidItemsEditor/PolaroidItemsEditor";
 import StudioLoader from "../../components/StudioLoader/StudioLoader";
+import { isPolaroidCategory } from "../../../utils/categoryLayout.js";
 import {
   CONTENT_TYPE_OPTIONS,
   estimateReadingTime,
@@ -31,6 +33,7 @@ const EMPTY_FORM = {
   body: "",
   coverImage: "",
   gallery: [],
+  polaroidItems: [],
   videos: [],
   type: "blog",
   category: "",
@@ -89,6 +92,13 @@ function ContentEditor() {
     () => estimateReadingTime(form.body),
     [form.body]
   );
+
+  const selectedCategory = useMemo(
+    () => categories.find((cat) => String(cat._id) === String(form.category)),
+    [categories, form.category]
+  );
+
+  const polaroidMode = isPolaroidCategory(selectedCategory);
 
   useStudioPage({
     title: isNew ? "New story" : "Edit story",
@@ -194,6 +204,15 @@ function ContentEditor() {
       body: state.body,
       coverImage: state.coverImage.trim(),
       gallery: normalizeMediaList(state.gallery),
+      polaroidItems: Array.isArray(state.polaroidItems)
+        ? state.polaroidItems.map((item) => ({
+            image: item.image || "",
+            alt: item.alt || "",
+            heading: item.heading || "",
+            tagline: item.tagline || "",
+            align: item.align === "right" ? "right" : "left",
+          }))
+        : [],
       videos: normalizeMediaList(state.videos),
       type: state.type,
       category: state.category || null,
@@ -211,7 +230,8 @@ function ContentEditor() {
 
   async function saveNow({ silent = false, statusOverride } = {}) {
     const state = formRef.current;
-    if (!state.title.trim() && !state.body.trim()) {
+    const hasPolaroid = Array.isArray(state.polaroidItems) && state.polaroidItems.some((i) => i?.image || i?.heading);
+    if (!state.title.trim() && !state.body.trim() && !hasPolaroid) {
       if (!silent) setSaveLabel("Add a title to save");
       return null;
     }
@@ -400,21 +420,28 @@ function ContentEditor() {
             placeholder="Title"
             aria-label="Title"
           />
-          <RichTextEditor
-            value={form.body}
-            onChange={(html) => patchForm({ body: html })}
-            placeholder="Tell the story… Use ## for headings, ** for bold, - for lists."
-            onInsertImage={(insert) => {
-              bodyImageInsertRef.current = insert;
-              setPicker({
-                purpose: "body",
-                accept: "image",
-                mode: "single",
-                folder: "gallery",
-                title: "Insert image",
-              });
-            }}
-          />
+          {polaroidMode ? (
+            <PolaroidItemsEditor
+              items={form.polaroidItems}
+              onChange={(polaroidItems) => patchForm({ polaroidItems })}
+            />
+          ) : (
+            <RichTextEditor
+              value={form.body}
+              onChange={(html) => patchForm({ body: html })}
+              placeholder="Tell the story… Use ## for headings, ** for bold, - for lists."
+              onInsertImage={(insert) => {
+                bodyImageInsertRef.current = insert;
+                setPicker({
+                  purpose: "body",
+                  accept: "image",
+                  mode: "single",
+                  folder: "gallery",
+                  title: "Insert image",
+                });
+              }}
+            />
+          )}
         </div>
 
         {settingsOpen && !fullscreen && (
@@ -564,9 +591,15 @@ function ContentEditor() {
                 {categories.map((cat) => (
                   <option key={cat._id} value={cat._id}>
                     {cat.title}
+                    {cat.layout === "polaroid" ? " · polaroid" : ""}
                   </option>
                 ))}
               </select>
+              {polaroidMode && (
+                <p className={styles.hint}>
+                  Polaroid bucket list — add photos with headings in the editor above.
+                </p>
+              )}
             </Field>
 
             <Field label="Tags (comma separated)">
@@ -747,6 +780,15 @@ function hydrateForm(item) {
     body: item.body || "",
     coverImage: item.coverImage || "",
     gallery: normalizeMediaList(item.gallery),
+    polaroidItems: Array.isArray(item.polaroidItems)
+      ? item.polaroidItems.map((row) => ({
+          image: row.image || "",
+          alt: row.alt || "",
+          heading: row.heading || "",
+          tagline: row.tagline || "",
+          align: row.align === "right" ? "right" : "left",
+        }))
+      : [],
     videos: normalizeMediaList(item.videos),
     type: item.type || "blog",
     category: item.category?._id || item.category || "",

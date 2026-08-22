@@ -1,0 +1,122 @@
+.frame {
+  position: relative;
+  width: min(100%, 17rem);
+  margin: 0;
+  padding: 0.85rem 0.85rem 2.25rem;
+  background: linear-gradient(165deg, #faf6f0 0%, #f3ebe3 48%, #efe4da 100%);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.85) inset,
+    0 14px 28px rgba(46, 40, 38, 0.12),
+    0 4px 10px rgba(46, 40, 38, 0.06);
+  transform-origin: center center;
+  animation: polaroidFloat 7s ease-in-out infinite;
+}
+
+@keyframes polaroidFloat {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-0.6deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(0.5deg);
+  }
+}
+
+.motif {
+  position: absolute;
+  inset: 0.45rem;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.borderTop,
+.borderBottom {
+  position: absolute;
+  left: 0.65rem;
+  right: 0.65rem;
+  height: 2px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--color-accent) 0 6px,
+    transparent 6px 10px,
+    #b8928c 10px 14px,
+    transparent 14px 18px
+  );
+  opacity: 0.55;
+}
+
+.borderTop {
+  top: 0.35rem;
+}
+
+.borderBottom {
+  bottom: 1.85rem;
+}
+
+.cornerTL,
+.cornerTR,
+.cornerBL,
+.cornerBR {
+  position: absolute;
+  width: 1.1rem;
+  height: 1.1rem;
+  border: 2px solid color-mix(in srgb, var(--color-accent) 70%, #8b5a4a);
+}
+
+.cornerTL {
+  top: 0.2rem;
+  left: 0.2rem;
+  border-right: none;
+  border-bottom: none;
+}
+
+.cornerTR {
+  top: 0.2rem;
+  right: 0.2rem;
+  border-left: none;
+  border-bottom: none;
+}
+
+.cornerBL {
+  bottom: 1.7rem;
+  left: 0.2rem;
+  border-right: none;
+  border-top: none;
+}
+
+.cornerBR {
+  bottom: 1.7rem;
+  right: 0.2rem;
+  border-left: none;
+  border-top: none;
+}
+
+.photoWrap {
+  position: relative;
+  z-index: 0;
+  overflow: hidden;
+  background: var(--color-white);
+  border: 1px solid color-mix(in srgb, var(--color-border) 80%, white);
+}
+
+.photoWrap img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  border-radius: 0;
+}
+
+.caption {
+  margin-top: 0.65rem;
+  font-size: var(--text-sm);
+  font-style: italic;
+  color: var(--color-secondary);
+  text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .frame {
+    animation: none;
+  }
+}

@@ -14,9 +14,11 @@ import { ROUTES } from "../../constants";
 import { listPublicCategories } from "../../services/category.service.js";
 import { listPublicContent } from "../../services/content.service.js";
 import { toCardProps } from "../../blocks/fetchLive";
+import useDocumentSeo from "../../hooks/useDocumentSeo.js";
 import styles from "./Categories.module.css";
 
 function Categories() {
+  useDocumentSeo({ title: "Browse by category" });
   const [params] = useSearchParams();
   const selected = params.get("category");
   const [categories, setCategories] = useState([]);

@@ -10,9 +10,11 @@ import {
 } from "../../components";
 import { SITE } from "../../constants";
 import { getSettings } from "../../services/settings.service.js";
+import useDocumentSeo from "../../hooks/useDocumentSeo.js";
 import styles from "./Contact.module.css";
 
 function Contact() {
+  useDocumentSeo({ title: "Contact" });
   const [site, setSite] = useState({
     author: SITE.AUTHOR,
     email: "",
@@ -34,7 +36,6 @@ function Contact() {
           note: data.contact?.note || "",
           socials: Array.isArray(data.socials) ? data.socials : [],
         });
-        document.title = `Contact · ${data.siteName || SITE.NAME}`;
       } catch {
         /* keep defaults */
       }

@@ -17,6 +17,7 @@ const BLANK = {
   description: "",
   coverImage: "",
   isActive: true,
+  layout: "default",
 };
 
 function CategoriesDesk() {
@@ -60,6 +61,7 @@ function CategoriesDesk() {
       description: item.description || "",
       coverImage: item.coverImage || "",
       isActive: item.isActive !== false,
+      layout: item.layout === "polaroid" ? "polaroid" : "default",
     });
   }
 
@@ -79,6 +81,7 @@ function CategoriesDesk() {
       description: form.description.trim(),
       coverImage: form.coverImage.trim(),
       isActive: Boolean(form.isActive),
+      layout: form.layout === "polaroid" ? "polaroid" : "default",
     };
     setSaving(true);
     try {
@@ -156,6 +159,22 @@ function CategoriesDesk() {
               }
             />
           </label>
+          <label className={desk.field}>
+            Page layout
+            <select
+              value={form.layout}
+              onChange={(e) => setForm((f) => ({ ...f, layout: e.target.value }))}
+            >
+              <option value="default">Standard stories</option>
+              <option value="polaroid">Polaroid bucket list</option>
+            </select>
+          </label>
+          {form.layout === "polaroid" && (
+            <p className={desk.muted} style={{ textTransform: "none", letterSpacing: "normal" }}>
+              Stories in this category get floating polaroid photos with heading + tagline beside
+              each image (left or right).
+            </p>
+          )}
           <div className={desk.field}>
             <span>Cover image</span>
             {form.coverImage ? (
@@ -227,6 +246,7 @@ function CategoriesDesk() {
                 <thead>
                   <tr>
                     <th>Title</th>
+                    <th>Layout</th>
                     <th>Status</th>
                     <th />
                   </tr>
@@ -240,6 +260,7 @@ function CategoriesDesk() {
                           <p className={desk.muted}>{item.description}</p>
                         )}
                       </td>
+                      <td>{item.layout === "polaroid" ? "Polaroid" : "Standard"}</td>
                       <td>{item.isActive === false ? "Hidden" : "Active"}</td>
                       <td>
                         <div className={desk.actions}>

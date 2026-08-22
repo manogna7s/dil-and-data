@@ -9,6 +9,7 @@ import {
   EmptyState,
   Avatar,
   Loader,
+  PolaroidBucketList,
 } from "../../components";
 import ReadingProgress from "../../components/ReadingProgress/ReadingProgress";
 import ArticleContent from "../../components/ArticleContent/ArticleContent";
@@ -16,12 +17,14 @@ import ArticleActions from "../../components/ArticleActions/ArticleActions";
 import CommentSection from "../../components/CommentSection/CommentSection";
 import { formatBlogDate } from "../../utils/formatDate.js";
 import { optimizeImageUrl, optimizeHtmlImages } from "../../utils/optimizeImage.js";
+import { isPolaroidCategory } from "../../utils/categoryLayout.js";
 import { ROUTES, SITE } from "../../constants";
 import {
   getContentBySlug,
   listPublicContent,
 } from "../../services/content.service.js";
 import { toCardProps } from "../../blocks/fetchLive";
+import useDocumentSeo from "../../hooks/useDocumentSeo.js";
 import styles from "./SingleBlog.module.css";
 
 function SingleBlog() {
@@ -71,6 +74,18 @@ function SingleBlog() {
     };
   }, [slug]);
 
+  useDocumentSeo(
+    post
+      ? {
+          title: post.seo?.title || post.title,
+          description: post.seo?.description || post.excerpt || undefined,
+          image: post.seo?.image || post.coverImage || undefined,
+          ogImage: post.seo?.image || post.coverImage || undefined,
+        }
+      : null,
+    { skip: !post }
+  );
+
   if (loading) {
     return (
       <Container size="md">
@@ -95,6 +110,10 @@ function SingleBlog() {
   const categoryName =
     post.category?.title || post.category?.name || "Journal";
   const author = post.author || { name: SITE.AUTHOR, avatar: "", bio: "" };
+  const polaroidMode =
+    isPolaroidCategory(post.category) &&
+    Array.isArray(post.polaroidItems) &&
+    post.polaroidItems.length > 0;
 
   return (
     <article className={styles.page}>
@@ -130,7 +149,7 @@ function SingleBlog() {
         </Container>
       </header>
 
-      {post.coverImage ? (
+      {post.coverImage && !polaroidMode ? (
         <div className={styles.cover}>
           <img
             src={optimizeImageUrl(post.coverImage, { width: 1600 })}
@@ -145,7 +164,11 @@ function SingleBlog() {
 
       <Container size="md" className={styles.bodyLayout}>
         <div className={styles.article}>
-          <ArticleContent html={optimizeHtmlImages(post.body || "")} />
+          {polaroidMode ? (
+            <PolaroidBucketList items={post.polaroidItems} />
+          ) : (
+            <ArticleContent html={optimizeHtmlImages(post.body || "")} />
+          )}
           <ArticleActions
             title={post.title}
             slug={post.slug}

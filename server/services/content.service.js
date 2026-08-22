@@ -87,7 +87,7 @@ export async function createContent(payload, authorId) {
   }
 
   const doc = await Content.create(data);
-  return Content.findById(doc._id).populate("author", "name email avatar").populate("category", "title slug");
+  return Content.findById(doc._id).populate("author", "name email avatar").populate("category", "title slug layout");
 }
 
 export async function updateContent(id, payload) {
@@ -98,7 +98,7 @@ export async function updateContent(id, payload) {
   Object.assign(existing, data);
   await existing.save();
 
-  return Content.findById(id).populate("author", "name email avatar").populate("category", "title slug");
+  return Content.findById(id).populate("author", "name email avatar").populate("category", "title slug layout");
 }
 
 export async function deleteContent(id) {
@@ -146,7 +146,7 @@ export async function saveDraft(id) {
 export async function getContentById(id) {
   const doc = await Content.findById(id)
     .populate("author", "name email avatar bio")
-    .populate("category", "title slug description");
+    .populate("category", "title slug description layout");
 
   if (!doc) throw new AppError("Content not found", 404);
   return doc;
@@ -158,7 +158,7 @@ export async function getContentBySlug(slug, { publicOnly = true } = {}) {
 
   const doc = await Content.findOne(filter)
     .populate("author", "name email avatar bio")
-    .populate("category", "title slug description")
+    .populate("category", "title slug description layout")
     .lean();
 
   if (!doc) throw new AppError("Content not found", 404);
@@ -209,7 +209,7 @@ export async function listContent(query = {}, options = {}) {
       .skip(skip)
       .limit(limit)
       .populate("author", "name avatar")
-      .populate("category", "title slug")
+      .populate("category", "title slug layout")
       .lean(),
     Content.countDocuments(filter),
   ]);
@@ -226,7 +226,7 @@ export async function getFeaturedContent(limit = 6) {
     .sort({ publishedAt: -1 })
     .limit(limit)
     .populate("author", "name avatar")
-    .populate("category", "title slug")
+    .populate("category", "title slug layout")
     .lean();
 }
 
@@ -236,7 +236,7 @@ export async function getRecentContent(limit = 6) {
     .sort({ publishedAt: -1 })
     .limit(limit)
     .populate("author", "name avatar")
-    .populate("category", "title slug")
+    .populate("category", "title slug layout")
     .lean();
 }
 

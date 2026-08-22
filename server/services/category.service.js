@@ -16,6 +16,9 @@ function pickCategoryFields(payload = {}) {
     next.icon = payload.icon == null ? "" : String(payload.icon);
   }
   if (payload.isActive !== undefined) next.isActive = Boolean(payload.isActive);
+  if (payload.layout !== undefined) {
+    next.layout = payload.layout === "polaroid" ? "polaroid" : "default";
+  }
   if (payload.slug !== undefined && payload.slug) next.slug = String(payload.slug).trim();
   return next;
 }

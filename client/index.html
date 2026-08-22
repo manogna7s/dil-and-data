@@ -4,10 +4,7 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="description"
-      content="DIL & DATA — a personal publishing platform."
-    />
+    <meta name="description" content="" />
     <title>DIL &amp; DATA</title>
     <link
       rel="preload"
@@ -21,14 +18,57 @@
       (function () {
         var base = "%VITE_API_URL%" || "http://localhost:5050/api";
         if (base.indexOf("%") === 0) base = "http://localhost:5050/api";
+        var api = String(base).replace(/\/$/, "");
+
+        function setMeta(name, content) {
+          if (!content) return;
+          var el = document.querySelector('meta[name="' + name + '"]');
+          if (!el) {
+            el = document.createElement("meta");
+            el.setAttribute("name", name);
+            document.head.appendChild(el);
+          }
+          el.content = content;
+        }
+
+        function setOg(prop, content) {
+          if (!content) return;
+          var el = document.querySelector('meta[property="' + prop + '"]');
+          if (!el) {
+            el = document.createElement("meta");
+            el.setAttribute("property", prop);
+            document.head.appendChild(el);
+          }
+          el.content = content;
+        }
+
+        fetch(api + "/settings", { cache: "no-store", mode: "cors", credentials: "omit" })
+          .then(function (r) {
+            return r.json();
+          })
+          .then(function (res) {
+            var seo = res && res.data && res.data.seoDefaults;
+            if (!seo) return;
+            if (seo.title) document.title = seo.title;
+            if (seo.description) setMeta("description", seo.description);
+            if (seo.robots) setMeta("robots", seo.robots);
+            var ogTitle = seo.ogTitle || seo.title;
+            var ogDesc = seo.ogDescription || seo.description;
+            var ogImage = seo.ogImage || seo.image;
+            if (ogTitle) setOg("og:title", ogTitle);
+            if (ogDesc) setOg("og:description", ogDesc);
+            if (ogImage) setOg("og:image", ogImage);
+          })
+          .catch(function () {});
+
         try {
-          var origin = new URL(base).origin;
+          var origin = new URL(api).origin;
           var link = document.createElement("link");
           link.rel = "preconnect";
           link.href = origin;
           document.head.appendChild(link);
         } catch (e) {}
-        fetch(String(base).replace(/\/$/, "") + "/health", {
+        fetch(api + "/health", {
           cache: "no-store",
           mode: "cors",
           credentials: "omit",
