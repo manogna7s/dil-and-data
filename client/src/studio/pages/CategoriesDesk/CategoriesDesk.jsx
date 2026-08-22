@@ -9,6 +9,7 @@ import {
 import useStudioPage from "../../hooks/useStudioPage";
 import { useToast, useConfirm, TableSkeleton } from "../../components/ux";
 import StudioEmptyState from "../../components/StudioEmptyState/StudioEmptyState";
+import MediaPicker from "../../components/media/MediaPicker";
 import desk from "../../styles/desk.module.css";
 
 const BLANK = {
@@ -26,6 +27,7 @@ function CategoriesDesk() {
   const [form, setForm] = useState(BLANK);
   const [editingId, setEditingId] = useState(null);
   const [saving, setSaving] = useState(false);
+  const [coverPickerOpen, setCoverPickerOpen] = useState(false);
 
   useStudioPage({
     title: "Categories",
@@ -154,16 +156,43 @@ function CategoriesDesk() {
               }
             />
           </label>
-          <label className={desk.field}>
-            Cover image URL
-            <input
-              value={form.coverImage}
-              onChange={(e) =>
-                setForm((f) => ({ ...f, coverImage: e.target.value }))
-              }
-              placeholder="Paste a media library URL"
-            />
-          </label>
+          <div className={desk.field}>
+            <span>Cover image</span>
+            {form.coverImage ? (
+              <img
+                src={form.coverImage}
+                alt=""
+                style={{
+                  width: "100%",
+                  maxHeight: "8rem",
+                  objectFit: "cover",
+                  borderRadius: "var(--radius-md)",
+                }}
+              />
+            ) : (
+              <p className={desk.muted} style={{ textTransform: "none", letterSpacing: "normal" }}>
+                Optional — shows on the public categories page.
+              </p>
+            )}
+            <div className={desk.toolbar}>
+              <button
+                type="button"
+                className={desk.btn}
+                onClick={() => setCoverPickerOpen(true)}
+              >
+                {form.coverImage ? "Change image" : "Upload or choose"}
+              </button>
+              {form.coverImage && (
+                <button
+                  type="button"
+                  className={desk.ghostBtn}
+                  onClick={() => setForm((f) => ({ ...f, coverImage: "" }))}
+                >
+                  Remove
+                </button>
+              )}
+            </div>
+          </div>
           <label className={desk.field} style={{ flexDirection: "row", alignItems: "center", textTransform: "none" }}>
             <input
               type="checkbox"
@@ -238,6 +267,22 @@ function CategoriesDesk() {
           )}
         </div>
       </div>
+
+      <MediaPicker
+        open={coverPickerOpen}
+        title="Choose category cover"
+        mode="single"
+        accept="image"
+        initialFolder="covers"
+        onClose={() => setCoverPickerOpen(false)}
+        onSelect={(item) => {
+          const media = Array.isArray(item) ? item[0] : item;
+          if (media?.url) {
+            setForm((f) => ({ ...f, coverImage: media.url }));
+          }
+          setCoverPickerOpen(false);
+        }}
+      />
     </div>
   );
 }

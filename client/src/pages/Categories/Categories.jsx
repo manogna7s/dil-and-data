@@ -75,11 +75,7 @@ function Categories() {
 
   return (
     <div className={styles.page}>
-      <PageHeader
-        eyebrow="Topics"
-        title="Browse by category"
-        description="Shelves appear here once you create categories in Creator Studio."
-      />
+      <PageHeader eyebrow="Topics" title="Browse by category" />
 
       <Section>
         <Container size="lg">

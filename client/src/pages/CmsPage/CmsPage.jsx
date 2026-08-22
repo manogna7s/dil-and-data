@@ -84,7 +84,7 @@ function CmsPage({ slug: slugProp, preview = false }) {
 
   if (page) {
     return (
-      <div className={styles.page}>
+      <div className={`${styles.page} ${slug === "about" ? styles.aboutPage : ""}`}>
         <BlockRenderer blocks={page.blocks || []} preview={preview} />
       </div>
     );

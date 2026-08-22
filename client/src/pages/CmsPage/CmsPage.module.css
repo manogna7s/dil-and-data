@@ -2,6 +2,10 @@
   min-height: 50vh;
 }
 
+.aboutPage :global(img) {
+  border-radius: 0;
+}
+
 .state {
   min-height: 50vh;
   display: grid;
