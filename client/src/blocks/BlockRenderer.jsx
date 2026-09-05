@@ -20,6 +20,7 @@ import {
   toCardProps,
 } from "./fetchLive";
 import { resolveSectionTone } from "./blockTypes";
+import { categoryPath } from "../constants";
 import styles from "./blocks.module.css";
 
 /**
@@ -379,7 +380,7 @@ function CategoriesBlock({ data }) {
           name: cat.title || cat.name,
           count: cat.contentCount ?? cat.count ?? 0,
           image: cat.image || cat.coverImage || "",
-          href: `/categories`,
+          href: categoryPath(cat.slug || cat.id),
         }));
         if (!cancelled) setCategories(list);
       } catch {

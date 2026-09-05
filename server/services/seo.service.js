@@ -1,39 +1,103 @@
 import Page from "../models/Page.js";
 import Content from "../models/Content.js";
+import Category from "../models/Category.js";
 import { getSettings } from "./settings.service.js";
 
-function siteBase(settings) {
-  const fromSeo = settings.seoDefaults?.canonicalBase?.replace(/\/$/, "");
-  return fromSeo || process.env.CLIENT_URL?.replace(/\/$/, "") || "http://localhost:5173";
+/** Ensure absolute https origin — Google rejects bare hosts in sitemaps. */
+function normalizeOrigin(value = "") {
+  const trimmed = String(value || "").trim().replace(/\/$/, "");
+  if (!trimmed) return "";
+  if (/^https?:\/\//i.test(trimmed)) return trimmed.replace(/\/$/, "");
+  return `https://${trimmed}`;
 }
 
-function apiBase(settings) {
-  const explicit = process.env.API_PUBLIC_URL?.replace(/\/$/, "");
-  if (explicit) return explicit;
-  // Prefer client origin + /api only when API is reverse-proxied under the same host.
-  const fromSeo = settings.seoDefaults?.canonicalBase?.replace(/\/$/, "");
-  if (fromSeo && process.env.SEO_SITEMAP_ON_CLIENT === "true") {
-    return `${fromSeo}/api`;
-  }
+function siteBase(settings) {
   return (
-    process.env.API_PUBLIC_URL?.replace(/\/$/, "") ||
-    process.env.RENDER_EXTERNAL_URL?.replace(/\/$/, "") ||
-    `http://localhost:${process.env.PORT || 5050}/api`
+    normalizeOrigin(settings.seoDefaults?.canonicalBase) ||
+    normalizeOrigin(process.env.CLIENT_URL) ||
+    "https://www.dilanddata.in"
   );
+}
+
+function isoDate(value) {
+  if (!value) return null;
+  const d = new Date(value);
+  if (Number.isNaN(d.getTime())) return null;
+  return d.toISOString();
 }
 
 export async function buildRobotsTxt() {
   const settings = await getSettings();
-  const api = apiBase(settings);
+  const site = siteBase(settings);
+  // Canonical root path — Vercel rewrites /sitemap.xml → API.
+  const sitemapUrl = `${site}/sitemap.xml`;
   const robots = settings.seoDefaults?.robots || "index, follow";
-  const disallow = robots.includes("noindex") ? "Disallow: /\n" : "Disallow:\n";
+  const disallow = robots.includes("noindex")
+    ? "Disallow: /\n"
+    : "Disallow: /studio\nDisallow: /studio/\n";
 
   return [
     "User-agent: *",
     disallow.trimEnd(),
-    `Sitemap: ${api}/seo/sitemap.xml`,
+    `Sitemap: ${sitemapUrl}`,
     "",
   ].join("\n");
+}
+
+/**
+ * Build sitemap entries with optional lastmod.
+ * @returns {Promise<Array<{ loc: string, lastmod?: string }>>}
+ */
+async function collectUrls(settings) {
+  const base = siteBase(settings);
+  /** @type {Map<string, string|undefined>} */
+  const map = new Map();
+
+  function add(loc, lastmod) {
+    if (!loc) return;
+    const prev = map.get(loc);
+    if (!prev || (lastmod && (!prev || lastmod > prev))) {
+      map.set(loc, lastmod || prev);
+    } else if (!map.has(loc)) {
+      map.set(loc, lastmod);
+    }
+  }
+
+  add(`${base}/`);
+  add(`${base}/blogs`);
+  add(`${base}/categories`);
+  add(`${base}/contact`);
+  add(`${base}/about`);
+
+  if (settings.sitemap?.includePages !== false) {
+    const pages = await Page.find({ status: "published" }).select("slug updatedAt");
+    for (const page of pages) {
+      const loc = page.slug === "home" ? `${base}/` : `${base}/${page.slug}`;
+      add(loc, isoDate(page.updatedAt));
+    }
+  }
+
+  const categories = await Category.find({ isActive: { $ne: false } }).select(
+    "slug updatedAt"
+  );
+  for (const cat of categories) {
+    if (!cat.slug) continue;
+    add(`${base}/categories/${cat.slug}`, isoDate(cat.updatedAt));
+  }
+
+  if (settings.sitemap?.includeContent !== false) {
+    const posts = await Content.find({ status: "published" }).select(
+      "slug updatedAt publishedAt"
+    );
+    for (const post of posts) {
+      add(
+        `${base}/blogs/${post.slug}`,
+        isoDate(post.updatedAt) || isoDate(post.publishedAt)
+      );
+    }
+  }
+
+  return [...map.entries()].map(([loc, lastmod]) => ({ loc, lastmod }));
 }
 
 export async function buildSitemapXml() {
@@ -42,28 +106,12 @@ export async function buildSitemapXml() {
     return `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"></urlset>`;
   }
 
-  const base = siteBase(settings);
-  const urls = [`${base}/`, `${base}/blogs`, `${base}/categories`, `${base}/contact`];
-
-  if (settings.sitemap?.includePages !== false) {
-    const pages = await Page.find({ status: "published" }).select("slug updatedAt");
-    for (const page of pages) {
-      urls.push(page.slug === "home" ? `${base}/` : `${base}/${page.slug}`);
-    }
-  }
-
-  if (settings.sitemap?.includeContent !== false) {
-    const posts = await Content.find({ status: "published" }).select("slug updatedAt");
-    for (const post of posts) {
-      urls.push(`${base}/blogs/${post.slug}`);
-    }
-  }
-
-  const unique = [...new Set(urls)];
-  const body = unique
-    .map(
-      (loc) => `  <url><loc>${escapeXml(loc)}</loc><changefreq>weekly</changefreq></url>`
-    )
+  const entries = await collectUrls(settings);
+  const body = entries
+    .map(({ loc, lastmod }) => {
+      const lm = lastmod ? `<lastmod>${lastmod}</lastmod>` : "";
+      return `  <url><loc>${escapeXml(loc)}</loc>${lm}<changefreq>weekly</changefreq></url>`;
+    })
     .join("\n");
 
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${body}\n</urlset>`;

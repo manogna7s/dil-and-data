@@ -16,7 +16,7 @@ const settingsSchema = new mongoose.Schema(
     },
     tagline: {
       type: String,
-      default: "A personal journal of heart, curiosity, and quiet strength",
+      default: "The Everything Journal of a Slightly Strange Girl.",
     },
     about: {
       type: String,

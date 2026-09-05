@@ -1,6 +1,5 @@
 /**
  * Apply document title + meta tags for SEO / Open Graph / Twitter.
- * Used by public pages after settings or page-specific SEO load.
  */
 
 function upsertMeta(attr, key, content) {
@@ -11,7 +10,7 @@ function upsertMeta(attr, key, content) {
     el.setAttribute(attr, key);
     document.head.appendChild(el);
   }
-  el.content = content;
+  el.setAttribute("content", content);
 }
 
 function upsertLink(rel, href) {
@@ -25,7 +24,7 @@ function upsertLink(rel, href) {
   el.href = href;
 }
 
-function normalizeBase(url = "") {
+export function normalizeBase(url = "") {
   const trimmed = String(url).trim().replace(/\/$/, "");
   if (!trimmed) return "";
   if (/^https?:\/\//i.test(trimmed)) return trimmed;
@@ -34,31 +33,18 @@ function normalizeBase(url = "") {
 
 function buildTitle(title, siteName) {
   if (!title) return siteName || "DIL & DATA";
-  if (siteName && !title.includes(siteName)) {
-    return `${title} · ${siteName}`;
-  }
+  if (siteName && title.includes(siteName)) return title;
+  if (siteName) return `${title} | ${siteName}`;
   return title;
 }
 
 /**
  * @param {object} opts
- * @param {string} [opts.title]
- * @param {string} [opts.description]
- * @param {string} [opts.image]
- * @param {string} [opts.canonical]
- * @param {string} [opts.canonicalBase]
- * @param {string} [opts.path] — pathname for canonical when base is set
- * @param {string} [opts.ogTitle]
- * @param {string} [opts.ogDescription]
- * @param {string} [opts.ogImage]
- * @param {string} [opts.robots]
- * @param {string} [opts.twitterCard]
- * @param {string} [opts.siteName]
  */
 export function applySeo(opts = {}) {
   const siteName = opts.siteName || "DIL & DATA";
   const title = opts.title || siteName;
-  document.title = buildTitle(title, siteName.includes("·") ? null : siteName);
+  document.title = buildTitle(title, siteName.includes("|") || siteName.includes("·") ? null : siteName);
 
   const description = opts.description || "";
   if (description) upsertMeta("name", "description", description);
@@ -66,15 +52,42 @@ export function applySeo(opts = {}) {
   const robots = opts.robots || "index, follow";
   upsertMeta("name", "robots", robots);
 
+  const base = normalizeBase(opts.canonicalBase) || "https://www.dilanddata.in";
+  const path = opts.path != null ? opts.path : "";
+  const canonical =
+    opts.canonical ||
+    (path === "/" || path === "" ? `${base}/` : `${base}${path.startsWith("/") ? path : `/${path}`}`);
+
+  if (canonical) {
+    upsertLink("canonical", canonical);
+    upsertMeta("property", "og:url", canonical);
+  }
+
   const ogTitle = opts.ogTitle || title;
   const ogDescription = opts.ogDescription || description;
   const ogImage = opts.ogImage || opts.image || "";
+  const ogType = opts.ogType || "website";
 
   if (ogTitle) upsertMeta("property", "og:title", ogTitle);
   if (ogDescription) upsertMeta("property", "og:description", ogDescription);
   if (ogImage) upsertMeta("property", "og:image", ogImage);
-  upsertMeta("property", "og:type", "website");
+  upsertMeta("property", "og:type", ogType);
   upsertMeta("property", "og:site_name", siteName);
+
+  if (ogType === "article") {
+    if (opts.publishedTime) {
+      upsertMeta("property", "article:published_time", opts.publishedTime);
+    }
+    if (opts.modifiedTime) {
+      upsertMeta("property", "article:modified_time", opts.modifiedTime);
+    }
+    if (opts.authorName) {
+      upsertMeta("property", "article:author", opts.authorName);
+    }
+    if (opts.section) {
+      upsertMeta("property", "article:section", opts.section);
+    }
+  }
 
   const twitterCard = opts.twitterCard || "summary_large_image";
   upsertMeta("name", "twitter:card", twitterCard);
@@ -82,10 +95,7 @@ export function applySeo(opts = {}) {
   if (ogDescription) upsertMeta("name", "twitter:description", ogDescription);
   if (ogImage) upsertMeta("name", "twitter:image", ogImage);
 
-  const base = normalizeBase(opts.canonicalBase);
-  const canonical =
-    opts.canonical || (base && opts.path != null ? `${base}${opts.path}` : base || "");
-  if (canonical) upsertLink("canonical", canonical);
+  upsertMeta("name", "theme-color", "#f7f2ef");
 }
 
 /** Map API settings → applySeo options for site-wide defaults. */
@@ -94,16 +104,22 @@ export function seoFromSettings(settings, { path } = {}) {
   const siteName = settings?.siteName || "DIL & DATA";
   return {
     siteName,
-    title: seo.title || siteName,
-    description: seo.description || "",
+    title: seo.title || `${siteName} | Stories, Travel, Culture & Ideas`,
+    description:
+      seo.description ||
+      "DIL & DATA is an independent personal publication exploring stories, travel, culture, books, people, and the quietly ridiculous details of everyday life.",
     image: seo.ogImage || seo.image || "",
-    canonicalBase: seo.canonicalBase,
+    canonicalBase: seo.canonicalBase || "https://www.dilanddata.in",
     path,
     ogTitle: seo.ogTitle || seo.title || siteName,
-    ogDescription: seo.ogDescription || seo.description || "",
+    ogDescription:
+      seo.ogDescription ||
+      seo.description ||
+      "An independent personal publication of stories, travel, culture, and curious everyday life.",
     ogImage: seo.ogImage || seo.image || "",
     robots: seo.robots || "index, follow",
     twitterCard: seo.twitterCard || "summary_large_image",
+    ogType: "website",
   };
 }
 

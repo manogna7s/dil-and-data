@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams, useNavigate } from "react-router-dom";
 import {
   PageHeader,
   Section,
@@ -12,18 +12,34 @@ import {
   Loader,
 } from "../../components";
 import { formatBlogDate } from "../../utils/formatDate.js";
-import { ROUTES, SITE } from "../../constants";
+import { ROUTES, SITE, categoryPath } from "../../constants";
 import { listPublicContent } from "../../services/content.service.js";
 import { listPublicCategories } from "../../services/category.service.js";
 import { toCardProps } from "../../blocks/fetchLive";
 import useDocumentSeo from "../../hooks/useDocumentSeo.js";
+import { useJsonLd, collectionPageJsonLd } from "../../utils/jsonLd.js";
 import styles from "./Blogs.module.css";
 
 const PAGE_SIZE = 6;
 
 function Blogs() {
-  useDocumentSeo({ title: "Shakti's Blog" });
+  useDocumentSeo({
+    title: "Stories | Essays, Letters & Soft Observations",
+    description:
+      "Stories from DIL & DATA — essays, letters, and quiet observations published when they feel ready. Browse by topic or search the journal.",
+    path: ROUTES.BLOGS,
+  });
+  useJsonLd(
+    "stories-page",
+    collectionPageJsonLd({
+      name: "Stories",
+      description:
+        "Essays, letters, and soft observations from DIL & DATA.",
+      url: `${SITE.CANONICAL_BASE}/blogs`,
+    })
+  );
   const [params, setParams] = useSearchParams();
+  const navigate = useNavigate();
   const [query, setQuery] = useState(params.get("q") || "");
   const category = params.get("category") || "all";
   const sort = params.get("sort") || "newest";
@@ -144,7 +160,7 @@ function Blogs() {
                   key={cat._id || cat.slug}
                   label={cat.title || cat.name}
                   active={category === cat.slug || category === String(cat._id)}
-                  onClick={() => updateParam("category", cat.slug || cat._id)}
+                  onClick={() => navigate(categoryPath(cat.slug || cat._id))}
                 />
               ))}
             </div>
@@ -157,7 +173,7 @@ function Blogs() {
               ) : items.length === 0 ? (
                 <EmptyState
                   title="No stories yet"
-                  description="When Shakti publishes from Creator Studio, they'll appear here."
+                  description="When new stories are published from Creator Studio, they'll appear here."
                   actionLabel={
                     params.toString() ? "Clear filters" : undefined
                   }

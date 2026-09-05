@@ -1,10 +1,16 @@
 import { useNavigate } from "react-router-dom";
 import { Container, EmptyState, Logo } from "../../components";
 import { ROUTES } from "../../constants";
+import useDocumentSeo from "../../hooks/useDocumentSeo.js";
 import styles from "./NotFound.module.css";
 
 function NotFound() {
   const navigate = useNavigate();
+  useDocumentSeo({
+    title: "Page not found",
+    description: "This chapter is missing from DIL & DATA.",
+    robots: "noindex, follow",
+  });
 
   return (
     <div className={styles.page}>

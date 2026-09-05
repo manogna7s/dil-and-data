@@ -71,10 +71,20 @@ function CmsPage({ slug: slugProp, preview = false }) {
     page
       ? {
           title:
-            page.seo?.title || (slug === "home" ? undefined : page.title),
-          description: page.seo?.description || undefined,
+            page.seo?.title ||
+            (slug === "home"
+              ? undefined
+              : slug === "about"
+                ? "About | Manogna & DIL & DATA"
+                : page.title),
+          description:
+            page.seo?.description ||
+            (slug === "about"
+              ? "Meet Manogna — writer behind DIL & DATA, an independent personal publication of stories, travel, culture, and everyday life."
+              : undefined),
           image: page.seo?.image || undefined,
           ogImage: page.seo?.image || undefined,
+          path: slug === "home" ? "/" : `/${slug}`,
         }
       : null,
     { skip: !page }

@@ -25,10 +25,12 @@ function BlogCard({
           <div className={styles.media}>
             <img
               src={optimizeImageUrl(image, { width: 720 })}
-              alt=""
+              alt={title ? `Cover for ${title}` : ""}
               className={styles.image}
               loading="lazy"
               decoding="async"
+              width={720}
+              height={480}
             />
           </div>
         </Link>
@@ -46,8 +48,8 @@ function BlogCard({
 
         {excerpt && <p className={styles.excerpt}>{excerpt}</p>}
 
-        <Link to={href} className={`link-underline ${styles.readMore}`}>
-          Read more
+        <Link to={href} className={`link-underline ${styles.readMore}`} aria-label={`Read ${title}`}>
+          Continue reading
         </Link>
       </div>
     </Card>

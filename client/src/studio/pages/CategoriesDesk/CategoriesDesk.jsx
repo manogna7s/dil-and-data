@@ -131,7 +131,8 @@ function CategoriesDesk() {
           <p className={desk.eyebrow}>Shelves</p>
           <h1 className={desk.title}>Categories</h1>
           <p className={desk.lede}>
-            Organize Shakti's Blog: travel, books, diary, and whatever else you invent.
+            Organize the journal: travel, books, diary, and whatever else you invent.
+            Use Polaroid layout for bucket-list shelves.
           </p>
         </div>
       </header>

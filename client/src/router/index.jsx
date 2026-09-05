@@ -233,6 +233,14 @@ const router = createBrowserRouter([
         ),
       },
       {
+        path: "categories/:slug",
+        element: (
+          <Suspend>
+            <Categories />
+          </Suspend>
+        ),
+      },
+      {
         path: "contact",
         element: (
           <Suspend>

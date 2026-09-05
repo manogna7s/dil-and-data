@@ -12,6 +12,19 @@
   margin-bottom: var(--space-lg);
 }
 
+.catLink {
+  display: inline-flex;
+  text-decoration: none;
+  color: inherit;
+}
+
+.shelfNote {
+  margin: var(--space-2xl) 0 var(--space-lg);
+  font-size: var(--text-base);
+  color: var(--color-secondary);
+  font-style: italic;
+}
+
 .title {
   font-family: var(--font-heading);
   font-size: clamp(2rem, 4vw, 3.25rem);

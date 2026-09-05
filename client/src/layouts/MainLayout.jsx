@@ -1,8 +1,10 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import { Navbar, Footer, ScrollToTop } from "../components";
 import { getSettings } from "../services/settings.service.js";
-import useDocumentSeo from "../hooks/useDocumentSeo.js";
+import useDocumentSeo, { loadSiteSettings } from "../hooks/useDocumentSeo.js";
+import { useJsonLd, websiteJsonLd, personJsonLd } from "../utils/jsonLd.js";
+import { SITE } from "../constants";
 import styles from "./MainLayout.module.css";
 
 function ScrollToTopOnNavigate() {
@@ -63,6 +65,49 @@ function useSiteChrome() {
   }, []);
 }
 
+function useSiteJsonLd() {
+  const [settings, setSettings] = useState(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    loadSiteSettings().then((data) => {
+      if (!cancelled && data) setSettings(data);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const base =
+    settings?.seoDefaults?.canonicalBase?.replace(/\/$/, "") ||
+    SITE.CANONICAL_BASE;
+  const name = settings?.siteName || SITE.NAME;
+  const description =
+    settings?.seoDefaults?.description ||
+    settings?.tagline ||
+    SITE.TAGLINE;
+
+  useJsonLd(
+    "website",
+    websiteJsonLd({
+      name,
+      url: `${base}/`,
+      description,
+      searchUrl: `${base}/blogs?q={search_term_string}`,
+    })
+  );
+
+  useJsonLd(
+    "person",
+    personJsonLd({
+      name: SITE.AUTHOR,
+      url: `${base}/about`,
+      description: settings?.about || undefined,
+      image: settings?.logo || undefined,
+    })
+  );
+}
+
 /**
  * Primary app shell.
  * Shared chrome + scroll utility; pages fill the outlet.
@@ -70,6 +115,7 @@ function useSiteChrome() {
 function MainLayout() {
   useSiteChrome();
   useDocumentSeo({});
+  useSiteJsonLd();
 
   return (
     <div className={styles.layout}>

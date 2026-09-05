@@ -8,7 +8,7 @@ import { pagePath } from "../../blocks/blockTypes";
 import styles from "./Navbar.module.css";
 
 const CORE_LINKS = [
-  { to: ROUTES.BLOGS, label: "Shakti's Blog" },
+  { to: ROUTES.BLOGS, label: "Stories" },
   { to: ROUTES.CATEGORIES, label: "Categories" },
   { to: ROUTES.CONTACT, label: "Contact" },
 ];

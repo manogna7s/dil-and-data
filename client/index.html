@@ -5,7 +5,9 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="" />
-    <title>DIL &amp; DATA</title>
+    <meta name="theme-color" content="#f7f2ef" />
+    <link rel="canonical" href="https://www.dilanddata.in/" />
+    <title>DIL &amp; DATA | Stories, Travel, Culture &amp; Ideas</title>
     <link
       rel="preload"
       as="image"
@@ -56,11 +58,27 @@
 
         function applySeoFromSettings(seo) {
           if (!seo) return;
-          if (seo.title) document.title = seo.title;
-          if (seo.description) setMeta("description", seo.description);
+          var title =
+            seo.title || "DIL & DATA | Stories, Travel, Culture & Ideas";
+          document.title = title;
+          var desc =
+            seo.description ||
+            "DIL & DATA is an independent personal publication exploring stories, travel, culture, books, people, and the quietly ridiculous details of everyday life.";
+          setMeta("description", desc);
           if (seo.robots) setMeta("robots", seo.robots);
-          var ogTitle = seo.ogTitle || seo.title;
-          var ogDesc = seo.ogDescription || seo.description;
+          var base = (seo.canonicalBase || "https://www.dilanddata.in").replace(/\/$/, "");
+          if (base.indexOf("http") !== 0) base = "https://" + base;
+          var canon = base + (location.pathname || "/");
+          var link = document.querySelector('link[rel="canonical"]');
+          if (!link) {
+            link = document.createElement("link");
+            link.rel = "canonical";
+            document.head.appendChild(link);
+          }
+          link.href = canon;
+          setOg("og:url", canon);
+          var ogTitle = seo.ogTitle || title;
+          var ogDesc = seo.ogDescription || desc;
           var ogImage = seo.ogImage || seo.image;
           if (ogTitle) setOg("og:title", ogTitle);
           if (ogDesc) setOg("og:description", ogDesc);
@@ -69,6 +87,7 @@
             setTwitter("twitter:image", ogImage);
           }
           setOg("og:type", "website");
+          setOg("og:site_name", "DIL & DATA");
           if (ogTitle) setTwitter("twitter:title", ogTitle);
           if (ogDesc) setTwitter("twitter:description", ogDesc);
           setTwitter("twitter:card", seo.twitterCard || "summary_large_image");

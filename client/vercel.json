@@ -1,12 +1,29 @@
 {
   "rewrites": [
     {
+      "source": "/robots.txt",
+      "destination": "https://dil-and-data.onrender.com/api/seo/robots.txt"
+    },
+    {
+      "source": "/sitemap.xml",
+      "destination": "https://dil-and-data.onrender.com/api/seo/sitemap.xml"
+    },
+    {
       "source": "/api/:path*",
       "destination": "https://dil-and-data.onrender.com/api/:path*"
     },
     {
       "source": "/((?!assets/).*)",
       "destination": "/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+      ]
     }
   ]
 }

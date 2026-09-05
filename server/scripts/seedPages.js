@@ -19,7 +19,7 @@ function homeBlocks() {
     createBlock("hero", {
       eyebrow: "Shakti's Blog",
       title: "DIL & DATA",
-      tagline: "A personal journal of heart, curiosity, and quiet strength",
+      tagline: "The Everything Journal of a Slightly Strange Girl.",
       ctaLabel: "Enter the journal",
       ctaTo: "/blogs",
     }),
@@ -149,7 +149,7 @@ async function run() {
       {
         $set: {
           siteName: "DIL & DATA",
-          tagline: "A personal journal of heart, curiosity, and quiet strength",
+          tagline: "The Everything Journal of a Slightly Strange Girl.",
           about:
             "Manogna writes DIL & DATA, home of Shakti's Blog. Short letters, soft frames, and quiet strength.",
           "seoDefaults.title": "DIL & DATA · Shakti's Blog",

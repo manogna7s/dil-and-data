@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { ROUTES, SITE } from "../../constants";
+import { ROUTES, SITE, categoryPath } from "../../constants";
 import { getSettings } from "../../services/settings.service.js";
 import { listPublicCategories } from "../../services/category.service.js";
 import Logo from "../Logo/Logo";
@@ -12,7 +12,8 @@ import styles from "./Footer.module.css";
 const QUICK_LINKS = [
   { to: ROUTES.HOME, label: "Home" },
   { to: ROUTES.ABOUT, label: "About" },
-  { to: ROUTES.BLOGS, label: "Shakti's Blog" },
+  { to: ROUTES.BLOGS, label: "Stories" },
+  { to: ROUTES.CATEGORIES, label: "Categories" },
   { to: ROUTES.CONTACT, label: "Contact" },
 ];
 
@@ -58,7 +59,7 @@ function Footer() {
           (Array.isArray(cats) ? cats : []).slice(0, 4).map((cat) => ({
             id: cat._id || cat.slug,
             name: cat.title || cat.name,
-            href: `${ROUTES.CATEGORIES}?category=${cat.slug || cat._id}`,
+            href: categoryPath(cat.slug || cat._id),
           }))
         );
       } catch {

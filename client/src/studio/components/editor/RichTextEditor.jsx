@@ -6,6 +6,7 @@ import Underline from "@tiptap/extension-underline";
 import { NodeSelection } from "@tiptap/pm/state";
 import { useEffect, useState } from "react";
 import StudioImage from "./StudioImage";
+import StudioParagraph from "./StudioParagraph";
 import styles from "./RichTextEditor.module.css";
 
 const IMAGE_POSITIONS = [
@@ -38,7 +39,9 @@ function RichTextEditor({
     extensions: [
       StarterKit.configure({
         heading: { levels: [2, 3] },
+        paragraph: false,
       }),
+      StudioParagraph,
       Underline,
       Placeholder.configure({ placeholder }),
       Link.configure({
@@ -210,6 +213,17 @@ function RichTextEditor({
           >
             “
           </ToolbarBtn>
+          <ToolbarBtn
+            label="Drop cap — large first letter on this paragraph"
+            active={
+              editor.isActive("paragraph") &&
+              Boolean(editor.getAttributes("paragraph").dropCap)
+            }
+            disabled={!editor.isActive("paragraph")}
+            onClick={() => editor.chain().focus().toggleDropCap().run()}
+          >
+            A▾
+          </ToolbarBtn>
           <span className={styles.sep} />
           <ToolbarBtn label="Link" active={editor.isActive("link")} onClick={setLink}>
             Link
@@ -262,7 +276,7 @@ function RichTextEditor({
         <p className={styles.hint}>
           {imageSelected
             ? "Image selected — set Position and Size above. Left/Right: text fills beside the image."
-            : "Insert Media, click the image, then choose Position and Size."}
+            : "Click a paragraph, then A▾ for a drop cap. Insert Media, click the image, then Position / Size."}
         </p>
       )}
     </div>

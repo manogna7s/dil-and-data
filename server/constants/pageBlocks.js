@@ -43,7 +43,7 @@ export function defaultBlockData(type) {
     hero: {
       eyebrow: "Shakti's Blog",
       title: "DIL & DATA",
-      tagline: "A personal journal of heart, curiosity, and quiet strength",
+      tagline: "The Everything Journal of a Slightly Strange Girl.",
       ctaLabel: "Enter the journal",
       ctaTo: "/blogs",
       secondaryLabel: "About Manogna",

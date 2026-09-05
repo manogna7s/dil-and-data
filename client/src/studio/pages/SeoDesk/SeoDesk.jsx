@@ -183,7 +183,11 @@ function SeoDesk() {
         <p className={desk.sectionRule}>Meta defaults</p>
         <label className={desk.field}>
           <span>Meta title</span>
-          <input value={form.title} onChange={(e) => patch({ title: e.target.value })} />
+          <input
+            value={form.title}
+            onChange={(e) => patch({ title: e.target.value })}
+            placeholder="DIL & DATA | Stories, Travel, Culture & Ideas"
+          />
         </label>
         <label className={desk.field}>
           <span>Meta description</span>
@@ -191,6 +195,7 @@ function SeoDesk() {
             rows={3}
             value={form.description}
             onChange={(e) => patch({ description: e.target.value })}
+            placeholder="An independent personal publication exploring stories, travel, culture, books, and everyday life — with a little wit."
           />
         </label>
         <label className={desk.field}>

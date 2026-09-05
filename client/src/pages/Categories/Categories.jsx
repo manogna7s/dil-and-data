@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useSearchParams, Link } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams, Link } from "react-router-dom";
 import {
   PageHeader,
   Section,
@@ -10,20 +10,36 @@ import {
   EmptyState,
   Loader,
 } from "../../components";
-import { ROUTES } from "../../constants";
+import { ROUTES, categoryPath } from "../../constants";
 import { listPublicCategories } from "../../services/category.service.js";
 import { listPublicContent } from "../../services/content.service.js";
 import { toCardProps } from "../../blocks/fetchLive";
 import useDocumentSeo from "../../hooks/useDocumentSeo.js";
+import {
+  useJsonLd,
+  collectionPageJsonLd,
+  breadcrumbJsonLd,
+} from "../../utils/jsonLd.js";
+import { SITE } from "../../constants";
 import styles from "./Categories.module.css";
 
 function Categories() {
-  useDocumentSeo({ title: "Browse by category" });
+  const { slug: routeSlug } = useParams();
   const [params] = useSearchParams();
-  const selected = params.get("category");
+  const navigate = useNavigate();
+  const querySlug = params.get("category");
+  const selected = routeSlug || querySlug || "";
+
   const [categories, setCategories] = useState([]);
   const [filtered, setFiltered] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  // Legacy ?category= → canonical /categories/:slug
+  useEffect(() => {
+    if (querySlug && !routeSlug) {
+      navigate(categoryPath(querySlug), { replace: true });
+    }
+  }, [querySlug, routeSlug, navigate]);
 
   useEffect(() => {
     let cancelled = false;
@@ -49,6 +65,7 @@ function Categories() {
       setFiltered(null);
       return undefined;
     }
+    window.scrollTo({ top: 0, behavior: "smooth" });
     (async () => {
       try {
         const match = categories.find(
@@ -75,12 +92,102 @@ function Categories() {
     ? categories.find((c) => c.slug === selected || String(c._id) === selected)
     : null;
 
+  const catTitle = activeCategory?.title || activeCategory?.name || selected;
+  const catDesc =
+    activeCategory?.description ||
+    (selected
+      ? `Stories filed under ${catTitle} in DIL & DATA — an independent personal publication.`
+      : "Browse the shelves of DIL & DATA: travel, books, diary notes, and whatever else grows here.");
+
+  useDocumentSeo(
+    selected
+      ? {
+          title: `${catTitle} | Stories`,
+          description: catDesc.slice(0, 160),
+          path: categoryPath(activeCategory?.slug || selected),
+        }
+      : {
+          title: "Categories | Stories, Travel, Culture & Ideas",
+          description:
+            "Browse DIL & DATA by topic — stories, travel, culture, books, and the curious corners of everyday life.",
+          path: ROUTES.CATEGORIES,
+        }
+  );
+
+  useJsonLd(
+    "category-page",
+    collectionPageJsonLd({
+      name: selected ? catTitle : "Categories",
+      description: catDesc,
+      url: selected
+        ? `${SITE.CANONICAL_BASE}${categoryPath(activeCategory?.slug || selected)}`
+        : `${SITE.CANONICAL_BASE}/categories`,
+    })
+  );
+
+  useJsonLd(
+    "category-breadcrumbs",
+    selected
+      ? breadcrumbJsonLd([
+          { name: "Home", url: `${SITE.CANONICAL_BASE}/` },
+          { name: "Categories", url: `${SITE.CANONICAL_BASE}/categories` },
+          {
+            name: catTitle,
+            url: `${SITE.CANONICAL_BASE}${categoryPath(activeCategory?.slug || selected)}`,
+          },
+        ])
+      : breadcrumbJsonLd([
+          { name: "Home", url: `${SITE.CANONICAL_BASE}/` },
+          { name: "Categories", url: `${SITE.CANONICAL_BASE}/categories` },
+        ])
+  );
+
   return (
     <div className={styles.page}>
-      <PageHeader eyebrow="Topics" title="Browse by category" />
+      <PageHeader
+        eyebrow="Topics"
+        title={selected ? catTitle : "Browse by category"}
+        description={
+          selected
+            ? activeCategory?.description || undefined
+            : "Shelves for stories that belong together."
+        }
+      />
+
+      {selected && (
+        <Section tone="surface">
+          <Container size="lg">
+            <div className={styles.filterHead}>
+              <SectionTitle>{catTitle}</SectionTitle>
+              <Link to={ROUTES.CATEGORIES} className={`link-underline ${styles.clear}`}>
+                All categories
+              </Link>
+            </div>
+            {activeCategory?.description && (
+              <p className={styles.desc}>{activeCategory.description}</p>
+            )}
+
+            {filtered === null ? (
+              <Loader label="Loading stories…" />
+            ) : !filtered.length ? (
+              <EmptyState
+                title="No stories in this category yet"
+                description="Publish from Creator Studio and they'll land here."
+              />
+            ) : (
+              <div className={styles.posts}>
+                {filtered.map((post) => (
+                  <BlogCard key={post.id} {...post} />
+                ))}
+              </div>
+            )}
+          </Container>
+        </Section>
+      )}
 
       <Section>
         <Container size="lg">
+          {selected && <SectionTitle>All categories</SectionTitle>}
           {loading ? (
             <Loader label="Loading shelves…" />
           ) : categories.length === 0 ? (
@@ -96,44 +203,13 @@ function Categories() {
                   name={cat.title || cat.name}
                   count={cat.contentCount ?? cat.count ?? 0}
                   image={cat.image || cat.coverImage || ""}
-                  href={`${ROUTES.CATEGORIES}?category=${cat.slug || cat._id}`}
+                  href={categoryPath(cat.slug || cat._id)}
                 />
               ))}
             </div>
           )}
         </Container>
       </Section>
-
-      {selected && (
-        <Section tone="surface">
-          <Container size="lg">
-            <div className={styles.filterHead}>
-              <SectionTitle>
-                {activeCategory?.title || activeCategory?.name || "Category"}
-              </SectionTitle>
-              <Link to={ROUTES.CATEGORIES} className={`link-underline ${styles.clear}`}>
-                Clear filter
-              </Link>
-            </div>
-            {activeCategory?.description && (
-              <p className={styles.desc}>{activeCategory.description}</p>
-            )}
-
-            {!filtered?.length ? (
-              <EmptyState
-                title="No stories in this category yet"
-                description="Publish from Creator Studio and they'll land here."
-              />
-            ) : (
-              <div className={styles.posts}>
-                {filtered.map((post) => (
-                  <BlogCard key={post.id} {...post} />
-                ))}
-              </div>
-            )}
-          </Container>
-        </Section>
-      )}
 
       {!selected && !loading && categories.length > 0 && (
         <Section>

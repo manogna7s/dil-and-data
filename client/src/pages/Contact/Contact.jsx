@@ -8,13 +8,18 @@ import {
   TextArea,
   Button,
 } from "../../components";
-import { SITE } from "../../constants";
+import { SITE, ROUTES } from "../../constants";
 import { getSettings } from "../../services/settings.service.js";
 import useDocumentSeo from "../../hooks/useDocumentSeo.js";
 import styles from "./Contact.module.css";
 
 function Contact() {
-  useDocumentSeo({ title: "Contact" });
+  useDocumentSeo({
+    title: "Contact | Write to Manogna",
+    description:
+      "Write to DIL & DATA — no pitch decks required. Tell me about a book you loved, a mountain you climbed, or a morning that felt like a poem.",
+    path: ROUTES.CONTACT,
+  });
   const [site, setSite] = useState({
     author: SITE.AUTHOR,
     email: "",
@@ -93,7 +98,7 @@ function Contact() {
                 you loved, a mountain you climbed, or a morning that felt like a poem.
               </p>
               <p className={styles.signoff}>with warmth,</p>
-              <p className={styles.signature}>{site.author}</p>
+              <p className={styles.signature}>Manogna</p>
 
               {site.socials.length > 0 && (
                 <ul className={styles.socialList}>

@@ -44,19 +44,22 @@ export function useDocumentSeo(overrides, { skip = false } = {}) {
     if (skip || overrides === null || !settings) return;
 
     const base = seoFromSettings(settings, { path: pathname });
+    const cleaned = Object.fromEntries(
+      Object.entries(overrides || {}).filter(([, v]) => v !== undefined)
+    );
     const merged = {
       ...base,
-      ...overrides,
-      path: overrides?.canonical ? undefined : pathname,
+      ...cleaned,
+      path: cleaned.canonical ? undefined : cleaned.path || pathname,
     };
 
-    if (overrides?.title) {
-      merged.title = overrides.title;
+    if (cleaned.title) {
+      merged.title = cleaned.title;
     }
-    if (overrides?.description) {
-      merged.description = overrides.description;
-      if (!overrides?.ogDescription) {
-        merged.ogDescription = overrides.description;
+    if (cleaned.description) {
+      merged.description = cleaned.description;
+      if (!cleaned.ogDescription) {
+        merged.ogDescription = cleaned.description;
       }
     }
 

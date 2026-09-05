@@ -41,7 +41,14 @@ export async function updateSettings(payload = {}) {
         typeof settings[key]?.toObject === "function"
           ? settings[key].toObject()
           : { ...(settings[key] || {}) };
-      settings[key] = { ...current, ...payload[key] };
+      const next = { ...current, ...payload[key] };
+      if (key === "seoDefaults" && next.canonicalBase) {
+        const trimmed = String(next.canonicalBase).trim().replace(/\/$/, "");
+        next.canonicalBase = /^https?:\/\//i.test(trimmed)
+          ? trimmed
+          : `https://${trimmed}`;
+      }
+      settings[key] = next;
     } else {
       settings[key] = payload[key];
     }

@@ -149,6 +149,19 @@
   font-style: italic;
 }
 
+.prose :global(p.drop-cap)::first-letter,
+.prose :global(p[data-drop-cap="true"])::first-letter {
+  float: left;
+  font-family: var(--font-heading);
+  font-size: 4.25rem;
+  line-height: 0.78;
+  padding-right: 0.35rem;
+  padding-top: 0.08em;
+  margin-right: 0.05em;
+  color: var(--color-text);
+  font-weight: var(--font-weight-medium);
+}
+
 .link {
   color: var(--color-accent);
   text-decoration: underline;
