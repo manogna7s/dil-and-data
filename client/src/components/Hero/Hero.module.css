@@ -1,7 +1,9 @@
 .hero {
   position: relative;
-  width: min(100%, calc(44rem * 1024 / 576));
+  width: 100%;
+  max-width: min(100%, calc(44rem * 1024 / 576));
   aspect-ratio: 1024 / 576;
+  height: auto;
   max-height: 44rem;
   margin-inline: auto;
   overflow: hidden;
@@ -133,6 +135,7 @@
 @media (max-width: 640px) {
   .hero {
     width: 100%;
+    max-width: 100%;
     max-height: none;
   }
 
