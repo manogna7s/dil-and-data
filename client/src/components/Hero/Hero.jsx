@@ -12,30 +12,33 @@ import styles from "./Hero.module.css";
 const CLOSED_SRC = "/dabba-closed.png";
 const OPEN_SRC = "/dabba-open.png";
 
-/* Polaroid positions — more gap, especially in bottom tray */
+/* Polaroid positions — room between bottom pair for scraps */
 const POLAROID_LAYOUT = [
-  { top: "8%", left: "16%", rotate: -6, z: 3, w: "36%" },
-  { top: "12%", left: "48%", rotate: 7, z: 4, w: "34%" },
-  { top: "58%", left: "12%", rotate: 4, z: 5, w: "34%" },
-  { top: "62%", left: "50%", rotate: -5, z: 6, w: "34%" },
+  { top: "8%", left: "14%", rotate: -6, z: 5, w: "34%" },
+  { top: "12%", left: "50%", rotate: 7, z: 6, w: "32%" },
+  { top: "56%", left: "8%", rotate: 4, z: 5, w: "32%" },
+  { top: "60%", left: "56%", rotate: -5, z: 6, w: "32%" },
 ];
 
-/* Mini desi scraps — tighter cluster around edges, slightly larger */
+/* Scraps peek beside polaroids; spaced so they barely overlap */
 const DABBA_SCRAPS = [
-  { src: "/dabba-scraps/pani-puri.png", top: "4%", left: "3%", w: "14%", rotate: -14, z: 2 },
-  { src: "/dabba-scraps/cutting-chai.png", top: "3%", left: "76%", w: "16%", rotate: 10, z: 2 },
-  { src: "/dabba-scraps/jhumkas.png", top: "24%", left: "1%", w: "15%", rotate: -6, z: 3 },
-  { src: "/dabba-scraps/star-anise.png", top: "34%", left: "84%", w: "13%", rotate: 16, z: 2 },
-  { src: "/dabba-scraps/laddu.png", top: "42%", left: "3%", w: "14%", rotate: 8, z: 2 },
-  { src: "/dabba-scraps/mango.png", top: "46%", left: "85%", w: "13%", rotate: -10, z: 2 },
-  { src: "/dabba-scraps/gajra.png", top: "76%", left: "2%", w: "15%", rotate: 12, z: 2 },
-  { src: "/dabba-scraps/paisley.png", top: "80%", left: "80%", w: "16%", rotate: -14, z: 2 },
-  { src: "/dabba-scraps/namaste-girl.png", top: "20%", left: "86%", w: "13%", rotate: 4, z: 3 },
-  { src: "/dabba-scraps/pani-plate.png", top: "84%", left: "55%", w: "18%", rotate: 6, z: 2 },
-  { src: "/dabba-scraps/floral-border.png", top: "1%", left: "28%", w: "36%", rotate: -2, z: 1 },
-  { src: "/dabba-scraps/heart-locket.png", top: "38%", left: "78%", w: "15%", rotate: -8, z: 3 },
-  { src: "/dabba-scraps/sunflower.png", top: "72%", left: "78%", w: "15%", rotate: 11, z: 2 },
-  { src: "/dabba-scraps/rose-emoji.png", top: "68%", left: "4%", w: "14%", rotate: -7, z: 3 },
+  /* top lid */
+  { src: "/dabba-scraps/floral-border.png", top: "2%", left: "24%", w: "32%", rotate: -2, z: 1 },
+  { src: "/dabba-scraps/cutting-chai.png", top: "4%", left: "74%", w: "14%", rotate: 8, z: 4 },
+  { src: "/dabba-scraps/jhumkas.png", top: "28%", left: "6%", w: "13%", rotate: -6, z: 4 },
+  { src: "/dabba-scraps/namaste-girl.png", top: "24%", left: "76%", w: "13%", rotate: 4, z: 4 },
+  { src: "/dabba-scraps/star-anise.png", top: "36%", left: "74%", w: "11%", rotate: 14, z: 3 },
+  { src: "/dabba-scraps/heart-locket.png", top: "36%", left: "8%", w: "13%", rotate: -8, z: 4 },
+  /* bottom lid — pani puri + laddu to the right of Before I Die */
+  { src: "/dabba-scraps/pani-puri.png", top: "58%", left: "38%", w: "14%", rotate: -10, z: 7 },
+  { src: "/dabba-scraps/laddu.png", top: "72%", left: "39%", w: "15%", rotate: 8, z: 7 },
+  { src: "/dabba-scraps/mango.png", top: "78%", left: "6%", w: "15%", rotate: -8, z: 4 },
+  { src: "/dabba-scraps/rose-emoji.png", top: "54%", left: "84%", w: "14%", rotate: -4, z: 7 },
+  { src: "/dabba-scraps/gajra.png", top: "82%", left: "74%", w: "16%", rotate: 10, z: 4 },
+  { src: "/dabba-scraps/sunflower.png", top: "70%", left: "78%", w: "18%", rotate: 8, z: 4 },
+  { src: "/dabba-scraps/paisley.png", top: "88%", left: "30%", w: "16%", rotate: -12, z: 3 },
+  { src: "/dabba-scraps/pani-plate.png", top: "88%", left: "8%", w: "18%", rotate: 5, z: 3 },
+  { src: "/dabba-scraps/glasses.png", top: "90%", left: "52%", w: "18%", rotate: -10, z: 4 },
 ];
 
 function ScrapObjects() {

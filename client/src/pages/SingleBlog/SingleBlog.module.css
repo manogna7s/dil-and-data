@@ -66,9 +66,14 @@
 
 .coverImage {
   width: 100%;
-  aspect-ratio: 21 / 9;
-  object-fit: cover;
+  height: auto;
+  max-height: min(70vh, 36rem);
+  aspect-ratio: auto;
+  object-fit: contain;
+  object-position: center;
   border-radius: 0;
+  background: transparent;
+  display: block;
 }
 
 .bodyLayout {
@@ -184,8 +189,17 @@
     position: static;
   }
 
+  .cover {
+    padding-inline: var(--space-md);
+    margin-bottom: var(--space-2xl);
+  }
+
   .coverImage {
-    aspect-ratio: 16 / 10;
+    aspect-ratio: auto;
+    height: auto;
+    max-height: none;
+    object-fit: contain;
+    width: 100%;
   }
 
   .relatedGrid {
