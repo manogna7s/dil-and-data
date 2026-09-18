@@ -1,4 +1,4 @@
-/* Dabba hero — scoped; do not leak into global layout */
+/* Memory-box hero — scoped; do not leak into global layout */
 
 .hero {
   --dabba-ink: #2a221c;
@@ -17,11 +17,23 @@
   overflow: visible;
 }
 
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .stage {
   position: relative;
   width: min(100%, 40rem);
   margin: 0 auto;
-  aspect-ratio: 651 / 439;
+  aspect-ratio: 1000 / 839;
   isolation: isolate;
 }
 
@@ -38,6 +50,8 @@
   background: transparent;
   padding: 0;
   outline: none;
+  perspective: 1100px;
+  transform-style: preserve-3d;
   transition:
     opacity 0.45s ease,
     transform 0.55s cubic-bezier(0.33, 0.1, 0.25, 1),
@@ -52,85 +66,54 @@
 }
 
 .dabbaImg {
+  position: relative;
+  z-index: 1;
   display: block;
   width: 100%;
   height: 100%;
   max-width: 100%;
   object-fit: contain;
-  object-position: center;
+  object-position: bottom center;
   background: transparent;
   border-radius: 0;
   pointer-events: none;
   user-select: none;
-  filter: drop-shadow(0 14px 28px rgba(42, 34, 28, 0.18));
+  transform-style: preserve-3d;
+  filter:
+    drop-shadow(0 2px 3px rgba(28, 16, 10, 0.28))
+    drop-shadow(0 10px 16px rgba(22, 12, 8, 0.26))
+    drop-shadow(0 28px 36px rgba(16, 8, 4, 0.22))
+    drop-shadow(0 48px 58px rgba(10, 6, 2, 0.16));
 }
 
-.lidCopy {
+.dabbaClosed {
+  transform: none;
+}
+
+.dabbaOpen {
+  transform: none;
+}
+
+.groundShadow {
   position: absolute;
-  left: 50%;
-  top: 46%;
-  transform: translate(-50%, -50%);
-  width: min(70%, 18rem);
-  text-align: center;
+  left: 11%;
+  right: 11%;
+  bottom: 1.5%;
+  height: 16%;
+  z-index: 0;
   pointer-events: none;
-  color: var(--dabba-ink);
+  background: radial-gradient(
+    ellipse at center,
+    rgba(18, 10, 6, 0.48) 0%,
+    rgba(18, 10, 6, 0.22) 38%,
+    rgba(18, 10, 6, 0.06) 62%,
+    transparent 76%
+  );
+  filter: blur(12px);
+  transform: scaleY(0.55);
 }
 
-.lidEyebrow {
-  margin: 0 0 0.4em;
-  font-family: "Times New Roman", Times, serif;
-  font-size: clamp(0.95rem, 2.8vw, 1.2rem);
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: #8a8178;
-  line-height: 1.1;
-}
-
-.lidTitle {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  justify-content: center;
-  gap: 0.06em;
-  margin: 0 0 0.4em;
-  font-family: "Times New Roman", Times, serif;
-  font-size: clamp(1.65rem, 5vw, 2.55rem);
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  line-height: 1.05;
-}
-
-.dil {
-  font-family: "Tiro Devanagari Hindi", "Times New Roman", Times, serif;
-  color: #c45c6a;
-  font-weight: 500;
-  letter-spacing: 0.02em;
-}
-
-.amp {
-  color: var(--dabba-ink);
-  font-family: "Times New Roman", Times, serif;
-}
-
-.data {
-  color: var(--dabba-ink);
-  font-family: "Times New Roman", Times, serif;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-
-.lidTagline {
-  margin: 0;
-  font-family: "Times New Roman", Times, serif;
-  font-size: clamp(0.95rem, 2.6vw, 1.25rem);
-  font-style: italic;
-  font-weight: 400;
-  line-height: 1.3;
-  color: #3a322c;
-}
-
-/* Near front latch — sit below the closed dabba */
+/* Near front latch — sit below the closed box */
 .tapHint {
   position: absolute;
   left: 50%;
@@ -184,6 +167,10 @@
   pointer-events: none;
 }
 
+.isOpening .dabbaClosed {
+  transform: rotateX(-4deg);
+}
+
 .isOpen .closed {
   opacity: 0;
   visibility: hidden;
@@ -231,7 +218,9 @@
   position: relative;
   width: 100%;
   margin: 0 auto;
-  aspect-ratio: 544 / 659;
+  aspect-ratio: 1000 / 839;
+  perspective: 1200px;
+  transform-style: preserve-3d;
 }
 
 .tray {
@@ -253,8 +242,7 @@
   flex-direction: column;
   align-items: stretch;
   padding: 0.35em 0.35em 0.55em;
-  background:
-    linear-gradient(180deg, #faf6ef 0%, var(--dabba-paper) 100%);
+  background: linear-gradient(180deg, #faf6ef 0%, var(--dabba-paper) 100%);
   border: 1px solid var(--dabba-paper-edge);
   border-radius: 2px;
   box-shadow:
@@ -304,127 +292,22 @@
   overflow: hidden;
   margin-top: 0.35em;
   padding: 0 0.15em;
-  font-family: "Caveat", cursive;
+  font-family: "Times New Roman", Times, serif;
   font-size: clamp(0.7rem, 1.8vw, 0.95rem);
   line-height: 1.15;
   text-align: center;
   color: #3d342c;
 }
 
-/* ——— Scraps ——— */
-
-.scraps {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  pointer-events: none;
-}
-
-.scrap {
-  position: absolute;
-  display: block;
-  line-height: 0;
-  filter: drop-shadow(0 2px 3px rgba(42, 34, 28, 0.2));
-  opacity: 0.92;
-}
-
-.scrapImg {
-  position: absolute;
-  display: block;
-  height: auto;
-  max-width: 24%;
-  object-fit: contain;
-  background: transparent;
-  border-radius: 0;
-  pointer-events: none;
-  user-select: none;
-  filter: drop-shadow(0 2px 4px rgba(42, 34, 28, 0.22));
-  opacity: 0.95;
-}
-
-.letter {
-  width: 2.4rem;
-  height: 1.7rem;
-}
-
-.letterFold {
-  position: relative;
-  display: block;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(135deg, #f7f1e4 50%, #ebe2d0 50%);
-  border: 1px solid #d9cfbc;
-  box-shadow: 0 2px 4px rgba(42, 34, 28, 0.15);
-}
-
-.letterFold::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    135deg,
-    transparent 48%,
-    rgba(42, 34, 28, 0.08) 50%,
-    transparent 52%
-  );
-}
-
-.ticket {
-  padding: 0.2em 0.45em;
-  font-family: "Reenie Beanie", cursive;
-  font-size: 0.72rem;
-  line-height: 1.1;
-  color: #5a4030;
-  background: repeating-linear-gradient(
-    90deg,
-    #f3e6c8,
-    #f3e6c8 6px,
-    #ecd9b0 6px,
-    #ecd9b0 7px
-  );
-  border: 1px dashed #b08968;
-  border-radius: 1px;
-}
-
-.note {
-  padding: 0.15em 0.4em;
-  font-family: "Caveat", cursive;
-  font-size: 0.75rem;
-  line-height: 1;
-  color: #6b2e3a;
-  background: #f0e4c8;
-  border: 1px solid #dfd0ae;
-  transform-origin: center;
-}
-
-.diaryBit {
-  padding: 0.2em 0.35em;
-  font-family: "Reenie Beanie", cursive;
-  font-size: 0.8rem;
-  line-height: 1;
-  color: #3a4558;
-  background: #eef1f4;
-  border: 1px solid #cfd5dc;
-  opacity: 0.85;
-}
-
-.clip {
-  width: 0.55rem;
-  height: 1.35rem;
-  background: linear-gradient(90deg, #c0c4c8, #8e949a 45%, #c0c4c8);
-  border-radius: 2px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-}
-
-/* ——— Invite — on the top edge of the bottom (lower) lid ——— */
+/* ——— Invite ——— */
 
 .invite {
   position: absolute;
   left: 50%;
-  top: 68%;
+  top: 79%;
   z-index: 8;
   transform: translate(-50%, -50%);
-  width: min(82%, 14rem);
+  width: min(58%, 13.5rem);
   padding: 0.5em 0.75em;
   font-family: "Times New Roman", Times, serif;
   font-size: clamp(0.9rem, 2.8vw, 1.1rem);
@@ -434,9 +317,9 @@
   color: #3a221f;
   text-decoration: none;
   text-align: center;
-  background: rgba(196, 92, 106, 0.55);
+  background: rgba(255, 255, 255, 0.82);
   border: 0;
-  border-radius: 0;
+  border-radius: 999px;
   box-shadow: none;
   pointer-events: auto;
   transition:
@@ -446,15 +329,14 @@
 
 .invite:hover,
 .invite:focus-visible {
-  background: rgba(196, 92, 106, 0.72);
+  background: rgba(255, 255, 255, 0.94);
   color: #1a1410;
   outline: none;
 }
 
-/* Open state: same width as closed; grow height for tall open dabba */
 .isOpen .stage,
 .isOpening .stage {
-  aspect-ratio: 544 / 659;
+  aspect-ratio: 1000 / 839;
   width: min(100%, 40rem);
   min-height: 0;
 }
@@ -481,49 +363,14 @@
     width: min(100%, 26rem);
   }
 
-  .lidCopy {
-    width: min(68%, 14rem);
-  }
-
   .polaroid {
-    width: 38% !important;
-  }
-
-  .scrap.jhumka,
-  .scrap.diaryBit {
-    transform: scale(0.9);
-  }
-
-  .scrapImg {
-    max-width: 24%;
-  }
-
-  .ticket,
-  .note {
-    font-size: 0.65rem;
+    width: 22% !important;
   }
 }
 
 @media (max-width: 480px) {
-  .lidCopy {
-    width: min(72%, 13rem);
-    top: 50%;
-  }
-
-  .lidEyebrow {
-    font-size: 0.92rem;
-  }
-
-  .lidTitle {
-    font-size: 1.55rem;
-  }
-
-  .lidTagline {
-    font-size: 0.92rem;
-  }
-
   .polaroid {
-    width: 40% !important;
+    width: 24% !important;
     padding: 0.28em 0.28em 0.45em;
   }
 
@@ -536,22 +383,6 @@
     width: min(86%, 12.5rem);
     font-size: 0.9rem;
     padding: 0.45em 0.6em;
-  }
-
-  .scrapImg {
-    max-width: 16%;
-  }
-
-  /* Soften scrap clutter on narrow screens */
-  .scrap.ticket,
-  .scrap.letter {
-    display: none;
-  }
-
-  .scrapImg[src*="floral-border"],
-  .scrapImg[src*="pani-plate"],
-  .scrapImg[src*="namaste-girl"] {
-    display: none;
   }
 }
 

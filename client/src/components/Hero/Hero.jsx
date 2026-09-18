@@ -9,84 +9,20 @@ import {
 import { optimizeImageUrl } from "../../utils/optimizeImage.js";
 import styles from "./Hero.module.css";
 
-const CLOSED_SRC = "/dabba-closed.png";
-const OPEN_SRC = "/dabba-open.png";
+const CLOSED_SRC = "/dabba-closed.png?v=solid";
+const OPEN_SRC = "/dabba-open.png?v=solid";
 
-/* Polaroid positions — room between bottom pair for scraps */
+/* Latest-blog polaroids sit on the photo stack inside the tray */
 const POLAROID_LAYOUT = [
-  { top: "8%", left: "14%", rotate: -6, z: 5, w: "34%" },
-  { top: "12%", left: "50%", rotate: 7, z: 6, w: "32%" },
-  { top: "56%", left: "8%", rotate: 4, z: 5, w: "32%" },
-  { top: "60%", left: "56%", rotate: -5, z: 6, w: "32%" },
+  { top: "28%", left: "16%", rotate: -8, z: 5, w: "20%" },
+  { top: "25%", left: "34%", rotate: 6, z: 6, w: "18%" },
+  { top: "46%", left: "18%", rotate: 5, z: 5, w: "18%" },
+  { top: "44%", left: "35%", rotate: -4, z: 6, w: "19%" },
 ];
-
-/* Scraps peek beside polaroids; spaced so they barely overlap */
-const DABBA_SCRAPS = [
-  /* top lid */
-  { src: "/dabba-scraps/floral-border.png", top: "2%", left: "24%", w: "32%", rotate: -2, z: 1 },
-  { src: "/dabba-scraps/cutting-chai.png", top: "4%", left: "74%", w: "14%", rotate: 8, z: 4 },
-  { src: "/dabba-scraps/jhumkas.png", top: "28%", left: "6%", w: "13%", rotate: -6, z: 4 },
-  { src: "/dabba-scraps/namaste-girl.png", top: "24%", left: "76%", w: "13%", rotate: 4, z: 4 },
-  { src: "/dabba-scraps/star-anise.png", top: "36%", left: "74%", w: "11%", rotate: 14, z: 3 },
-  { src: "/dabba-scraps/heart-locket.png", top: "36%", left: "8%", w: "13%", rotate: -8, z: 4 },
-  /* bottom lid — pani puri + laddu to the right of Before I Die */
-  { src: "/dabba-scraps/pani-puri.png", top: "58%", left: "38%", w: "14%", rotate: -10, z: 7 },
-  { src: "/dabba-scraps/laddu.png", top: "72%", left: "39%", w: "15%", rotate: 8, z: 7 },
-  { src: "/dabba-scraps/mango.png", top: "78%", left: "6%", w: "15%", rotate: -8, z: 4 },
-  { src: "/dabba-scraps/rose-emoji.png", top: "54%", left: "84%", w: "14%", rotate: -4, z: 7 },
-  { src: "/dabba-scraps/gajra.png", top: "82%", left: "74%", w: "16%", rotate: 10, z: 4 },
-  { src: "/dabba-scraps/sunflower.png", top: "70%", left: "78%", w: "18%", rotate: 8, z: 4 },
-  { src: "/dabba-scraps/paisley.png", top: "88%", left: "30%", w: "16%", rotate: -12, z: 3 },
-  { src: "/dabba-scraps/pani-plate.png", top: "88%", left: "8%", w: "18%", rotate: 5, z: 3 },
-  { src: "/dabba-scraps/glasses.png", top: "90%", left: "52%", w: "18%", rotate: -10, z: 4 },
-];
-
-function ScrapObjects() {
-  return (
-    <div className={styles.scraps} aria-hidden="true">
-      {DABBA_SCRAPS.map((item) => (
-        <img
-          key={item.src}
-          className={styles.scrapImg}
-          src={item.src}
-          alt=""
-          draggable={false}
-          decoding="async"
-          style={{
-            top: item.top,
-            left: item.left,
-            width: item.w,
-            zIndex: item.z,
-            transform: `rotate(${item.rotate}deg)`,
-          }}
-        />
-      ))}
-      <span
-        className={`${styles.scrap} ${styles.ticket}`}
-        style={{ top: "12%", left: "58%", transform: "rotate(14deg)" }}
-      >
-        ticket · 2005
-      </span>
-      <span
-        className={`${styles.scrap} ${styles.note}`}
-        style={{ top: "70%", left: "18%", transform: "rotate(-8deg)" }}
-      >
-        keep
-      </span>
-      <span
-        className={`${styles.scrap} ${styles.letter}`}
-        style={{ top: "40%", left: "72%", transform: "rotate(-12deg)" }}
-      >
-        <span className={styles.letterFold} />
-      </span>
-    </div>
-  );
-}
 
 /**
- * Interactive desi dabba hero — closed lid first, opens to polaroid memories.
- * Scoped to the homepage hero block only.
- * Lid copy is fixed to the dabba concept (CMS props intentionally unused for lid text).
+ * Interactive memory-box hero — closed lid first, opens to the chest
+ * with latest-blog polaroids. Branding is baked into the closed artwork.
  */
 function Hero({ ctaTo = ROUTES.BLOGS }) {
   const [open, setOpen] = useState(false);
@@ -146,7 +82,6 @@ function Hero({ ctaTo = ROUTES.BLOGS }) {
       aria-label="Welcome"
     >
       <div className={styles.stage}>
-        {/* Closed dabba */}
         <div
           className={styles.closed}
           role={open ? undefined : "button"}
@@ -157,51 +92,43 @@ function Hero({ ctaTo = ROUTES.BLOGS }) {
           onClick={open ? undefined : handleOpen}
           onKeyDown={open ? undefined : onKeyDown}
         >
+          <span className={styles.groundShadow} aria-hidden="true" />
           <img
-            className={styles.dabbaImg}
+            className={`${styles.dabbaImg} ${styles.dabbaClosed}`}
             src={CLOSED_SRC}
-            alt=""
-            width={650}
-            height={438}
+            alt="Shakti's Blog — दिल & DATA"
+            width={1000}
+            height={656}
             draggable={false}
             fetchPriority="high"
             decoding="async"
           />
-          <div className={styles.lidCopy} id={labelId}>
-            <p className={styles.lidEyebrow}>Shakti&apos;s Blog</p>
-            <h1 className={styles.lidTitle} aria-label="DIL & DATA">
-              <span className={styles.dil}>दिल</span>
-              <span className={styles.amp}>&</span>
-              <span className={styles.data}>DATA</span>
-            </h1>
-            <p className={styles.lidTagline}>
-              The Everything Journal of a Slightly Strange Girl.
-            </p>
-          </div>
+          <span id={labelId} className={styles.srOnly}>
+            Shakti&apos;s Blog, Dil and Data. Tap to open.
+          </span>
           <p className={styles.tapHint} aria-hidden="true">
             <span className={styles.tapArrow}>↑</span>
             <span className={styles.tapLabel}>tap to open</span>
           </p>
         </div>
 
-        {/* Open dabba + contents */}
         <div
           className={styles.open}
           id={`${labelId}-open`}
           aria-hidden={!open}
         >
           <div className={styles.openFrame}>
+            <span className={styles.groundShadow} aria-hidden="true" />
             <img
-              className={styles.dabbaImg}
+              className={`${styles.dabbaImg} ${styles.dabbaOpen}`}
               src={OPEN_SRC}
-              alt=""
-              width={543}
-              height={658}
+              alt="Open memory chest"
+              width={1000}
+              height={839}
               draggable={false}
               decoding="async"
             />
             <div className={styles.tray}>
-              <ScrapObjects />
               {polaroids.map((post, i) => {
                 const layout = POLAROID_LAYOUT[i] || POLAROID_LAYOUT[0];
                 const src = optimizeImageUrl(post.coverImage || post.image, {

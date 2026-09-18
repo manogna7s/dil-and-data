@@ -12,14 +12,10 @@ function fingerprint() {
   return value;
 }
 
-/** Share + like — wired to /api/likes. */
-function ArticleActions({ title, slug, contentId, initialLikes = 0 }) {
+/** Like control — wired to /api/likes. */
+function ArticleActions({ contentId, initialLikes = 0 }) {
   const [liked, setLiked] = useState(false);
   const [likes, setLikes] = useState(initialLikes);
-  const url =
-    typeof window !== "undefined"
-      ? `${window.location.origin}/blogs/${slug}`
-      : `/blogs/${slug}`;
 
   useEffect(() => {
     if (!contentId) return undefined;
@@ -62,21 +58,6 @@ function ArticleActions({ title, slug, contentId, initialLikes = 0 }) {
     }
   }
 
-  function share(network) {
-    const encoded = encodeURIComponent(url);
-    const text = encodeURIComponent(title);
-    const map = {
-      twitter: `https://twitter.com/intent/tweet?url=${encoded}&text=${text}`,
-      linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encoded}`,
-      copy: null,
-    };
-    if (network === "copy") {
-      navigator.clipboard?.writeText(url);
-      return;
-    }
-    window.open(map[network], "_blank", "noopener,noreferrer");
-  }
-
   return (
     <div className={styles.actions}>
       <button
@@ -87,18 +68,6 @@ function ArticleActions({ title, slug, contentId, initialLikes = 0 }) {
       >
         ♥ {likes}
       </button>
-      <div className={styles.share} role="group" aria-label="Share">
-        <span className={styles.label}>Share</span>
-        <button type="button" onClick={() => share("twitter")}>
-          X
-        </button>
-        <button type="button" onClick={() => share("linkedin")}>
-          in
-        </button>
-        <button type="button" onClick={() => share("copy")}>
-          Copy
-        </button>
-      </div>
     </div>
   );
 }

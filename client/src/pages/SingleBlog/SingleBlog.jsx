@@ -255,8 +255,6 @@ function SingleBlog() {
           )}
 
           <ArticleActions
-            title={post.title}
-            slug={post.slug}
             contentId={post._id}
             initialLikes={post.likesCount || 0}
           />
